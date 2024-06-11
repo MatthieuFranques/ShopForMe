@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  my-mqtt-broker:
+    image: eclipse-mosquitto
+    command: mosquitto -v
+    networks:
+      - my-network
+
+  my-mqtt-client:
+    build:
+      context: .
+      dockerfile: ./MQTT-client/Dockerfile
+    depends_on:
+      - my-mqtt-broker
+    networks:
+      - my-network
+
+networks:
+  my-network:
