@@ -3,11 +3,11 @@ version: '3.7'
 services:
   app:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: backend
+      dockerfile: Dockerfile
     volumes:
       - ./backend:/app
-      - /app/node_modules
+      - /src/app/node_modules
     ports:
       - 3000:3000
     environment:
@@ -25,5 +25,11 @@ services:
       - 5432:5432
     volumes:
       - postgres:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
 volumes:
   postgres:
