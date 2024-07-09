@@ -3,13 +3,13 @@ export interface CompleteUser {
     email: string;
     password: string;
     createdAt: Date;
-    updatedAt: Date;
+    updatedAt: Date | null;
+    deletedAt: Date | null;
 }
 
-export interface CreateUser {
+export interface ReturnUser {
     id: number;
     email: string;
-    password: string;
 }
 
 export interface EmailUser {

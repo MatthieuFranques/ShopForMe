@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import  userRouter  from './routes/user.route';
 import dotenv from 'dotenv';
 
@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/user', userRouter);
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.send('Hello World');
 });
 

@@ -10,7 +10,7 @@ export async function isValidEmail(email: string): Promise<boolean> {
         const emailExists : EmailUser | null = await prisma.user.findFirst({
             where: {
                 email: email
-            },select : {
+            }, select : {
                 email: true
             }
         });
