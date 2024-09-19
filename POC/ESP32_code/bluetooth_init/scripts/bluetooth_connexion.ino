@@ -1,27 +1,56 @@
-#include "BluetoothSerial.h"
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
 
-// Check if Bluetooth and Bluedroid (Bluetooth stack for ESP32) are enabled
-#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
-#error Bluetooth is not enabled! Please run `make menuconfig` to enable it
-#endif
+BLEServer *pServer = NULL;
+BLECharacteristic *pCharacteristic = NULL;
+bool deviceConnected = false; // Variable to track connection status
+const int notifyInterval = 1000; // Notification interval in milliseconds (1 second)
 
-BluetoothSerial SerialBT;
+// Class to handle BLE server events for connection and disconnection
+class MyServerCallbacks: public BLEServerCallbacks {
+  void onConnect(BLEServer* pServer) {
+    deviceConnected = true; // Update status when a device connects
+  }
+
+  void onDisconnect(BLEServer* pServer) {
+    deviceConnected = false; // Update status when a device disconnects
+  }
+};
 
 void setup() {
   Serial.begin(115200);
-  SerialBT.begin("ESP32test");  // Start Bluetooth Serial with the device name "ESP32test"
-  Serial.println("The device started, now you can pair it with bluetooth!");  // Print a message to the Serial Monitor
+  BLEDevice::init("ESP32_BLE"); // Name of BLE device
+
+  pServer = BLEDevice::createServer(); // Create a BLE server
+  pServer->setCallbacks(new MyServerCallbacks()); // Set callbacks for connection events
+
+  // Create a BLE service with a specific UUID
+  BLEService *pService = pServer->createService(BLEUUID((uint16_t)0x180D));
+
+  // Create a BLE characteristic with read and notify properties
+  pCharacteristic = pService->createCharacteristic(
+                      BLEUUID((uint16_t)0x2A37),
+                      BLECharacteristic::PROPERTY_READ |
+                      BLECharacteristic::PROPERTY_NOTIFY
+                    );
+
+  pCharacteristic->setValue("-- TEST Notification from ESP32 --"); // Set the initial value of the characteristic
+
+  // Start the BLE service
+  pService->start();
+
+  // Start advertising so the device can be discovered
+  BLEAdvertising *pAdvertising = pServer->getAdvertising();
+  pAdvertising->start();
 }
 
 void loop() {
-  // Check if data is available on the hardware serial
-  if (Serial.available()) {
-    SerialBT.write(Serial.read());
+  // If a device is connected, send a notification every 'notifyInterval' milliseconds
+  if (deviceConnected) {
+    pCharacteristic->setValue("-- Notification from ESP32 --"); // Update the value of the characteristic
+    pCharacteristic->notify(); // Send a notification with the new value
+    delay(notifyInterval); // Wait before sending the next notification
   }
-  // Check if data is available on the Bluetooth Serial
-  if (SerialBT.available()) {
-    Serial.write(SerialBT.read());
-  }
-
-  delay(20);  // Delay to prevent excessive CPU usage
 }
