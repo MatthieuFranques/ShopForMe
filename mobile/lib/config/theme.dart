@@ -9,10 +9,10 @@ class Shop4MeTheme {
       scaffoldBackgroundColor: const Color(0xFFF5F5DC),
       colorScheme: ColorScheme.fromSwatch(
         primarySwatch: Colors.blue,
-        accentColor: Colors.orange,
+        accentColor: const Color(0xFFF24822),
       ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.blue[900],
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFF011C40),
         foregroundColor: Colors.white,
       ),
       textTheme: baseTextTheme,
