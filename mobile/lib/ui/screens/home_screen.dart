@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const AppHeader(),
-              const SizedBox(height: 32),
+              const SizedBox(height: 50),
               Row(
                 children: [
                   Expanded(child: ActionButton(icon: Icons.edit, color: Theme.of(context).colorScheme.secondary)),
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                   Expanded(child: ActionButton(icon: Icons.search, color: Theme.of(context).primaryColor)),
                 ],
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 50),
               Center(
                 child: StartButton(
                   onPressed: () {

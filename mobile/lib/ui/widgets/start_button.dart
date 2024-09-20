@@ -14,7 +14,7 @@ class StartButton extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
-      child: const Icon(Icons.play_arrow, size: 48),
+      child: const Icon(Icons.play_arrow, size: 150),
     );
   }
 }
