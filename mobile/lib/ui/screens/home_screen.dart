@@ -25,16 +25,25 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 50),
               Row(
                 children: [
-                  Expanded(child: ActionButton(icon: Icons.edit, color: Theme.of(context).colorScheme.secondary)),
+                  Expanded(
+                      child: ActionButton(
+                          icon: Icons.edit,
+                          color: Theme.of(context).colorScheme.secondary,
+                          onPressed: () => _navigateToEditList(context))),
                   const SizedBox(width: 16),
-                  Expanded(child: ActionButton(icon: Icons.search, color: Theme.of(context).primaryColor)),
+                  Expanded(
+                      child: ActionButton(
+                          icon: Icons.search,
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () => _searchProduct(context))),
                 ],
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 80),
               Center(
                 child: StartButton(
                   onPressed: () {
                     // TODO: Implement start shopping functionality
+                    _startShopping(context);
                   },
                 ),
               ),
@@ -43,5 +52,32 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigateToEditList(BuildContext context) {
+    // TODO: Implement navigation to edit list screen
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const EditListScreen()),
+    // );
+    print('Navigating to edit list screen');
+  }
+
+  void _searchProduct(BuildContext context) {
+    // TODO: Implement navigation to search screen
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const NavigationScreen()),
+    // );
+    print('Navigating to search screen');
+  }
+
+  void _startShopping(BuildContext context) {
+    // TODO: Implement start shopping functionality
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const Shopping()),
+    // );
+    print('Starting shopping');
   }
 }
