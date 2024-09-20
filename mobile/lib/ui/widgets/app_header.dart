@@ -6,9 +6,10 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height:80,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).appBarTheme.backgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -18,7 +19,10 @@ class AppHeader extends StatelessWidget {
           Text(
             //TODO: Replace with the name of list
             '15/07',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.white),
           ),
         ],
       ),

@@ -11,10 +11,10 @@ class StartButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(48),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
-      child: const Icon(Icons.play_arrow, size: 48),
+      child: const Icon(Icons.play_arrow, size: 150),
     );
   }
 }
