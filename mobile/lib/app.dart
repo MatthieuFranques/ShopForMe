@@ -9,7 +9,7 @@ class Shop4MeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shop4Me',
-      theme: Shop4MeTheme.lightTheme,
+      theme: Shop4MeTheme.getTheme(fontSize: FontSize.medium),
       home: const HomeScreen(),
     );
   }
