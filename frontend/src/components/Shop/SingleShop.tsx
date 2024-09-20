@@ -1,0 +1,964 @@
+import React, {useState} from 'react';
+import {useParams} from 'react-router-dom';
+import "./form.css"
+import {Autocomplete, createFilterOptions, TextField} from "@mui/material";
+
+interface Shop {
+    id: number;
+    name: string;
+    adresse: string;
+    city: string;
+    plan: Array<Array<Cell>>;
+}
+
+
+export interface Position {
+    row: number;
+    col: number;
+}
+
+export enum PlanType {
+    VIDE = "VIDE",
+    RAYON = "RAYON",
+    PLEIN = "PLEIN",
+    BEACON = "BEACON",
+    CHEMIN = "CHEMIN"
+}
+
+export interface Produit {
+    name: string;
+    rayon: string;
+}
+
+export interface Cell {
+    name: string;
+    size?: number;
+    type: PlanType;
+    isBeacon: boolean;
+}
+
+export interface Rayon {
+    name: string;
+    startPos?: Position;
+    endPos?: Position;
+}
+
+interface CustomPropsRender {
+    plan: Array<Array<Cell>>;
+}
+
+const EMPTY_CELL: Cell = {
+    isBeacon: false,
+    type: PlanType.VIDE,
+    name: "X",
+    size: 0
+}
+
+const PLEIN_CELL: Cell = {
+    isBeacon: false,
+    type: PlanType.PLEIN,
+    name: "PLEIN",
+    size: 0
+}
+
+interface CustomProps {
+    plan: Array<Array<Cell>>;
+    onFinish: (plan: Array<Array<Cell>>) => void;
+    isEdit: boolean;
+}
+
+const PLAN: Array<Array<Cell>> = [
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon1",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon2",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon1",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon2",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon1",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon2",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.PLEIN,
+            "name": PlanType.PLEIN,
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon2",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon2",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon4",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon4",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon4",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon4",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon4",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon2",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon3",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon3",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon3",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon3",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.RAYON,
+            "name": "rayon3",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ],
+    [
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        },
+        {
+            "isBeacon": false,
+            "type": PlanType.VIDE,
+            "name": "X",
+            "size": 0
+        }
+    ]
+]
+
+const shopData: Shop[] = [
+    {id: 1, name: 'shop1', adresse: '123 Main St', city: 'Metropolis', plan: PLAN},
+    {id: 2, name: 'Shop Two', adresse: '456 Market Rd', city: 'Gotham', plan: PLAN},
+    {id: 3, name: 'Shop Three', adresse: '789 High St', city: 'Star City', plan: PLAN},
+];
+
+const Plan = (props: CustomProps) => {
+
+    const [plan, setPlan] = useState<Array<Array<Cell>>>(props.plan);
+
+    const [currentDraw, setCurrentDraw] = useState<PlanType>(PlanType.VIDE);
+
+    const [value, setValue] = React.useState<string | null>(null);
+
+    const [rayons, setRayons] = useState<Array<string>>(['cool']);
+    const filter = createFilterOptions<string>();
+
+    const handleChangeRadio = (event: any) => {
+        setCurrentDraw(event.target.value as PlanType);
+    };
+
+    /**
+     * Generates a CSS class string for a specific cell within a grid.
+     *
+     * The class string is based on the properties of the cell located at the specified
+     * row and column indices within the plan array. The class string will always start
+     * with 'cell', followed by the value of the 'name' property of the cell. If the
+     * cell's 'isBeacon' property is true, the class string will also include 'BEACON'.
+     *
+     * @param {number} rowIndex - The index of the row in the plan array.
+     * @param {number} colIndex - The index of the column in the plan array.
+     * @returns {string} The CSS class string for the specified cell.
+     */
+    const getCellClass = (rowIndex: number, colIndex: number) => {
+
+        const classes = ["cell", plan[rowIndex][colIndex].name]
+
+        classes.push(plan[rowIndex][colIndex].isBeacon ? "BEACON" : "");
+
+        return classes.join(" ");
+    }
+
+    /**
+     * Function to toggle the state of a cell within a given 2D plan based on its row and column indices,
+     * and the current drawing type.
+     *
+     * @param {number} rowIndex - The index of the row where the cell is located.
+     * @param {number} colIndex - The index of the column where the cell is located.
+     */
+    const toggleCell = (rowIndex: number, colIndex: number) => {
+        console.log(currentDraw)
+        setPlan(prevPlan => {
+            const newPlan = [...prevPlan];
+
+            const updatedRow = [...newPlan[rowIndex]];
+
+            switch (currentDraw) {
+                case PlanType.BEACON:
+                    updatedRow[colIndex] = {
+                        ...updatedRow[colIndex],
+                        isBeacon: !updatedRow[colIndex].isBeacon
+                    };
+                    break;
+                case PlanType.RAYON:
+                    if (value) {
+                        updatedRow[colIndex] = {
+                            name: value,
+                            type: PlanType.RAYON,
+                            isBeacon: updatedRow[colIndex].isBeacon
+                        };
+                    }
+                    break;
+                case PlanType.PLEIN:
+                    updatedRow[colIndex] = PLEIN_CELL;
+                    break;
+                case PlanType.VIDE:
+                    updatedRow[colIndex] = EMPTY_CELL;
+                    break;
+                default:
+                    return prevPlan;
+            }
+
+            newPlan[rowIndex] = updatedRow;
+
+            return newPlan;
+        });
+
+        // handleRayon(rowIndex, colIndex);
+
+        // if (currentRayonDestination !== "") {
+        //     travelToRayon(currentRayonDestination);
+        // }
+    }
+
+    const getListDrawType = () => {
+        return Object.values(PlanType);
+    }
+
+    /**
+     * Retrieves a unique list of rayon names from a given plan.
+     *
+     * The function iterates through each row and cell of the provided `plan`,
+     * collecting unique names of rayons that are present. The result is an array
+     * of distinct rayon names.
+     *
+     * @returns {Array<string>} An array containing unique rayon names.
+     */
+    const getListRayon = (): Array<string> => {
+        let listRayons: Array<string> = []
+        plan.map((row) => {
+            row.map((cell) => {
+                if (!listRayons.includes(cell.name)) {
+                    listRayons.push(cell.name);
+                }
+            })
+        })
+
+        return listRayons;
+    }
+
+
+
+    /**
+     * Function to download the current plan as a JSON file.
+     * The function converts the `plan` object to a JSON string,
+     * creates a Blob from the JSON string, and provides a download
+     * link for the user to download the file named "plan.json".
+     */
+    const downloadPlanAsJSON = () => {
+        const planJSON = JSON.stringify(plan, null, 2);
+        const blob = new Blob([planJSON], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "plan.json";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    return (
+        <div>
+            <h3>Choix du stylo</h3>
+            <div>
+                {getListDrawType().map((planType, index) => (
+                    <label key={index} className={"type"}>
+                        <input
+                            type="radio"
+                            name={"checkbox"}
+                            value={planType}
+                            checked={currentDraw === planType}
+                            onChange={handleChangeRadio}
+                        />
+                        {planType}
+                    </label>
+                ))}
+            </div>
+
+            <h3>Choix du rayon</h3>
+            <Autocomplete
+                value={value}
+                onChange={(event, newValue) => {
+                    console.log(newValue);
+                    if (typeof newValue === 'string') {
+                        if (newValue.includes("Add \"")) {
+                            setValue(newValue.split("\"")[1]);
+                        } else {
+                            setValue(newValue);
+                        }
+                    } else {
+                        setValue(null);
+                    }
+                }}
+                filterOptions={(options, params) => {
+                    const filtered = filter(options, params);
+
+                    const {inputValue} = params;
+                    // Suggest the creation of a new value if it doesn't exist
+                    const isExisting = options.includes(inputValue);
+                    if (inputValue !== '' && !isExisting) {
+                        filtered.push(`Add "${inputValue}"`);
+                    }
+
+                    return filtered;
+                }}
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                id="free-solo-with-text-demo"
+                options={getListRayon()}
+                getOptionLabel={(option) => {
+                    return option;
+                }}
+                renderOption={(props, option) => {
+                    const {key, ...optionProps} = props;
+                    return (
+                        <li key={key} {...optionProps}>
+                            {option}
+                        </li>
+                    );
+                }}
+                sx={{width: 300}}
+                freeSolo
+                renderInput={(params) => (
+                    <TextField {...params} label="Free solo with text demo"/>
+                )}
+            />
+
+            <button onClick={downloadPlanAsJSON}>Download Plan as JSON</button>
+
+            <table>
+                <tbody>
+                {plan.map((row: Array<Cell>, rowIndex: any) => {
+                    return (
+                        <tr key={rowIndex}>
+                            {row.map((col: Cell, colIndex) => (
+                                <td key={colIndex}
+                                    onClick={() => props.isEdit ? toggleCell(rowIndex, colIndex) : ""}
+                                    className={getCellClass(rowIndex, colIndex)}></td>
+                            ))}
+                        </tr>
+                    );
+                })}
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
+const SingleShop: React.FC = () => {
+
+    const {id} = useParams<{ id: string }>();
+    const shop = shopData.find(shop => shop.name === id);
+
+    const [isEdit, setEdit] = useState(true);
+
+    if (!shop) {
+        return <div>Shop not found</div>;
+    }
+
+    const updatePlan = (plan: Array<Array<Cell>>) => {
+        console.log(plan)
+    }
+
+    return (
+        <div>
+            <button onClick={() => setEdit(!isEdit)}>Current action : {isEdit ? "Edit" : "Not Edit"}</button>
+            <table style={{borderCollapse: 'collapse', width: '100%'}}>
+                <thead>
+                <tr>
+                    <th style={{border: '1px solid black', padding: '8px'}}>ID</th>
+                    <th style={{border: '1px solid black', padding: '8px'}}>Adresse</th>
+                    <th style={{border: '1px solid black', padding: '8px'}}>Name</th>
+                    <th style={{border: '1px solid black', padding: '8px'}}>City</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.id}</td>
+                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.adresse}</td>
+                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.name}</td>
+                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.city}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <Plan onFinish={updatePlan} plan={shop.plan} isEdit={isEdit}/>
+        </div>
+    );
+};
+
+export default SingleShop;
