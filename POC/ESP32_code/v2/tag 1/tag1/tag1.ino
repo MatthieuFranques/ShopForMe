@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include "DW1000Ranging.h"
 
-#define TAG_ADDRESS "82:17:5B:D5:A9:9A:E2:9C"
+#define TAG_ADDRESS "7D:00:22:EA:82:60:3B:9C"
 #define SPI_SCK 18
 #define SPI_MISO 19
 #define SPI_MOSI 23
