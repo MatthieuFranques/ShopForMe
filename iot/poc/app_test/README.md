@@ -1,16 +1,40 @@
-# app_test
+# App_test
 
-A new Flutter project.
+This flutter project allows the verification of a bluetooth connection from an ESP-32 to a device.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To start the project, you need to begin with the following step: 
 
-A few resources to get you started if this is your first Flutter project:
+> flutter pub get
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Once you've installed the dependencies, you can check that there are no problems with the project: 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> flutter doctor -v
+
+If all goes well, you can launch your project as follows:
+
+> flutter run
+
+
+## Few Tips
+
+When you make changes to the code, you can use on of these shortcuts:
+- Ctrl+\
+- Ctrl+Maj+\
+
+
+This will allow you to refresh the project without having to restart it.
+
+
+## Development
+
+To develop the interface, you can do this locally without an external phone (except for the Bluetooth connection).
+For example, the phone used from `Android Studio` is called `Pixel 4 API 30`.
+
+
+## Goal
+
+As soon as the esp-32 device is detected from our phone, it is considered complete.
+
+This flutter project is only used to test the POC and validate that the device is correctly detected by Bluetooth.
