@@ -3,19 +3,26 @@ import 'package:flutter/material.dart';
 class ActionButton extends StatelessWidget {
   final IconData icon;
   final Color color;
+  final VoidCallback onPressed;
 
-  const ActionButton({super.key, required this.icon, required this.color});
+  const ActionButton({super.key, required this.icon, required this.color, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(
+      child: Material(
           color: color,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(15),
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(15),
+          child: Icon(
+            icon,
+            size: 90,
+            color: Colors.white,
+          ),
         ),
-        child: Icon(icon, color: Colors.white, size: 32),
       ),
     );
   }
