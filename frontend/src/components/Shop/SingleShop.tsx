@@ -712,7 +712,7 @@ const Plan = (props: CustomProps) => {
         setCurrentDraw(event.target.value as PlanType);
     };
 
-    const [info, setInfo] = useState<{open: boolean, message: string}>({
+    const [info, setInfo] = useState<{ open: boolean, message: string }>({
         open: false,
         message: ""
     })
@@ -746,7 +746,6 @@ const Plan = (props: CustomProps) => {
      * @param {number} colIndex - The index of the column where the cell is located.
      */
     const toggleCell = (rowIndex: number, colIndex: number) => {
-        console.log(currentDraw)
         setPlan(prevPlan => {
             const newPlan = [...prevPlan];
 
@@ -791,7 +790,7 @@ const Plan = (props: CustomProps) => {
     }
 
     const getListDrawType = () => {
-        return Object.values(PlanType);
+        return Object.values(PlanType).filter((type) => type !== PlanType.CHEMIN);
     }
 
     /**
@@ -806,7 +805,7 @@ const Plan = (props: CustomProps) => {
     const getListRayon = (): Array<string> => {
         let listRayons: Array<string> = []
         plan.map((row) => {
-            row.map((cell) => {
+            row.filter(value1 => value1.type === PlanType.RAYON).map((cell) => {
                 if (!listRayons.includes(cell.name)) {
                     listRayons.push(cell.name);
                 }
@@ -860,7 +859,8 @@ const Plan = (props: CustomProps) => {
     return (
         <div>
             {info.open ? <div className={"info"}>
-                <p>{info.message}</p> <div onClick={() => updateOpen(false)}>X</div>
+                <p>{info.message}</p>
+                <div onClick={() => updateOpen(false)}>X</div>
             </div> : ""}
             <div className={"configPlan"}>
                 <div>
@@ -941,12 +941,13 @@ const Plan = (props: CustomProps) => {
             </div>
 
             <table>
-            <tbody>
+                <tbody>
                 {plan.map((row: Array<Cell>, rowIndex: any) => {
                     return (
                         <tr key={rowIndex}>
                             {row.map((col: Cell, colIndex) => (
-                                <Tooltip title={col.type === PlanType.RAYON ? col.name : ""} key={colIndex} placement={"top"}>
+                                <Tooltip title={col.type === PlanType.RAYON ? col.name : ""} key={colIndex}
+                                         placement={"top"}>
                                     <td onClick={() => props.isEdit ? toggleCell(rowIndex, colIndex) : ""}
                                         className={getCellClass(rowIndex, colIndex)}></td>
                                 </Tooltip>
@@ -954,7 +955,7 @@ const Plan = (props: CustomProps) => {
                         </tr>
                     );
                 })}
-            </tbody>
+                </tbody>
             </table>
         </div>
     )
