@@ -1,19 +1,15 @@
 import React, {useState} from 'react';
-import './form.css'
+import './form.scss'
 import { useNavigate } from "react-router-dom";
+import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import {ShopModel} from '../../models/Shop.model'
 
 interface ShopFormCreateProps {
-    onSubmit: (shop: ShopFormData) => void;
+    onSubmit: (shop: ShopModel) => void;
 }
 
 interface ShopFormListProps {
     onSubmit: (shop: string) => void;
-}
-
-interface ShopFormData {
-    name: string;
-    address: string;
-    city: string;
 }
 
 
@@ -29,7 +25,7 @@ interface ShopFormData {
  * when the form is submitted, passing the form data as a parameter.
  */
 const ShopFormCreate: React.FC<ShopFormCreateProps> = ({onSubmit}) => {
-    const [formData, setFormData] = useState<ShopFormData>({
+    const [formData, setFormData] = useState<ShopModel>({
         name: '',
         address: '',
         city: '',
@@ -51,39 +47,33 @@ const ShopFormCreate: React.FC<ShopFormCreateProps> = ({onSubmit}) => {
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label htmlFor="name">Name:</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
+                <TextField
+                    fullWidth
+                    id="outlined-controlled"
+                    label="Name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                 />
             </div>
             <div>
-                <label htmlFor="address">Address:</label>
-                <input
-                    type="text"
-                    id="address"
-                    name="address"
+                <TextField
+                    id="outlined-controlled"
+                    fullWidth
+                    label="Address"
                     value={formData.address}
                     onChange={handleChange}
-                    required
                 />
             </div>
             <div>
-                <label htmlFor="city">City:</label>
-                <input
-                    type="text"
-                    id="city"
-                    name="city"
+                <TextField
+                    id="outlined-controlled"
+                    label="City"
+                    fullWidth
                     value={formData.city}
                     onChange={handleChange}
-                    required
                 />
             </div>
-            <button type="submit">Create Shop</button>
+            <Button variant="contained" type={"submit"}>Create Shop</Button>
         </form>
     );
 };
@@ -99,7 +89,7 @@ const ShopFormCreate: React.FC<ShopFormCreateProps> = ({onSubmit}) => {
 const ShopFormList: React.FC<ShopFormListProps> = ({onSubmit}) => {
     const [shop, setShop] = useState<string>("shop1");
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleChange = (e: any) => {
         setShop(e.target.value);
     };
 
@@ -109,14 +99,23 @@ const ShopFormList: React.FC<ShopFormListProps> = ({onSubmit}) => {
     };
 
     return (
+
         <form onSubmit={handleSubmit}>
-            <label htmlFor="shopList">Select Shop:</label>
-            <select id="shopList" name="shopList" value={shop} onChange={handleChange} required>
-                <option value="shop1">Shop 1</option>
-                <option value="shop2">Shop 2</option>
-                <option value="shop3">Shop 3</option>
-            </select>
-            <button type="submit">Create Shop</button>
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Select Shop:</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={shop}
+                    label="Select Shop:"
+                    onChange={handleChange}
+                >
+                    <MenuItem value={"shop1"}>Shop 1</MenuItem>
+                    <MenuItem value={"shop2"}>Shop 2</MenuItem>
+                    <MenuItem value={"shop3"}>Shop 3</MenuItem>
+                </Select>
+            </FormControl>
+            <Button variant="contained" type={"submit"}>Visit Shop</Button>
         </form>
     );
 };
@@ -125,7 +124,7 @@ const Shop: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const handleCreateShop = (shop: ShopFormData) => {
+    const handleCreateShop = (shop: ShopModel) => {
         console.log('Shop created: ', shop);
     };
 
@@ -135,12 +134,16 @@ const Shop: React.FC = () => {
     }
 
     return (
-        <div>
-            <h1>Create a new Shop</h1>
-            <ShopFormCreate onSubmit={handleCreateShop}/>
+        <div className={"shop_container"}>
+            <div>
+                <h1>Create a new Shop</h1>
+                <ShopFormCreate onSubmit={handleCreateShop}/>
+            </div>
 
-            <h1>Consult a shop</h1>
-            <ShopFormList onSubmit={handleListConsultShop}/>
+            <div>
+                <h1>Consult a Shop</h1>
+                <ShopFormList onSubmit={handleListConsultShop}/>
+            </div>
         </div>
     );
 };

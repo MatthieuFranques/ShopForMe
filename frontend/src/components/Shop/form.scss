@@ -3,7 +3,6 @@ form {
     margin: auto;
     padding: 1em;
     border: 1px solid #ccc;
-    border-radius: 1em;
 }
 
 div {
@@ -147,4 +146,55 @@ td {
 
 .type:hover {
     background-color: rgba(128, 128, 128, 0.31);
+}
+
+.shop_container {
+    display: flex;
+    justify-content: space-around;
+
+    h1 {
+        margin: 20px 0;
+    }
+}
+
+.configPlan {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+
+    h3 {
+        margin-bottom: 10px;
+    }
+    >div {
+        padding: 10px;
+    }
+}
+
+.info {
+    background-color: #d73434;
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-weight: bolder;
+    div {
+        color: #d73434;
+        margin: 0;
+        background-color: white;
+        border-radius: 50%;
+        padding: 10px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        transition: all .2s ease-in-out;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        &:hover {
+            background-color: rgb(208, 149, 149);
+        }
+    }
 }
