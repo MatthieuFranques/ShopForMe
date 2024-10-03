@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'services/bluetooth_service.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,21 +30,27 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   List<String> devicesList = [];
   String data = 'No data yet';
 
+  void requestPermissions() async {
+    if (await Permission.bluetoothScan.request().isGranted &&
+        await Permission.bluetoothConnect.request().isGranted &&
+        await Permission.locationWhenInUse.request().isGranted) {
+      // Permissions granted, start the scan
+      _bluetoothService.startScan((BluetoothDevice device) {
+        setState(() {
+          devicesList.add(device.name);
+        });
+        _bluetoothService.connectToDevice(device);
+      });
+    } else {
+      // Handle permissions not granted
+      print('Permissions not granted');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _bluetoothService.startScan((BluetoothDevice device) {
-      setState(() {
-        devicesList.add(device.name);
-      });
-      _bluetoothService.connectToDevice(device);
-    });
-
-    _bluetoothService.dataStream?.listen((value) {
-      setState(() {
-        data = String.fromCharCodes(value);
-      });
-    });
+    requestPermissions(); // Request permissions at the start
   }
 
   @override
