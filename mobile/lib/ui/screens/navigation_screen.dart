@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/navigation_bloc.dart';
-import 'package:mobile/ui/screens/home_screen.dart';
+import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
 class NavigationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      //Logo de l'application
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text(
           'Shop4Me',
           style: TextStyle(
-            fontSize: 48,
+            fontSize: 32,
             fontWeight: FontWeight.bold,
             color: Color.fromARGB(255, 1, 28, 64),
           ),
@@ -26,13 +27,13 @@ class NavigationPage extends StatelessWidget {
         builder: (context, state) {
           if (state is NavigationLoadedState) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //Bloc avec l'aliment recherché
+                // Bloc avec l'aliment recherché
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Container(
-                    height: 120,
+                    height: screenHeight * 0.15,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
@@ -41,8 +42,8 @@ class NavigationPage extends StatelessWidget {
                     child: Center(
                       child: Text(
                         state.objectName,
-                        style: const TextStyle(
-                          fontSize: 48,
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.05,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -51,24 +52,24 @@ class NavigationPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                //Icon de navigation
+                // Icône de navigation 
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  padding: const EdgeInsets.symmetric(vertical: 16), 
                   child: Icon(
                     state.arrowDirection == ArrowDirection.left
                         ? Icons.arrow_back
                         : Icons.arrow_forward,
-                    size: 250,
+                    size: screenWidth * 0.65, 
                     color: Color.fromARGB(255, 1, 28, 64),
                   ),
                 ),
-                //Instruction de navigation
+                // Instruction de navigation
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text(
                     state.instruction,
-                    style: const TextStyle(
-                      fontSize: 48,
+                    style: TextStyle(
+                      fontSize: screenHeight * 0.05,
                       color: Color.fromARGB(255, 1, 28, 64),
                       fontWeight: FontWeight.bold,
                     ),
@@ -81,55 +82,55 @@ class NavigationPage extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        //Bouton de validation
+                        // Bouton de validation
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => HomeScreen()),
+                              MaterialPageRoute(builder: (context) => FinalNavigationScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero, 
+                            padding: EdgeInsets.zero,
                             shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero, 
+                              borderRadius: BorderRadius.zero,
                             ),
                             backgroundColor: Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white,
                           ),
                           child: Container(
-                            width: double.infinity, 
-                            height: 80, 
-                            alignment: Alignment.center, 
-                            child: const Icon(
+                            width: double.infinity,
+                            height: screenHeight * 0.1,
+                            alignment: Alignment.center,
+                            child: Icon(
                               Icons.check,
-                              size: 60,
+                              size: screenHeight * 0.08, 
                               color: Colors.white,
                             ),
                           ),
                         ),
                       ),
                       Expanded(
-                        //Bouton de skip pour passer à un autre aliment
+                        // Bouton de skip pour passer à un autre aliment
                         child: ElevatedButton(
                           onPressed: () {
                             // to do
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero, 
+                            padding: EdgeInsets.zero,
                             shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero, 
+                              borderRadius: BorderRadius.zero,
                             ),
                             backgroundColor: Theme.of(context).colorScheme.secondary,
                             foregroundColor: Colors.white,
                           ),
                           child: Container(
-                            width: double.infinity, 
-                            height: 80, 
-                            alignment: Alignment.center, 
-                            child: const Icon(
+                            width: double.infinity,
+                            height: screenHeight * 0.1,
+                            alignment: Alignment.center,
+                            child: Icon(
                               Icons.skip_next,
-                              size: 60, 
+                              size: screenHeight * 0.08,
                               color: Colors.white,
                             ),
                           ),
@@ -141,7 +142,7 @@ class NavigationPage extends StatelessWidget {
               ],
             );
           } else {
-            //Loader si les données à chercher n'ont pas été reçu
+            // Loader si les données ne sont pas encore chargées
             return const Center(
               child: CircularProgressIndicator(),
             );

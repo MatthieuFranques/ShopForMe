@@ -29,7 +29,7 @@ class Shop4MeApp extends StatelessWidget {
         ..add(LoadNavigationEvent()), // Charge l'événement initial
       child: MaterialApp(
         title: 'Shop4Me',
-        // Todo Add thème
+        theme: Shop4MeTheme.lightTheme,
         home: HomeScreen(), // Page d'accueil par défaut
       ),
     );

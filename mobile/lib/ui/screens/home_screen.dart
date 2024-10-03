@@ -43,7 +43,11 @@ class HomeScreen extends StatelessWidget {
               Center(
                 child: StartButton(
                   onPressed: () {
-                    _startShopping(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NavigationPage()),
+                    );
+                    // _startShopping(context);
                   },
                 ),
               ),
