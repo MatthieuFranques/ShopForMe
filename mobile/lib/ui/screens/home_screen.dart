@@ -1,86 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:mobile/ui/screens/navigation_screen.dart';
+import '../widgets/app_header.dart';
+import '../widgets/action_button.dart';
+import '../widgets/start_button.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final FlutterTts flutterTts = FlutterTts();
-  List<String> shoppingList = ['MELON', 'POMME', 'PÂTES'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Shop4Me'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // TODO: Implement search functionality
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: shoppingList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(shoppingList[index]),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      setState(() {
-                        shoppingList.removeAt(index);
-                      });
-                      _speak('Item supprimé');
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Shop4Me',
+                style: Theme.of(context).textTheme.headlineMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              const AppHeader(),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                      child: ActionButton(
+                          icon: Icons.edit,
+                          color: Theme.of(context).colorScheme.secondary,
+                          onPressed: () => _navigateToEditList(context))),
+                  const SizedBox(width: 16),
+                  Expanded(
+                      child: ActionButton(
+                          icon: Icons.search,
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () => _searchProduct(context))),
+                ],
+              ),
+              const SizedBox(height: 80),
+              Center(
+                child: StartButton(
                   onPressed: () {
-                    //TODO: Implement add product functionality
-                    _speak('Ajouter un produit');
+                    // TODO: Implement start shopping functionality
+                    _startShopping(context);
                   },
-                  child: Icon(Icons.add),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NavigationPage()),
-                    );
-                    _speak('Commencer les courses');
-                  },
-                  child: Icon(Icons.play_arrow),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Future<void> _speak(String text) async {
-    await flutterTts.setLanguage("fr-FR");
-    await flutterTts.speak(text);
+  void _navigateToEditList(BuildContext context) {
+    // TODO: Implement navigation to edit list screen
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const EditListScreen()),
+    // );
+    print('Navigating to edit list screen');
+  }
+
+  void _searchProduct(BuildContext context) {
+    // TODO: Implement navigation to search screen
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const NavigationScreen()),
+    // );
+    print('Navigating to search screen');
+  }
+
+  void _startShopping(BuildContext context) {
+    // TODO: Implement start shopping functionality
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const Shopping()),
+    // );
+    print('Starting shopping');
   }
 }
-
