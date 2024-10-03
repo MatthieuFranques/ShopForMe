@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {CSSProperties, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import "./form.scss"
 import {Autocomplete, createFilterOptions, TextField, Tooltip} from "@mui/material";
 import {Product} from "../Product/Product";
 import {ProductModel} from "../../models/Product.model";
+import randomColor from "randomcolor";
 
 interface Shop {
     id: number;
@@ -683,6 +684,8 @@ const Plan = (props: CustomProps) => {
 
     const [value, setValue] = React.useState<string | null>(null);
 
+    const [rayons, setRayons] = useState<string[]>([]);
+
     const filter = createFilterOptions<string>();
 
     const handleChangeRadio = (event: any) => {
@@ -693,6 +696,19 @@ const Plan = (props: CustomProps) => {
         open: false,
         message: ""
     })
+
+    useEffect(() => {
+        setRayons(getListRayon());
+        setColorRayons()
+    }, [])
+
+    const setColorRayons = () => {
+        const color = randomColor({count: rayons.length});
+        rayons.map((r, count) => {
+            if (!localStorage.getItem(r))
+                localStorage.setItem(r, color[count]);
+        })
+    }
 
     /**
      * Generates a CSS class string for a specific cell within a grid.
@@ -811,6 +827,7 @@ const Plan = (props: CustomProps) => {
     };
 
     const affectProduitRayon = (data: ProductModel) => {
+
         if (!value) {
             updateOpen(true);
             updateMessage("Selectioner un rayon avant...")
@@ -832,6 +849,16 @@ const Plan = (props: CustomProps) => {
             open: newOpen,
         }));
     };
+
+    const getStyleRayon = (cell: Cell): CSSProperties => {
+        console.log(cell)
+        if (cell.type === PlanType.RAYON) {
+            const color = localStorage.getItem(cell.name);
+            return {backgroundColor: color ? color : "#000000"}
+        } else {
+            return {}
+        }
+    }
 
     return (
         <div>
@@ -865,6 +892,8 @@ const Plan = (props: CustomProps) => {
                             if (typeof newValue === 'string') {
                                 if (newValue.includes("Add \"")) {
                                     setValue(newValue.split("\"")[1]);
+                                    setRayons([...rayons, newValue.split("\"")[1]]);
+                                    setColorRayons();
                                 } else {
                                     setValue(newValue);
                                 }
@@ -888,7 +917,7 @@ const Plan = (props: CustomProps) => {
                         clearOnBlur
                         handleHomeEndKeys
                         id="free-solo-with-text-demo"
-                        options={getListRayon()}
+                        options={rayons}
                         getOptionLabel={(option) => {
                             return option;
                         }}
@@ -926,7 +955,7 @@ const Plan = (props: CustomProps) => {
                                 <Tooltip title={col.type === PlanType.RAYON ? col.name : ""} key={colIndex}
                                          placement={"top"}>
                                     <td onClick={() => props.isEdit ? toggleCell(rowIndex, colIndex) : ""}
-                                        className={getCellClass(rowIndex, colIndex)}></td>
+                                        className={getCellClass(rowIndex, colIndex)} style={getStyleRayon(col)}></td>
                                 </Tooltip>
                             ))}
                         </tr>
