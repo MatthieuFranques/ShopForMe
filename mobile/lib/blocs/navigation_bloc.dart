@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// Define the possible directions for the arrow
 enum ArrowDirection { left, right }
 
 // Navigation Event
@@ -32,9 +31,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   }
 
   void _onLoadNavigation(LoadNavigationEvent event, Emitter<NavigationState> emit) {
-    // Simulate loading data
     emit(NavigationLoadedState(
-      objectName: "Chaise",
+      objectName: "Bananes",
       arrowDirection: ArrowDirection.left,
       instruction: "Faites 3 pas vers la gauche",
     ));

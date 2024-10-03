@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/navigation_bloc.dart';
+import 'package:mobile/ui/screens/home_screen.dart';
 
 class NavigationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //Logo de l'application
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Hide back button
-        title: Image.asset(
-          'assets/logo.png', // Your logo path
-          height: 50,
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Shop4Me',
+          style: TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 1, 28, 64),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
         elevation: 0,
+        backgroundColor: Color.fromARGB(255, 242, 238, 216),
       ),
       body: BlocBuilder<NavigationBloc, NavigationState>(
         builder: (context, state) {
@@ -22,79 +28,112 @@ class NavigationPage extends StatelessWidget {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Object name in a large rectangle
+                //Bloc avec l'aliment recherché
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Container(
-                    height: 150,
+                    height: 120,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Center(
                       child: Text(
-                        state.objectName, // The name of the object
-                        style: TextStyle(
-                          fontSize: 28,
+                        state.objectName,
+                        style: const TextStyle(
+                          fontSize: 48,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
                 ),
-                
-                // Big arrow in the middle
+                //Icon de navigation
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 32),
                   child: Icon(
                     state.arrowDirection == ArrowDirection.left
-                        ? Icons.arrow_left
-                        : Icons.arrow_right, // Arrow based on state
-                    size: 100,
-                    color: Colors.blue,
+                        ? Icons.arrow_back
+                        : Icons.arrow_forward,
+                    size: 250,
+                    color: Color.fromARGB(255, 1, 28, 64),
                   ),
                 ),
-
-                // Movement instruction
+                //Instruction de navigation
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text(
-                    state.instruction, // Example: "Faites 3 pas vers la gauche"
-                    style: TextStyle(fontSize: 20),
+                    state.instruction,
+                    style: const TextStyle(
+                      fontSize: 48,
+                      color: Color.fromARGB(255, 1, 28, 64),
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-
-                // Bottom navigation bar with two large buttons
+                const Spacer(), 
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle button press
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      Expanded(
+                        //Bouton de validation
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero, 
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero, 
+                            ),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Container(
+                            width: double.infinity, 
+                            height: 80, 
+                            alignment: Alignment.center, 
+                            child: const Icon(
+                              Icons.check,
+                              size: 60,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        child: Text('Retour', style: TextStyle(fontSize: 18)),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle button press
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      Expanded(
+                        //Bouton de skip pour passer à un autre aliment
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // to do
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero, 
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero, 
+                            ),
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Container(
+                            width: double.infinity, 
+                            height: 80, 
+                            alignment: Alignment.center, 
+                            child: const Icon(
+                              Icons.skip_next,
+                              size: 60, 
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        child: Text('Suivant', style: TextStyle(fontSize: 18)),
                       ),
                     ],
                   ),
@@ -102,8 +141,8 @@ class NavigationPage extends StatelessWidget {
               ],
             );
           } else {
-            // Loading or error state
-            return Center(
+            //Loader si les données à chercher n'ont pas été reçu
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }

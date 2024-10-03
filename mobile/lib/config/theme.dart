@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
-
 class Shop4MeTheme {
   static ThemeData get lightTheme {
     return ThemeData(
-      primarySwatch: Colors.blue,
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: Colors.blue,
-        accentColor: Colors.orange,
+      colorScheme: ColorScheme.fromSwatch().copyWith(
+        primary: const Color.fromARGB(255, 242, 72, 34), // Couleur principale : rouge pour les blocs et boutons primaires
+        secondary: const Color.fromARGB(255, 18, 67, 166),
+        tertiary: const Color.fromARGB(255, 1, 28, 64), // Couleur secondaire : bleu pour les boutons secondaires
       ),
-      scaffoldBackgroundColor: Colors.white,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
+
+      //Fond de l'application
+      scaffoldBackgroundColor: const Color.fromARGB(255, 242, 238, 216),
+
+      //Bouton principal
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orange,
-          foregroundColor: Colors.white,
+        style: ButtonStyle(
+          // Bouton principal
+          backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 242, 72, 34)), 
+          foregroundColor: MaterialStateProperty.all(Colors.white), 
         ),
       ),
-      textTheme: const TextTheme(
-        titleLarge: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+
+      //Bouton secondaire
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 18, 67, 166), 
+          foregroundColor: Colors.white, 
         ),
-        bodyMedium: TextStyle(fontSize: 16),
+      ),
+
+      //Champ de recherche
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: const Color.fromARGB(255, 29, 100, 242), 
+        hintStyle: const TextStyle(color: Colors.white), 
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none, 
+        ),
       ),
     );
   }

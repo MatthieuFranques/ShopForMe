@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:mobile/ui/screens/navigation_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -61,7 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // TODO: Implement start shopping functionality
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NavigationPage()),
+                    );
                     _speak('Commencer les courses');
                   },
                   child: Icon(Icons.play_arrow),
