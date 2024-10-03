@@ -861,7 +861,7 @@ const Plan = (props: CustomProps) => {
     }
 
     return (
-        <div>
+        <div className={"single_shop"}>
             {info.open ? <div className={"info"}>
                 <p>{info.message}</p>
                 <div onClick={() => updateOpen(false)}>X</div>
