@@ -12,13 +12,6 @@ interface Shop {
     city: string;
     plan: Array<Array<Cell>>;
 }
-
-
-export interface Position {
-    row: number;
-    col: number;
-}
-
 export enum PlanType {
     VIDE = "VIDE",
     RAYON = "RAYON",
@@ -27,28 +20,12 @@ export enum PlanType {
     CHEMIN = "CHEMIN"
 }
 
-export interface Produit {
-    name: string;
-    rayon: string;
-}
-
 export interface Cell {
     name: string;
     size?: number;
     type: PlanType;
     isBeacon: boolean;
 }
-
-export interface Rayon {
-    name: string;
-    startPos?: Position;
-    endPos?: Position;
-}
-
-interface CustomPropsRender {
-    plan: Array<Array<Cell>>;
-}
-
 const EMPTY_CELL: Cell = {
     isBeacon: false,
     type: PlanType.VIDE,
@@ -884,7 +861,7 @@ const Plan = (props: CustomProps) => {
                     <h3>Choix du rayon</h3>
                     <Autocomplete
                         value={value}
-                        onChange={(event, newValue) => {
+                        onChange={(_, newValue) => {
                             if (typeof newValue === 'string') {
                                 if (newValue.includes("Add \"")) {
                                     setValue(newValue.split("\"")[1]);
