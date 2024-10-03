@@ -15,6 +15,9 @@ const int MAX_TAGS = 3; // Nombre maximal de tags à suivre
 unsigned long previousMillis = 0; // variable pour stocker le temps précédent
 const long interval = 1000;       // intervalle pour le log (1 seconde)
 
+// Ajout d'un offset constant de 70 cm
+const float DISTANCE_OFFSET = 0.7; // en mètres
+
 // Structures pour stocker les distances des tags
 struct Tag {
     uint8_t address[8]; // Utiliser un tableau de 8 octets pour l'adresse longue
@@ -67,6 +70,9 @@ void newRange() {
     DW1000Device* distantDevice = DW1000Ranging.getDistantDevice();
     uint8_t* address = distantDevice->getByteAddress(); // Utiliser l'adresse longue en tableau d'octets
     float range = distantDevice->getRange();
+
+    // Appliquer l'offset de 70 cm (0.7 m)
+    range -= DISTANCE_OFFSET;
 
     // Vérifier si le tag est déjà dans le tableau
     bool found = false;
