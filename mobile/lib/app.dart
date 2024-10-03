@@ -24,10 +24,14 @@ class Shop4MeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Shop4Me',
-      theme: Shop4MeTheme.getTheme(fontSize: FontSize.medium),
-      home: const HomeScreen(),
+    return BlocProvider(
+      create: (context) => NavigationBloc()
+        ..add(LoadNavigationEvent()), // Charge l'événement initial
+      child: MaterialApp(
+        title: 'Shop4Me',
+        // Todo Add thème
+        home: HomeScreen(), // Page d'accueil par défaut
+      ),
     );
   }
 }

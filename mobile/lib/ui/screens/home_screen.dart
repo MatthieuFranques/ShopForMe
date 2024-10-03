@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/ui/screens/navigation_screen.dart';
 import '../widgets/app_header.dart';
 import '../widgets/action_button.dart';
 import '../widgets/start_button.dart';
@@ -42,7 +43,6 @@ class HomeScreen extends StatelessWidget {
               Center(
                 child: StartButton(
                   onPressed: () {
-                    // TODO: Implement start shopping functionality
                     _startShopping(context);
                   },
                 ),
@@ -74,10 +74,11 @@ class HomeScreen extends StatelessWidget {
 
   void _startShopping(BuildContext context) {
     // TODO: Implement start shopping functionality
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const Shopping()),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NavigationPage()),
+    );
+
     print('Starting shopping');
   }
 }
