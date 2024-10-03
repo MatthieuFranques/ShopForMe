@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
-import "./form.css"
-import {Autocomplete, createFilterOptions, TextField} from "@mui/material";
+import "./form.scss"
+import {Autocomplete, createFilterOptions, TextField, Tooltip} from "@mui/material";
+import {Product} from "../Product/Product";
+import {ProductModel} from "../../models/Product.model";
 
 interface Shop {
     id: number;
@@ -704,12 +706,16 @@ const Plan = (props: CustomProps) => {
 
     const [value, setValue] = React.useState<string | null>(null);
 
-    const [rayons, setRayons] = useState<Array<string>>(['cool']);
     const filter = createFilterOptions<string>();
 
     const handleChangeRadio = (event: any) => {
         setCurrentDraw(event.target.value as PlanType);
     };
+
+    const [info, setInfo] = useState<{open: boolean, message: string}>({
+        open: false,
+        message: ""
+    })
 
     /**
      * Generates a CSS class string for a specific cell within a grid.
@@ -810,8 +816,6 @@ const Plan = (props: CustomProps) => {
         return listRayons;
     }
 
-
-
     /**
      * Function to download the current plan as a JSON file.
      * The function converts the `plan` object to a JSON string,
@@ -830,90 +834,127 @@ const Plan = (props: CustomProps) => {
         document.body.removeChild(link);
     };
 
+    const affectProduitRayon = (data: ProductModel) => {
+        if (!value) {
+            updateOpen(true);
+            updateMessage("Selectioner un rayon avant...")
+            return
+        }
+        // TODO : Gerer la base de données
+    }
+
+    const updateMessage = (newMessage: string) => {
+        setInfo((prevState) => ({
+            ...prevState,
+            message: newMessage,
+        }));
+    };
+
+    const updateOpen = (newOpen: boolean) => {
+        setInfo((prevState) => ({
+            ...prevState,
+            open: newOpen,
+        }));
+    };
+
     return (
         <div>
-            <h3>Choix du stylo</h3>
-            <div>
-                {getListDrawType().map((planType, index) => (
-                    <label key={index} className={"type"}>
-                        <input
-                            type="radio"
-                            name={"checkbox"}
-                            value={planType}
-                            checked={currentDraw === planType}
-                            onChange={handleChangeRadio}
-                        />
-                        {planType}
-                    </label>
-                ))}
+            {info.open ? <div className={"info"}>
+                <p>{info.message}</p> <div onClick={() => updateOpen(false)}>X</div>
+            </div> : ""}
+            <div className={"configPlan"}>
+                <div>
+                    <h3>Choix du stylo</h3>
+                    <div>
+                        {getListDrawType().map((planType, index) => (
+                            <label key={index} className={"type"}>
+                                <input
+                                    type="radio"
+                                    name={"checkbox"}
+                                    value={planType}
+                                    checked={currentDraw === planType}
+                                    onChange={handleChangeRadio}
+                                />
+                                {planType}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <h3>Choix du rayon</h3>
+                    <Autocomplete
+                        value={value}
+                        onChange={(event, newValue) => {
+                            if (typeof newValue === 'string') {
+                                if (newValue.includes("Add \"")) {
+                                    setValue(newValue.split("\"")[1]);
+                                } else {
+                                    setValue(newValue);
+                                }
+                            } else {
+                                setValue(null);
+                            }
+                        }}
+                        filterOptions={(options, params) => {
+                            const filtered = filter(options, params);
+
+                            const {inputValue} = params;
+                            // Suggest the creation of a new value if it doesn't exist
+                            const isExisting = options.includes(inputValue);
+                            if (inputValue !== '' && !isExisting) {
+                                filtered.push(`Add "${inputValue}"`);
+                            }
+
+                            return filtered;
+                        }}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        id="free-solo-with-text-demo"
+                        options={getListRayon()}
+                        getOptionLabel={(option) => {
+                            return option;
+                        }}
+                        renderOption={(props, option) => {
+                            const {key, ...optionProps} = props;
+                            return (
+                                <li key={key} {...optionProps}>
+                                    {option}
+                                </li>
+                            );
+                        }}
+                        sx={{width: 300}}
+                        freeSolo
+                        renderInput={(params) => (
+                            <TextField {...params} label="Free solo with text demo"/>
+                        )}
+                    />
+                </div>
+                <div>
+                    <h3>Ajout d'un produit</h3>
+                    <Product type={"get"} onSubmit={affectProduitRayon}/>
+                </div>
+                <div>
+                    <h3>Téléchargement du plan</h3>
+                    <button onClick={downloadPlanAsJSON}>Download Plan as JSON</button>
+                </div>
             </div>
 
-            <h3>Choix du rayon</h3>
-            <Autocomplete
-                value={value}
-                onChange={(event, newValue) => {
-                    console.log(newValue);
-                    if (typeof newValue === 'string') {
-                        if (newValue.includes("Add \"")) {
-                            setValue(newValue.split("\"")[1]);
-                        } else {
-                            setValue(newValue);
-                        }
-                    } else {
-                        setValue(null);
-                    }
-                }}
-                filterOptions={(options, params) => {
-                    const filtered = filter(options, params);
-
-                    const {inputValue} = params;
-                    // Suggest the creation of a new value if it doesn't exist
-                    const isExisting = options.includes(inputValue);
-                    if (inputValue !== '' && !isExisting) {
-                        filtered.push(`Add "${inputValue}"`);
-                    }
-
-                    return filtered;
-                }}
-                selectOnFocus
-                clearOnBlur
-                handleHomeEndKeys
-                id="free-solo-with-text-demo"
-                options={getListRayon()}
-                getOptionLabel={(option) => {
-                    return option;
-                }}
-                renderOption={(props, option) => {
-                    const {key, ...optionProps} = props;
-                    return (
-                        <li key={key} {...optionProps}>
-                            {option}
-                        </li>
-                    );
-                }}
-                sx={{width: 300}}
-                freeSolo
-                renderInput={(params) => (
-                    <TextField {...params} label="Free solo with text demo"/>
-                )}
-            />
-
-            <button onClick={downloadPlanAsJSON}>Download Plan as JSON</button>
-
             <table>
-                <tbody>
+            <tbody>
                 {plan.map((row: Array<Cell>, rowIndex: any) => {
                     return (
                         <tr key={rowIndex}>
                             {row.map((col: Cell, colIndex) => (
-                                <td key={colIndex}
-                                    onClick={() => props.isEdit ? toggleCell(rowIndex, colIndex) : ""}
-                                    className={getCellClass(rowIndex, colIndex)}></td>
+                                <Tooltip title={col.type === PlanType.RAYON ? col.name : ""} key={colIndex} placement={"top"}>
+                                    <td onClick={() => props.isEdit ? toggleCell(rowIndex, colIndex) : ""}
+                                        className={getCellClass(rowIndex, colIndex)}></td>
+                                </Tooltip>
                             ))}
                         </tr>
                     );
                 })}
-                </tbody>
+            </tbody>
             </table>
         </div>
     )
