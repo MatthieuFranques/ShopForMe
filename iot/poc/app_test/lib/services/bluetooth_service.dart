@@ -20,7 +20,19 @@ class BluetoothScanService {
 
   // Connect to a found device
   void connectToDevice(BluetoothDevice device) async {
-    //TODO
+    await device.connect();
+    connectedDevice = device;
+
+    device.discoverServices().then((services) {
+      for (var service in services) {
+        for (var characteristic in service.characteristics) {
+          if (characteristic.properties.notify) {
+            characteristic.setNotifyValue(true);
+            dataStream = characteristic.value.asBroadcastStream();
+          }
+        }
+      }
+    });
   }
 
   // Disconnect from device
