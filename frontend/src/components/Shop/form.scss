@@ -166,8 +166,21 @@ td {
     }
 }
 
-.info {
+.error {
     background-color: #d73434;
+    div {
+        color: #d73434;
+    }
+}
+
+.success {
+    background-color: #27b60e;
+    div {
+        color: #27b60e;
+    }
+}
+
+.info {
     padding: 10px;
     display: flex;
     align-items: center;
@@ -175,7 +188,6 @@ td {
     color: white;
     font-weight: bolder;
     div {
-        color: #d73434;
         margin: 0;
         background-color: white;
         border-radius: 50%;
@@ -188,9 +200,7 @@ td {
         align-items: center;
         cursor: pointer;
 
-        &:hover {
-            background-color: rgb(208, 149, 149);
-        }
+
     }
 }
 
