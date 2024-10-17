@@ -17,37 +17,38 @@ model User {
   id          Int          @id @default(autoincrement())
   email       String       @unique
   password    String
-  stores      Store[]      @relation("UserStores")
+  stores      Manage[]
   preferences Preference[]
   createdAt   DateTime     @default(now())
-  updatedAt   DateTime?    @default(dbgenerated("null")) @updatedAt
-  deletedAt   DateTime?    @default(dbgenerated("null"))
+  updatedAt   DateTime?    @default(dbgenerated()) @updatedAt
+  deletedAt   DateTime?    @default(dbgenerated())
 }
 
 model Store {
   id        Int       @id @default(autoincrement())
   name      String
+  ville     String
+  adresse   String
   layout    Json
+  sections  Section[]
   products  Product[]
-  userId    Int?
-  user      User?     @relation("UserStores", fields: [userId], references: [id])
+  manages   Manage[]
   createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(dbgenerated("null")) @updatedAt
-  deletedAt DateTime? @default(dbgenerated("null"))
+  updatedAt DateTime? @default(dbgenerated()) @updatedAt
+  deletedAt DateTime? @default(dbgenerated())
 }
 
 model Product {
   id          Int          @id @default(autoincrement())
   name        String
   category    String
-  zone        String
-  price       Float
-  storeId     Int
-  store       Store        @relation(fields: [storeId], references: [id])
   preferences Preference[]
+  sections    Section[]
   createdAt   DateTime     @default(now())
-  updatedAt   DateTime?    @default(dbgenerated("null")) @updatedAt
-  deletedAt   DateTime?    @default(dbgenerated("null"))
+  updatedAt   DateTime?    @default(dbgenerated()) @updatedAt
+  deletedAt   DateTime?    @default(dbgenerated())
+  Store       Store?       @relation(fields: [storeId], references: [id])
+  storeId     Int?
 }
 
 model Preference {
@@ -56,8 +57,33 @@ model Preference {
   productId Int
   product   Product   @relation(fields: [productId], references: [id])
   createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(dbgenerated("null")) @updatedAt
-  deletedAt DateTime? @default(dbgenerated("null"))
+  updatedAt DateTime? @default(dbgenerated()) @updatedAt
+  deletedAt DateTime? @default(dbgenerated())
 
   @@unique([userId, productId])
+}
+
+model Manage {
+  id        Int      @id @default(autoincrement())
+  role      String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  storeId   Int
+  store     Store    @relation(fields: [storeId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, storeId])
+}
+
+model Section {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float
+  storeId   Int
+  store     Store    @relation(fields: [storeId], references: [id])
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([storeId, productId])
 }
