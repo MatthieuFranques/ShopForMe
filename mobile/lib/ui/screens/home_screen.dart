@@ -1,5 +1,120 @@
+// import 'package:flutter/material.dart';
+// import 'package:mobile/ui/screens/navigation_screen.dart';
+// import '../../utils/screen_utils.dart';
+// import '../widgets/app_header.dart';
+// import '../widgets/action_button.dart';
+// import '../widgets/start_button.dart';
+
+// class HomeScreen extends StatefulWidget {
+//   const HomeScreen({super.key});
+
+//   @override
+//   State<HomeScreen> createState() => _HomeScreenState();
+// }
+
+// class _HomeScreenState extends State<HomeScreen> {
+//   List<String> shoppingLists = ['09/07', '15/07', '24/07'];
+//   int currentIndex = 0;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     ScreenUtils.init(context);
+    
+//     return Scaffold(
+//       body: SafeArea(
+//         child: SingleChildScrollView(
+//           child: Padding(
+//             padding: EdgeInsets.all(ScreenUtils.getResponsiveSize(16)),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.stretch,
+//               children: [
+//                 Text(
+//                   'Shop4Me',
+//                   style: Theme.of(context).textTheme.headlineMedium,
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 SizedBox(height: ScreenUtils.getResponsiveSize(16)),
+//                 AppHeader(
+//                   shoppingLists: shoppingLists,
+//                   currentIndex: currentIndex,
+//                   onIndexChanged: (index) {
+//                     setState(() {
+//                       currentIndex = index;
+//                     });
+//                   },
+//                   onAddList: () {
+//                     setState(() {
+//                       shoppingLists.add('New List');
+//                       currentIndex = shoppingLists.length - 1;
+//                     });
+//                   },
+//                 ),
+//                 SizedBox(height: ScreenUtils.getResponsiveSize(24)),
+//                 Row(
+//                   children: [
+//                     Expanded(
+//                       child: ActionButton(
+//                         icon: Icons.edit,
+//                         color: Theme.of(context).colorScheme.secondary,
+//                         onPressed: () {
+//                           if (shoppingLists.isNotEmpty) {
+//                             _navigateToEditList(context);
+//                           }
+//                         },
+//                       ),
+//                     ),
+//                     SizedBox(width: ScreenUtils.getResponsiveSize(16)),
+//                     Expanded(
+//                       child: ActionButton(
+//                         icon: Icons.search,
+//                         color: Theme.of(context).colorScheme.primary,
+//                         onPressed: () {
+//                           if (shoppingLists.isNotEmpty) {
+//                             _searchProduct(context);
+//                           }
+//                         },
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 SizedBox(height: ScreenUtils.getResponsiveSize(40)),
+//                 Center(
+//                   child: StartButton(
+//                     onPressed: () {
+//                       if (shoppingLists.isNotEmpty) {
+//                         _startShopping(context);
+//                       }
+//                     },
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+
+//   void _navigateToEditList(BuildContext context) {
+//     // Implement navigation to edit list screen
+//   }
+
+//   void _searchProduct(BuildContext context) {
+//     // Implement navigation to search screen
+//   }
+
+//   void _startShopping(BuildContext context) {
+//     Navigator.push(
+//       context,
+//       MaterialPageRoute(builder: (context) => NavigationPage()),
+//     );
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:mobile/ui/screens/navigation_screen.dart';
+import '../../utils/screen_utils.dart';
 import '../widgets/app_header.dart';
 import '../widgets/action_button.dart';
 import '../widgets/start_button.dart';
@@ -15,81 +130,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> shoppingLists = ['09/07', '15/07', '24/07'];
   int currentIndex = 0;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Shop4Me',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              AppHeader(
-                shoppingLists: shoppingLists,
-                currentIndex: currentIndex,
-                onIndexChanged: (index) {
-                  setState(() {
-                    currentIndex = index;
-                  });
-                },
-                onAddList: () {
-                  setState(() {
-                    shoppingLists.add('New List');
-                    currentIndex = shoppingLists.length - 1;
-                  });
-                },
-              ),
-              const SizedBox(height: 50),
-              Row(
-                children: [
-                  Expanded(
-                    child: ActionButton(
-                      icon: Icons.edit,
-                      color: Theme.of(context).colorScheme.secondary,
-                      onPressed: () {
-                        if (shoppingLists.isNotEmpty) {
-                          _navigateToEditList(context);
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: ActionButton(
-                      icon: Icons.search,
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        if (shoppingLists.isNotEmpty) {
-                          _searchProduct(context);
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 80),
-              Center(
-                child: StartButton(
-                  onPressed: () {
-                    if (shoppingLists.isNotEmpty) {
-                      _startShopping(context);
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _navigateToEditList(BuildContext context) {
     // Implement navigation to edit list screen
   }
@@ -104,4 +144,94 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(builder: (context) => NavigationPage()),
     );
   }
-}
+  @override
+  Widget build(BuildContext context) {
+    ScreenUtils.init(context);
+    
+    return Scaffold(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: constraints.maxHeight * 0.02,
+                horizontal: constraints.maxWidth * 0.04,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Shop4Me',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: constraints.maxHeight * 0.02),
+                  Flexible(
+                    flex: 3,
+                    child: AppHeader(
+                      shoppingLists: shoppingLists,
+                      currentIndex: currentIndex,
+                      onIndexChanged: (index) {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      },
+                      onAddList: () {
+                        setState(() {
+                          shoppingLists.add('New List');
+                          currentIndex = shoppingLists.length - 1;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: constraints.maxHeight * 0.03),
+                  Flexible(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ActionButton(
+                            icon: Icons.edit,
+                            color: Theme.of(context).colorScheme.secondary,
+                            onPressed: () {
+                              if (shoppingLists.isNotEmpty) {
+                                _navigateToEditList(context);
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(width: constraints.maxWidth * 0.04),
+                        Expanded(
+                          child: ActionButton(
+                            icon: Icons.search,
+                            color: Theme.of(context).colorScheme.primary,
+                            onPressed: () {
+                              if (shoppingLists.isNotEmpty) {
+                                _searchProduct(context);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Center(
+                    child: StartButton(
+                      onPressed: () {
+                        if (shoppingLists.isNotEmpty) {
+                          _startShopping(context);
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(height: constraints.maxHeight * 0.02),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+  }}

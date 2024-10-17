@@ -7,14 +7,19 @@ class StartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        shape: const CircleBorder(),
-        padding: const EdgeInsets.all(48),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-      ),
-      child: const Icon(Icons.play_arrow, size: 150),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = constraints.maxWidth * 0.2; // 20% de la largeur du parent
+        return ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            shape: const CircleBorder(),
+            padding: EdgeInsets.all(size * 0.2),
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+          ),
+          child: Icon(Icons.play_arrow, size: size),
+        );
+      },
     );
   }
 }
