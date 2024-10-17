@@ -169,7 +169,6 @@ td {
 .info {
     background-color: #d73434;
     padding: 10px;
-    margin: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -200,6 +199,7 @@ td {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 10px;
 
     >div {
         width: 100%;

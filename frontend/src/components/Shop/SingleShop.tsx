@@ -680,6 +680,10 @@ const Plan = (props: CustomProps) => {
 
     const [plan, setPlan] = useState<Array<Array<Cell>>>(props.plan);
 
+    const [rows, setRows] = useState<number>(10);
+
+    const [cols, setCols] = useState<number>(10);
+
     const [currentDraw, setCurrentDraw] = useState<PlanType>(PlanType.VIDE);
 
     const [value, setValue] = React.useState<string | null>(null);
@@ -860,6 +864,50 @@ const Plan = (props: CustomProps) => {
         }
     }
 
+    /**
+     * Change le nombre de colonnes dans le plan
+     */
+    const handleChangeCols = () => {
+        const diffCols = cols - plan[0].length;
+
+        if (diffCols < 0) {
+            // Remove cols
+            const updatedPlan = plan.map((row) => row.slice(0, diffCols));
+            setPlan(updatedPlan);
+        } else {
+            // Add cols
+            const updatedPlan = plan.map((row) => [
+                ...row,
+                ...Array(diffCols).fill(EMPTY_CELL),
+            ]);
+            setPlan(updatedPlan);
+        }
+    };
+
+    /**
+     * Change le nombre de lignes dans le plan
+     */
+    const handleChangeRows = () => {
+        const rowsDiff = rows - plan.length;
+
+        if (rowsDiff < 0) {
+            // Remove rows
+            setPlan(plan.slice(0, rowsDiff));
+        } else {
+            // Add rows
+            const newRows = Array(rowsDiff).fill(Array(cols).fill(EMPTY_CELL));
+            setPlan([...plan, ...newRows]);
+        }
+    };
+
+    useEffect(() => {
+        handleChangeRows()
+    }, [rows])
+
+    useEffect(() => {
+        handleChangeCols()
+    }, [cols])
+
     return (
         <div className={"single_shop"}>
             {info.open ? <div className={"info"}>
@@ -939,6 +987,28 @@ const Plan = (props: CustomProps) => {
                 <div>
                     <h3>Ajout d'un produit</h3>
                     <Product type={"get"} onSubmit={affectProduitRayon}/>
+                </div>
+                <div>
+                    <h3>Configuration de la grille</h3>
+                    <TextField
+                        id="outlined-controlled"
+                        label="Nombres de rows"
+                        value={rows}
+                        type={"number"}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setRows(parseInt(event.target.value));
+                        }}
+                    />
+                    <br/>
+                    <TextField
+                        id="outlined-controlled"
+                        label="Nombre de cols"
+                        type={"number"}
+                        value={cols}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setCols(parseInt(event.target.value));
+                        }}
+                    />
                 </div>
                 <div>
                     <h3>Téléchargement du plan</h3>
