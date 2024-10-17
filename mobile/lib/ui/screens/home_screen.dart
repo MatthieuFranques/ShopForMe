@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/ui/screens/navigation_screen.dart';
+import 'package:mobile/ui/screens/shopping_list_screen.dart';
+import 'package:mobile/blocs/shopping_list_bloc.dart';
 import '../widgets/app_header.dart';
 import '../widgets/action_button.dart';
 import '../widgets/start_button.dart';
@@ -47,7 +50,6 @@ class HomeScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => NavigationPage()),
                     );
-                    // _startShopping(context);
                   },
                 ),
               ),
@@ -59,30 +61,27 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _navigateToEditList(BuildContext context) {
-    // TODO: Implement navigation to edit list screen
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const EditListScreen()),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) => ShoppingListBloc(),
+          child: ShoppingListPage(),
+        ),
+      ),
+    );
     print('Navigating to edit list screen');
   }
 
   void _searchProduct(BuildContext context) {
-    // TODO: Implement navigation to search screen
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const NavigationScreen()),
-    // );
     print('Navigating to search screen');
   }
 
   void _startShopping(BuildContext context) {
-    // TODO: Implement start shopping functionality
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NavigationPage()),
     );
-
     print('Starting shopping');
   }
 }
