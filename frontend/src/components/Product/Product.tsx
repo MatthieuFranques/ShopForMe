@@ -110,6 +110,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
                     } else if (newValue) {
                         if (newValue.name.includes("Add \"")) {
                             newValue.name = newValue.name.split("\"")[1]
+                            // TODO : Gerer l'ajout du produit dans la base de données
                         }
                         setValue(newValue);
                     } else {

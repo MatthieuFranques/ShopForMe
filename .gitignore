@@ -5,7 +5,6 @@
 /frontend/build
 node_modules
 
-.idea
+.idea/*
 
-/frontend/.idea
-/frontend/node_modules
+/.idea/
