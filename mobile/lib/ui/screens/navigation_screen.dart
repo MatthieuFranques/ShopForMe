@@ -52,14 +52,14 @@ class NavigationPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Icône de navigation 
+                // Icône de navigation
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16), 
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Icon(
-                    state.arrowDirection == ArrowDirection.left
+                    state.arrowDirection == ArrowDirection.Nord
                         ? Icons.arrow_back
                         : Icons.arrow_forward,
-                    size: screenWidth * 0.65, 
+                    size: screenWidth * 0.65,
                     color: Color.fromARGB(255, 1, 28, 64),
                   ),
                 ),
@@ -76,7 +76,7 @@ class NavigationPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const Spacer(), 
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Row(
@@ -87,7 +87,9 @@ class NavigationPage extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => FinalNavigationScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      FinalNavigationScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -95,7 +97,8 @@ class NavigationPage extends StatelessWidget {
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
                             ),
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white,
                           ),
                           child: Container(
@@ -104,7 +107,7 @@ class NavigationPage extends StatelessWidget {
                             alignment: Alignment.center,
                             child: Icon(
                               Icons.check,
-                              size: screenHeight * 0.08, 
+                              size: screenHeight * 0.08,
                               color: Colors.white,
                             ),
                           ),
@@ -121,7 +124,8 @@ class NavigationPage extends StatelessWidget {
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
                             ),
-                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
                             foregroundColor: Colors.white,
                           ),
                           child: Container(

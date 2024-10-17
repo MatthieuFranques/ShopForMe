@@ -24,8 +24,10 @@ dev_dependencies:
   # leak_tracker: ^10.0.7  # Mettre à jour vers la dernière version
   # leak_tracker_flutter_testing: ^3.0.8  # Mettre à jour vers la dernière version
   string_scanner: ^1.2.0  # Mettre à jour vers la dernière version
-
+  collection: ^1.18.0 # Utilisé pour l'algorithme de localisation
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/datas.json
 
