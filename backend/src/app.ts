@@ -3,6 +3,7 @@ import  userRouter  from './routes/user.route';
 import dotenv from 'dotenv';
 import shopRouter from "./routes/shop.route";
 import cors from 'cors'
+import productRoute from "./routes/product.route";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/user', userRouter);
 app.use('/shop', shopRouter);
+app.use('/product', productRoute);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World');
