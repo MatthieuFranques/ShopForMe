@@ -1,24 +1,27 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Autocomplete, Button, createFilterOptions, TextField} from "@mui/material";
 import {ProductModel} from "../../models/Product.model";
+import {api, onError} from "../../utils/utils";
 
 interface ProductFormCreateProps {
     onSubmit: (shop: any) => void;
+    storeId: number;
 }
 
 interface ProductFormProps {
     type: 'create' | 'update' | 'delete' | 'get';
     onSubmit: (data: any) => void;
+    storeId: number;
 }
 
-export const Product: React.FC<ProductFormProps> = ({type, onSubmit}) => {
+export const Product: React.FC<ProductFormProps> = ({type, onSubmit, storeId}) => {
 
 
     switch (type) {
         case "get":
-            return <Get onSubmit={onSubmit}/>
+            return <Get onSubmit={onSubmit} storeId={storeId}/>
         case "create":
-            return <Create onSubmit={onSubmit}/>
+            return <Create onSubmit={onSubmit} storeId={storeId}/>
         default:
             return <></>
     }
@@ -28,7 +31,7 @@ const Create: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
 
     const [formData, setFormData] = useState<ProductModel>({
         name: '',
-        price: '',
+        category: '',
         rayon: '',
     });
 
@@ -60,7 +63,7 @@ const Create: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
                 id="outlined-controlled"
                 fullWidth
                 label="Address"
-                value={formData.price}
+                value={formData.category}
                 onChange={handleChange}
             />
         </div>
@@ -77,21 +80,16 @@ const Create: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
     </form>)
 }
 
-const Get: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
+const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
 
-    const getList = () => {
-        return [
-            {price: "10", rayon: "10", name: "Pomme"},
-            {price: "10", rayon: "10", name: "Tarte"},
-            {price: "10", rayon: "10", name: "Gateau"},
-            {price: "10", rayon: "10", name: "Madeleine"},
-            {price: "10", rayon: "10", name: "Table"},
-            {price: "10", rayon: "10", name: "Chaise"},
-            {price: "10", rayon: "10", name: "Poulet"},
-            {price: "10", rayon: "10", name: "Chips"},
-            {price: "10", rayon: "10", name: "Coca Cola"},
-            {price: "10", rayon: "10", name: "Frite"},
-        ];
+    const [produits, setProducts] = useState<Array<ProductModel>>([])
+
+    useEffect(() => {
+        api("GET", `product/getFree/${storeId}`, undefined, onGetProduitSuccess, onError)
+    }, [])
+
+    const onGetProduitSuccess = (data: ProductModel[]) => {
+        setProducts(data.sort((a, b) => a.name.localeCompare(b.name)))
     }
 
     const [value, setValue] = React.useState<ProductModel  | null>(null);
@@ -106,7 +104,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
                     if (typeof newValue === 'string') {
                         setValue({
                             name: newValue,
-                            price: "0",
+                            category: "0",
                             rayon: "0"
                         });
                     } else if (newValue) {
@@ -127,7 +125,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
                     if (inputValue !== '' && !isExisting) {
                         filtered.push({
                             name: `Add "${inputValue}"`,
-                            price: "0",
+                            category: "0",
                             rayon: "0",
                         });
                     }
@@ -138,7 +136,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
                 clearOnBlur
                 handleHomeEndKeys
                 id="free-solo-with-text-demo"
-                options={getList()}
+                options={produits}
                 getOptionLabel={(option) => {
                     if (typeof option === 'string') {
                         return option;
@@ -149,7 +147,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit}) => {
                     const {key, ...optionProps} = props;
                     return (
                         <li key={key} {...optionProps}>
-                            {option.name}
+                            {option.name} - {option.category}
                         </li>
                     );
                 }}

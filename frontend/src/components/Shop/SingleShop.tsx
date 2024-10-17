@@ -41,6 +41,7 @@ interface CustomProps {
     onFinish: (plan: Array<Array<Cell>>) => void;
     isEdit: boolean;
     name: string;
+    storeId: number;
 }
 
 const Plan = (props: CustomProps) => {
@@ -224,6 +225,7 @@ const Plan = (props: CustomProps) => {
             setInfo({open: true, message: "Veuillez choisir un rayon", type: "error"});
             return
         }
+
         // TODO : Gerer la base de données
     }
 
@@ -368,7 +370,7 @@ const Plan = (props: CustomProps) => {
                 </div>
                 <div>
                     <h3>Ajout d'un produit</h3>
-                    <Product type={"get"} onSubmit={affectProduitRayon}/>
+                    <Product type={"get"} onSubmit={affectProduitRayon} storeId={props.storeId}/>
                 </div>
                 <div>
                     <h3>Configuration de la grille</h3>
@@ -467,7 +469,7 @@ const SingleShop: React.FC = () => {
                 </tbody>
             </table>
 
-            <Plan name={shop.name} onFinish={updatePlan} plan={shop.layout} isEdit={isEdit}/>
+            <Plan name={shop.name} storeId={shop.id} onFinish={updatePlan} plan={shop.layout} isEdit={isEdit}/>
         </div>
     );
 };

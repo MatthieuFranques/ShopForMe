@@ -48,3 +48,19 @@ export async function get(): Promise<ProductModel[] | null> {
         throw error;
     }
 }
+
+export async function getFree(storeId: number): Promise<ProductModel[] | null> {
+    try {
+        return await prisma.product.findMany({
+            where: {
+                sections: {
+                    none: {
+                        storeId
+                    },
+                },
+            },
+        });
+    } catch (error) {
+        throw error;
+    }
+}
