@@ -1,31 +1,80 @@
 import 'package:flutter/material.dart';
 
 class AppHeader extends StatelessWidget {
-  const AppHeader({super.key});
+  final List<String> shoppingLists;
+  final int currentIndex;
+  final Function(int) onIndexChanged;
+  final VoidCallback onAddList;
+
+  const AppHeader({
+    super.key,
+    required this.shoppingLists,
+    required this.currentIndex,
+    required this.onIndexChanged,
+    required this.onAddList,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height:80,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      height: 120,
       decoration: BoxDecoration(
-        color: Theme.of(context).appBarTheme.backgroundColor,
+        color: Theme.of(context).colorScheme.tertiary,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
-          const Icon(Icons.list, color: Colors.white),
-          const Spacer(),
-          Text(
-            //TODO: Replace with the name of list
-            '15/07',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Colors.white),
+          if (shoppingLists.isNotEmpty && currentIndex > 0)
+            _buildArrow(Icons.arrow_back_ios, () => onIndexChanged(currentIndex - 1)),
+          Expanded(
+            child: shoppingLists.isEmpty
+                ? _buildAddButton()
+                : _buildPageView(),
           ),
+          if (shoppingLists.isNotEmpty && currentIndex < shoppingLists.length - 1)
+            _buildArrow(Icons.arrow_forward_ios, () => onIndexChanged(currentIndex + 1)),
         ],
       ),
+    );
+  }
+
+  Widget _buildArrow(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        color: Colors.transparent,
+        child: Icon(icon, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _buildAddButton() {
+    return IconButton(
+      icon: const Icon(Icons.add, color: Colors.white),
+      onPressed: onAddList,
+    );
+  }
+
+  Widget _buildPageView() {
+    return PageView.builder(
+      itemCount: shoppingLists.length,
+      controller: PageController(initialPage: currentIndex),
+      onPageChanged: onIndexChanged,
+      itemBuilder: (context, index) {
+        return Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width: 8),
+              Text(
+                shoppingLists[index],
+                style: const TextStyle(color: Colors.white, fontSize: 75, fontWeight: FontWeight.w900),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

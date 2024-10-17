@@ -4,8 +4,16 @@ import '../widgets/app_header.dart';
 import '../widgets/action_button.dart';
 import '../widgets/start_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<String> shoppingLists = ['09/07', '15/07', '24/07'];
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -22,32 +30,56 @@ class HomeScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              const AppHeader(),
+              AppHeader(
+                shoppingLists: shoppingLists,
+                currentIndex: currentIndex,
+                onIndexChanged: (index) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+                onAddList: () {
+                  setState(() {
+                    shoppingLists.add('New List');
+                    currentIndex = shoppingLists.length - 1;
+                  });
+                },
+              ),
               const SizedBox(height: 50),
               Row(
                 children: [
                   Expanded(
-                      child: ActionButton(
-                          icon: Icons.edit,
-                          color: Theme.of(context).colorScheme.secondary,
-                          onPressed: () => _navigateToEditList(context))),
+                    child: ActionButton(
+                      icon: Icons.edit,
+                      color: Theme.of(context).colorScheme.secondary,
+                      onPressed: () {
+                        if (shoppingLists.isNotEmpty) {
+                          _navigateToEditList(context);
+                        }
+                      },
+                    ),
+                  ),
                   const SizedBox(width: 16),
                   Expanded(
-                      child: ActionButton(
-                          icon: Icons.search,
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () => _searchProduct(context))),
+                    child: ActionButton(
+                      icon: Icons.search,
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        if (shoppingLists.isNotEmpty) {
+                          _searchProduct(context);
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 80),
               Center(
                 child: StartButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NavigationPage()),
-                    );
-                    // _startShopping(context);
+                    if (shoppingLists.isNotEmpty) {
+                      _startShopping(context);
+                    }
                   },
                 ),
               ),
@@ -59,30 +91,17 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _navigateToEditList(BuildContext context) {
-    // TODO: Implement navigation to edit list screen
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const EditListScreen()),
-    // );
-    print('Navigating to edit list screen');
+    // Implement navigation to edit list screen
   }
 
   void _searchProduct(BuildContext context) {
-    // TODO: Implement navigation to search screen
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const NavigationScreen()),
-    // );
-    print('Navigating to search screen');
+    // Implement navigation to search screen
   }
 
   void _startShopping(BuildContext context) {
-    // TODO: Implement start shopping functionality
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NavigationPage()),
     );
-
-    print('Starting shopping');
   }
 }
