@@ -9,7 +9,7 @@ class StartButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final size = constraints.maxWidth * 0.2; // 20% de la largeur du parent
+        final size = constraints.maxWidth * 0.4; // 20% de la largeur du parent
         return ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
