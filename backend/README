@@ -1,0 +1,13 @@
+For PRODUCTION : - Fill .env file with your database credentials (you have en exemple in .env.template).
+
+    - Update Dockerfile for prod (You have all in the file).
+
+    - RUN docker-compose up
+
+For Developpement : - Fill .env file with your database credentials (you have en exemple in .env.template).
+
+    - Update Dockerfile and docker-compose.yml files for dev (You have all in the files).
+
+    - RUN docker-compose up
+
+    - RUN npm run dev
