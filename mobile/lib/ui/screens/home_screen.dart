@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/ui/screens/navigation_screen.dart';
+import 'package:mobile/ui/screens/product_search_screen.dart';
 import 'package:mobile/ui/screens/shopping_list_screen.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
 import '../widgets/app_header.dart';
@@ -45,12 +46,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 80),
               Center(
                 child: StartButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NavigationPage()),
-                    );
-                  },
+                  onPressed: () => _startShopping(context)
                 ),
               ),
             ],
@@ -74,6 +70,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _searchProduct(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchProductPage()),
+    );
     print('Navigating to search screen');
   }
 
