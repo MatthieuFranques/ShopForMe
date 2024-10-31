@@ -13,6 +13,8 @@ dependencies:
   # equatable: ^2.0.5
   flutter_tts: ^4.0.2
   cupertino_icons: ^1.0.8
+  logging: ^1.0.2
+  equatable: ^2.0.5
   # collection: ^1.18.0  # Mettre à jour vers la dernière version
   # material_color_utilities: ^0.12.0  # Mettre à jour vers la dernière version
   
@@ -28,4 +30,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/datas.json
 
