@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/ui/screens/navigation_screen.dart';
+import 'package:mobile/ui/screens/product_search_screen.dart';
 import '../../utils/screen_utils.dart';
 import 'package:mobile/ui/screens/shopping_list_screen.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
@@ -33,7 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _searchProduct(BuildContext context) {
-    // Implement navigation to search screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchProductPage()),
+    );
+    print('Navigating to search screen');
   }
 
   void _startShopping(BuildContext context) {
