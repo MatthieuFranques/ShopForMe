@@ -6,7 +6,7 @@ import {Product} from "../Product/Product";
 import {ProductModel} from "../../models/Product.model";
 import randomColor from "randomcolor";
 import {ShopModel} from "../../models/Shop.model";
-import {api, onError} from "../../utils/utils";
+import {ShopService} from "../../services/shop.service";
 
 export enum PlanType {
     VIDE = "VIDE",
@@ -430,21 +430,14 @@ const SingleShop: React.FC = () => {
     const [isEdit, setEdit] = useState(true);
 
     useEffect(() => {
-        api("GET", `shop/${id}`, undefined, onGetShopSuccess, onError)
+        ShopService.getPlanById(id).then((data: ShopModel) => setShop(data))
     }, []);
-
-    const onGetShopSuccess = (data: ShopModel) => {
-        setShop(data);
-    }
 
     const updatePlan = (plan: Array<Array<Cell>>) => {
         if (!shop)
             return;
 
-        api("PUT", `shop/${shop?.id}`, {layout: plan}, onUpdateSuccess, onError)
-    }
-
-    const onUpdateSuccess = () => {
+        ShopService.updatePlan(shop?.id, {layout: plan}).then()
     }
 
     return (!shop ? <div>Loading...</div> :

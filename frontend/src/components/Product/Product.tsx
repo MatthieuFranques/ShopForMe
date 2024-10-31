@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Autocomplete, Button, createFilterOptions, TextField} from "@mui/material";
 import {ProductModel} from "../../models/Product.model";
-import {api, onError} from "../../utils/utils";
+import {productService} from "../../services/product.service"
 
 interface ProductFormCreateProps {
     onSubmit: (shop: any) => void;
@@ -85,12 +85,12 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
     const [produits, setProducts] = useState<Array<ProductModel>>([])
 
     useEffect(() => {
-        api("GET", `product/getFree/${storeId}`, undefined, onGetProduitSuccess, onError)
-    }, [])
 
-    const onGetProduitSuccess = (data: ProductModel[]) => {
-        setProducts(data.sort((a, b) => a.name.localeCompare(b.name)))
-    }
+        productService.getUserProduct(storeId).then((data: ProductModel[]) => {
+                setProducts(data.sort((a, b) => a.name.localeCompare(b.name)))
+            }
+        )
+    }, [])
 
     const [value, setValue] = React.useState<ProductModel  | null>(null);
 

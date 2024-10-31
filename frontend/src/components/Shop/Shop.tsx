@@ -3,7 +3,7 @@ import './form.scss'
 import {useNavigate} from "react-router-dom";
 import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 import {ShopModel, ShopModelCreate} from '../../models/Shop.model'
-import {api, onError} from "../../utils/utils";
+import {ShopService} from "../../services/shop.service";
 
 
 interface ShopFormCreateProps {
@@ -46,12 +46,8 @@ const ShopFormCreate: React.FC<ShopFormCreateProps> = ({onSubmit}) => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         onSubmit(formData);
-        api("POST", "shop", formData, onCreateSuccess, onError)
+        ShopService.createShop(formData).then((data: ShopModel) => navigate(`/shop/${data.id}`))
     };
-
-    const onCreateSuccess = (data: ShopModel) => {
-        navigate(`/shop/${data.id}`);
-    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -105,14 +101,12 @@ const ShopFormList: React.FC<ShopFormListProps> = ({onSubmit}) => {
     const [shop, setShop] = useState<string>("");
 
     useEffect(() => {
-        api("GET", "shop", undefined, onGetShopSuccess, onError)
+        ShopService.getAllShop().then((data: ShopModel[]) => {
+            setAllShops(data);
+            if (data[0])
+                setShop(`${data[0].id}`)
+        })
     }, [])
-
-    const onGetShopSuccess = (data: ShopModel[]) => {
-        setAllShops(data);
-        if (data[0])
-            setShop(`${data[0].id}`)
-    };
 
     const handleChange = (e: any) => {
         setShop(e.target.value);
