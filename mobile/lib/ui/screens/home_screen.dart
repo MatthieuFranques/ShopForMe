@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/ui/screens/navigation_screen.dart';
 import '../../utils/screen_utils.dart';
 import 'package:mobile/ui/screens/shopping_list_screen.dart';
@@ -19,7 +20,16 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
   void _navigateToEditList(BuildContext context) {
-    // Implement navigation to edit list screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) => ShoppingListBloc(),
+          child: ShoppingListPage(),
+        ),
+      ),
+    );
+    print('Navigating to edit list screen');
   }
 
   void _searchProduct(BuildContext context) {
