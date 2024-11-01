@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _searchProduct(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SearchProductPage()),
+      MaterialPageRoute(builder: (context) => const SearchProductPage()),
     );
     print('Navigating to search screen');
   }

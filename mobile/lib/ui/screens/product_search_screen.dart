@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SearchProductPage extends StatefulWidget {
+  const SearchProductPage({super.key});
+
   @override
   _SearchProductPageState createState() => _SearchProductPageState();
 }
@@ -54,14 +56,14 @@ class _SearchProductPageState extends State<SearchProductPage> {
     //Filtre en fonction des caractères tapés dans la search bar (par ordre de frappe)
     _searchController.addListener(() {
       setState(() {
-        String query = _searchController.text.toLowerCase();
+        final String query = _searchController.text.toLowerCase();
 
         if (query.isNotEmpty) {
-          List<String> startingWithQuery = allProducts
+          final List<String> startingWithQuery = allProducts
               .where((product) => product.toLowerCase().startsWith(query))
               .toList();
 
-          List<String> containingQuery = allProducts
+          final List<String> containingQuery = allProducts
               .where((product) => product.toLowerCase().contains(query) && !product.toLowerCase().startsWith(query))
               .toList();
 
@@ -121,7 +123,7 @@ class _SearchProductPageState extends State<SearchProductPage> {
                 style: const TextStyle(color: Colors.white, fontSize: 32),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             //affichage des produits correspondant aux caractères tapés dans la search bar
             if (filteredProducts.isNotEmpty)
