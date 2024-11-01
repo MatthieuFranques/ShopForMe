@@ -1,0 +1,43 @@
+{
+  "id": "1",
+  "name": "Liste de courses",
+  "date": "17/10/2024",
+  "products": [
+    {
+      "id": "101",
+      "name": "Pomme",
+      "category": "Fruits",
+      "layout": [1, 1]
+    },
+    {
+      "id": "102",
+      "name": "Banane",
+      "category": "Fruits",
+      "layout": [2, 3]
+    },
+    {
+      "id": "103",
+      "name": "Carotte",
+      "category": "Légumes",
+      "layout": [4, 5]
+    },
+    {
+      "id": "104",
+      "name": "Pain",
+      "category": "Boulangerie",
+      "layout": [3, 7]
+    },
+    {
+      "id": "105",
+      "name": "Lait",
+      "category": "Produits laitiers",
+      "layout": [8, 9]
+    },
+    {
+      "id": "109",
+      "name": "Camembert",
+      "category": "Fromages",
+      "layout": [8, 9]
+    }
+  ]
+}

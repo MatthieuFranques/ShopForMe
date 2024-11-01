@@ -12,15 +12,20 @@ class ActionButton extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: Material(
-          color: color,
-          borderRadius: BorderRadius.circular(15),
+        color: color,
+        borderRadius: BorderRadius.circular(15),
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(15),
-          child: Icon(
-            icon,
-            size: 90,
-            color: Colors.white,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Icon(
+                icon,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),

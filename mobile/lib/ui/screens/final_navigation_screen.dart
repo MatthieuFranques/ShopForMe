@@ -4,6 +4,8 @@ import 'package:mobile/blocs/navigation_bloc.dart';
 import 'package:mobile/ui/screens/home_screen.dart';
 
 class FinalNavigationScreen extends StatefulWidget {
+  const FinalNavigationScreen({super.key});
+
   @override
   _FinalNavigationScreenState createState() => _FinalNavigationScreenState();
 }
@@ -13,10 +15,10 @@ class _FinalNavigationScreenState extends State<FinalNavigationScreen> {
   void initState() {
     super.initState();
     // Retour à la page d'accueil après 5 secondes
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     });
   }
@@ -38,7 +40,7 @@ class _FinalNavigationScreenState extends State<FinalNavigationScreen> {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 242, 238, 216),
+        backgroundColor: const Color.fromARGB(255, 242, 238, 216),
       ),
       body: BlocBuilder<NavigationBloc, NavigationState>(
         builder: (context, state) {
@@ -51,7 +53,7 @@ class _FinalNavigationScreenState extends State<FinalNavigationScreen> {
                   child: Icon(
                     Icons.check_circle,
                     size: screenWidth * 0.8,
-                    color: Color.fromARGB(255, 1, 28, 64),
+                    color: const Color.fromARGB(255, 1, 28, 64),
                   ),
                 ),
               ),
@@ -62,7 +64,7 @@ class _FinalNavigationScreenState extends State<FinalNavigationScreen> {
                   "La liste est terminée !",
                   style: TextStyle(
                     fontSize: screenHeight * 0.05,
-                    color: Color.fromARGB(255, 1, 28, 64),
+                    color: const Color.fromARGB(255, 1, 28, 64),
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,

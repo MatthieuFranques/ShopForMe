@@ -21,7 +21,7 @@ class NavigationPage extends StatelessWidget {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 242, 238, 216),
+        backgroundColor: const Color.fromARGB(255, 242, 238, 216),
       ),
       body: BlocBuilder<NavigationBloc, NavigationState>(
         builder: (context, state) {
@@ -60,7 +60,7 @@ class NavigationPage extends StatelessWidget {
                         ? Icons.arrow_back
                         : Icons.arrow_forward,
                     size: screenWidth * 0.65,
-                    color: Color.fromARGB(255, 1, 28, 64),
+                    color: const Color.fromARGB(255, 1, 28, 64),
                   ),
                 ),
                 // Instruction de navigation
@@ -70,7 +70,7 @@ class NavigationPage extends StatelessWidget {
                     state.instruction,
                     style: TextStyle(
                       fontSize: screenHeight * 0.05,
-                      color: Color.fromARGB(255, 1, 28, 64),
+                      color: const Color.fromARGB(255, 1, 28, 64),
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
@@ -89,7 +89,7 @@ class NavigationPage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      FinalNavigationScreen()),
+                                      const FinalNavigationScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
