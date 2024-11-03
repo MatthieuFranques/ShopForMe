@@ -4,6 +4,8 @@ import 'package:mobile/blocs/navigation_bloc.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
 class NavigationPage extends StatelessWidget {
+  const NavigationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
