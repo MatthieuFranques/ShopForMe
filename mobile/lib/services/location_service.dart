@@ -1,11 +1,9 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
 import 'package:mobile/models/Grid.dart';
-import 'package:mobile/models/node.dart'; // Import de la bibliothèque collection
+import 'package:mobile/models/node.dart';
 
 // TODO
 // class LocationService {
@@ -18,15 +16,15 @@ Future<Grid> loadGridFromJson(String jsonFilePath) async {
   final String response = await rootBundle.loadString(jsonFilePath);
   final List<dynamic> jsonData = jsonDecode(response);
 
-  List<List<int>> grid = List.generate(jsonData.length,
+  final List<List<int>> grid = List.generate(jsonData.length,
       (_) => List<int>.filled(jsonData[0].length, 1)); // Grille initiale
 
-  List<List<int>> beaconPositions = [];
+  final List<List<int>> beaconPositions = [];
 
   for (int rowIndex = 0; rowIndex < jsonData.length; rowIndex++) {
-    List<dynamic> row = jsonData[rowIndex];
+    final List<dynamic> row = jsonData[rowIndex];
     for (int colIndex = 0; colIndex < row.length; colIndex++) {
-      Map<String, dynamic> cell = row[colIndex];
+      final Map<String, dynamic> cell = row[colIndex];
       if (cell['type'] == "VIDE") {
         grid[rowIndex][colIndex] = 0; // Accessible
       } else {
@@ -57,12 +55,12 @@ Future<List<List<int>>> getBeaconPositions(String jsonFilePath) async {
   final String response = await rootBundle.loadString(jsonFilePath);
   final List<dynamic> jsonData = jsonDecode(response);
 
-  List<List<int>> beaconPositions = [];
+  final List<List<int>> beaconPositions = [];
 
   for (int rowIndex = 0; rowIndex < jsonData.length; rowIndex++) {
-    List<dynamic> row = jsonData[rowIndex];
+    final List<dynamic> row = jsonData[rowIndex];
     for (int colIndex = 0; colIndex < row.length; colIndex++) {
-      Map<String, dynamic> cell = row[colIndex];
+      final Map<String, dynamic> cell = row[colIndex];
       if (cell['isBeacon'] == true) {
         beaconPositions.add([rowIndex, colIndex]);
       }
@@ -73,17 +71,18 @@ Future<List<List<int>>> getBeaconPositions(String jsonFilePath) async {
 }
 
 List<List<int>> findShortestPath(Grid grid, List<int> start, List<int> goal) {
-  int n = grid.n;
-  int m = grid.m;
-  List<List<int>> distances =
+  final int n = grid.n;
+  final int m = grid.m;
+  final List<List<int>> distances =
       List.generate(n, (_) => List<int>.filled(m, 999999));
-  List<List<int>> previous = List.generate(n, (_) => List<int>.filled(m, -1));
-  PriorityQueue<Node> queue = PriorityQueue<Node>();
+  final List<List<int>> previous =
+      List.generate(n, (_) => List<int>.filled(m, -1));
+  final PriorityQueue<Node> queue = PriorityQueue<Node>();
 
   distances[start[0]][start[1]] = 0;
   queue.add(Node(start[0], start[1], 0));
 
-  List<List<int>> directions = [
+  final List<List<int>> directions = [
     [0, 1],
     [1, 0],
     [0, -1],
@@ -91,9 +90,9 @@ List<List<int>> findShortestPath(Grid grid, List<int> start, List<int> goal) {
   ];
 
   while (queue.isNotEmpty) {
-    Node current = queue.removeFirst();
-    int x = current.x;
-    int y = current.y;
+    final Node current = queue.removeFirst();
+    final int x = current.x;
+    final int y = current.y;
 
     if (x == goal[0] && y == goal[1]) {
       break;
@@ -137,12 +136,13 @@ Future<List<List<int>>?> findTargetPosition() async {
   String jsonDistanceFile = '../../assets/beacon.json';
   Grid grid = await loadGridFromJson(jsonFilePath);
 
-  List<List<int>> beaconPositions = await getBeaconPositions(jsonFilePath);
+  final List<List<int>> beaconPositions =
+      await getBeaconPositions(jsonFilePath);
 
   await loadDistances(jsonDistanceFile);
 
   if (beaconPositions.length >= 3) {
-    List<double> targetPosition = await triangulateData(
+    final List<double> targetPosition = await triangulateData(
       beaconPositions[0],
       distance1,
       beaconPositions[1],
@@ -151,13 +151,13 @@ Future<List<List<int>>?> findTargetPosition() async {
       distance3,
     );
     //Position actuelle
-    List<int> currentPosition = [
+    final List<int> currentPosition = [
       targetPosition[0].round(),
       targetPosition[1].round()
     ];
 
     // TODO Position of product
-    List<int> end = [5, 8];
+    final List<int> end = [5, 8];
 
     print(
         "distance1 : $distance1 , distance2 : $distance2 , distance3: $distance3");
