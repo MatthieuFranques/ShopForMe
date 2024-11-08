@@ -58,7 +58,7 @@ class NavigationPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Icon(
-                    state.arrowDirection == ArrowDirection.Nord
+                    state.arrowDirection == ArrowDirection.nord
                         ? Icons.arrow_back
                         : Icons.arrow_forward,
                     size: screenWidth * 0.65,
