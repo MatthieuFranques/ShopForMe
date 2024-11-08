@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
 
 class ShoppingListPage extends StatelessWidget {
+  const ShoppingListPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     context.read<ShoppingListBloc>().add(LoadShoppingList());
@@ -29,7 +31,7 @@ class ShoppingListPage extends StatelessWidget {
                   height: screenHeight * 0.1, 
                   width: double.infinity,
                   color: Theme.of(context).colorScheme.primary,
-                  child: Center(child: CircularProgressIndicator()),
+                  child: const Center(child: CircularProgressIndicator()),
                 );
               } else if (state is ShoppingListLoaded) {
                 return Container(
@@ -39,7 +41,7 @@ class ShoppingListPage extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(Icons.list, size: screenHeight * 0.06, color: Colors.white), 
-                      SizedBox(width: 16), 
+                      const SizedBox(width: 16), 
                       Text(
                         state.shoppingList.date, 
                         style: TextStyle(
@@ -56,22 +58,22 @@ class ShoppingListPage extends StatelessWidget {
                   height: screenHeight * 0.1, 
                   width: double.infinity,
                   color: Theme.of(context).colorScheme.primary,
-                  child: Center(child: Text('Unknown state.', style: TextStyle(color: Colors.white))),
+                  child: const Center(child: Text('Unknown state.', style: TextStyle(color: Colors.white))),
                 );
               }
             },
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Expanded(
             child: BlocBuilder<ShoppingListBloc, ShoppingListState>(
               builder: (context, state) {
                 if (state is ShoppingListLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (state is ShoppingListLoaded) {
                   final products = state.shoppingList.products;
                   return ListView.separated(
                     itemCount: products.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 10), 
+                    separatorBuilder: (context, index) => const SizedBox(height: 10), 
                     itemBuilder: (context, index) {
                       final product = products[index];
 
@@ -107,9 +109,9 @@ class ShoppingListPage extends StatelessWidget {
                     },
                   );
                 } else if (state is ShoppingListError) {
-                  return Center(child: Text('Failed to load shopping list.'));
+                  return const Center(child: Text('Failed to load shopping list.'));
                 } else {
-                  return Center(child: Text('Unknown state.'));
+                  return const Center(child: Text('Unknown state.'));
                 }
               },
             ),

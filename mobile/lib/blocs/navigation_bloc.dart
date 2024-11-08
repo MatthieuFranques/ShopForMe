@@ -1,32 +1,44 @@
+// blocs/navigation_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../services/store_service.dart';
 
-enum ArrowDirection { Nord, Sud, Est, Ouest }
+enum ArrowDirection { nord, sud, est, ouest }
 
 // Navigation Event
 abstract class NavigationEvent {}
 
 class LoadNavigationEvent extends NavigationEvent {}
 
-// Navigation State
+// States
 abstract class NavigationState {}
 
-class NavigationLoadingState extends NavigationState {}
+class NavigationInitial extends NavigationState {}
 
 class NavigationLoadedState extends NavigationState {
   final String objectName;
-  final ArrowDirection arrowDirection;
   final String instruction;
+  final ArrowDirection arrowDirection;
 
   NavigationLoadedState({
     required this.objectName,
-    required this.arrowDirection,
     required this.instruction,
+    required this.arrowDirection,
   });
 }
 
-// Navigation BLoC
+class NavigationLoading extends NavigationState {}
+
+class NavigationError extends NavigationState {
+  final String message;
+  NavigationError(this.message);
+}
+
+
+// Bloc
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
-  NavigationBloc() : super(NavigationLoadingState()) {
+  final StoreService _storeService;
+
+  NavigationBloc(this._storeService) : super(NavigationInitial()) {
     on<LoadNavigationEvent>(_onLoadNavigation);
   }
   // TODO Call location_service for navigation
@@ -34,7 +46,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       LoadNavigationEvent event, Emitter<NavigationState> emit) {
     emit(NavigationLoadedState(
       objectName: "Bananes",
-      arrowDirection: ArrowDirection.Nord,
+      arrowDirection: ArrowDirection.nord,
       instruction: "Faites 3 pas vers la gauche",
     ));
   }

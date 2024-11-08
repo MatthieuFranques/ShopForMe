@@ -4,6 +4,8 @@ import 'package:mobile/blocs/navigation_bloc.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
 class NavigationPage extends StatelessWidget {
+  const NavigationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -56,7 +58,7 @@ class NavigationPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Icon(
-                    state.arrowDirection == ArrowDirection.Nord
+                    state.arrowDirection == ArrowDirection.nord
                         ? Icons.arrow_back
                         : Icons.arrow_forward,
                     size: screenWidth * 0.65,

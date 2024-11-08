@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/models/Grid.dart';
+import 'package:mobile/models/grid.dart';
 import 'package:mobile/models/node.dart';
 import 'package:mobile/services/location_service.dart';
 
@@ -56,9 +56,9 @@ void main() {
     final pos1 = [1, 0];
     final pos2 = [0, 1];
     final pos3 = [2, 1];
-    final distance1 = 5.0;
-    final distance2 = 3.0;
-    final distance3 = 4.0;
+    const distance1 = 5.0;
+    const distance2 = 3.0;
+    const distance3 = 4.0;
 
     final result = await locationService.triangulateData(
         pos1, distance1, pos2, distance2, pos3, distance3);

@@ -37,7 +37,7 @@ class FakeFlutterTts implements FlutterTts {
 
   // Implémentation minimale pour éviter les erreurs
   @override
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {

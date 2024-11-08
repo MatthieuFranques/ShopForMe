@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
-import 'package:mobile/models/Grid.dart';
+import 'package:mobile/models/grid.dart';
 import 'package:mobile/models/node.dart';
 
 class LocationService {
@@ -97,11 +97,11 @@ class LocationService {
       }
 
       for (List<int> direction in directions) {
-        int newX = x + direction[0];
-        int newY = y + direction[1];
+        final int newX = x + direction[0];
+        final int newY = y + direction[1];
 
         if (grid.isValid(newX, newY)) {
-          int newDist = distances[x][y] + 1;
+          final int newDist = distances[x][y] + 1;
 
           if (newDist < distances[newX][newY]) {
             distances[newX][newY] = newDist;
@@ -118,7 +118,7 @@ class LocationService {
 
     while (x != start[0] || y != start[1]) {
       path.add([x, y]);
-      int prev = previous[x][y];
+      final int prev = previous[x][y];
       x = prev ~/ m;
       y = prev % m;
     }
@@ -130,9 +130,9 @@ class LocationService {
   }
 
   Future<List<List<int>>?> findTargetPosition() async {
-    String jsonFilePath = '../../assets/plan.json';
-    String jsonDistanceFile = '../../assets/beacon.json';
-    Grid grid = await loadGridFromJson(jsonFilePath);
+    const String jsonFilePath = '../../assets/plan.json';
+    const String jsonDistanceFile = '../../assets/beacon.json';
+    final Grid grid = await loadGridFromJson(jsonFilePath);
 
     final List<List<int>> beaconPositions =
         await getBeaconPositions(jsonFilePath);
@@ -163,7 +163,7 @@ class LocationService {
       print("currentPosition : $currentPosition");
       print("End : $end");
 
-      List<List<int>> path = findShortestPath(grid, currentPosition, end);
+      final List<List<int>> path = findShortestPath(grid, currentPosition, end);
       print("Chemin le plus court : $path");
       return path;
     } else {
