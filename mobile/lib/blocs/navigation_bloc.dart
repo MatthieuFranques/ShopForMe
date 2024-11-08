@@ -2,7 +2,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../services/store_service.dart';
 
-// Events
+enum ArrowDirection { nord, sud, est, ouest }
+
+// Navigation Event
 abstract class NavigationEvent {}
 
 class LoadNavigationEvent extends NavigationEvent {}
@@ -31,7 +33,6 @@ class NavigationError extends NavigationState {
   NavigationError(this.message);
 }
 
-enum ArrowDirection { left, right }
 
 // Bloc
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
@@ -40,24 +41,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   NavigationBloc(this._storeService) : super(NavigationInitial()) {
     on<LoadNavigationEvent>(_onLoadNavigation);
   }
-
-  Future<void> _onLoadNavigation(
-    LoadNavigationEvent event,
-    Emitter<NavigationState> emit,
-  ) async {
-    try {
-      emit(NavigationLoading());
-      
-      // Pour le moment, on émet un état chargé basique
-      // À adapter selon vos besoins de navigation
-      emit(NavigationLoadedState(
-        objectName: "Premier produit",
-        instruction: "Tournez à gauche",
-        arrowDirection: ArrowDirection.left,
-      ));
-      
-    } catch (e) {
-      emit(NavigationError(e.toString()));
-    }
+  // TODO Call location_service for navigation
+  void _onLoadNavigation(
+      LoadNavigationEvent event, Emitter<NavigationState> emit) {
+    emit(NavigationLoadedState(
+      objectName: "Bananes",
+      arrowDirection: ArrowDirection.nord,
+      instruction: "Faites 3 pas vers la gauche",
+    ));
   }
 }

@@ -18,7 +18,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   logging: ^1.0.2
   equatable: ^2.0.5
-  # collection: ^1.18.0  # Mettre à jour vers la dernière version
+  collection: ^1.18.0 
   # material_color_utilities: ^0.12.0  # Mettre à jour vers la dernière version
   
 dev_dependencies:
@@ -32,9 +32,11 @@ dev_dependencies:
   hive_generator: ^2.0.1
   build_runner: ^2.4.6
 
-
 flutter:
   uses-material-design: true
   assets:
     - assets/datas.json
+    - assets/plan.json
+    - assets/beacon.json
+
 

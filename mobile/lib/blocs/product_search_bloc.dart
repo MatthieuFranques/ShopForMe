@@ -83,7 +83,7 @@ class ProductSearchBloc extends Bloc<ProductSearchEvent, ProductSearchState> {
       ));
     } catch (e) {
       print('❌ Error loading products: $e');
-      emit(ProductSearchError('Impossible de charger les produits. Veuillez réessayer.'));
+      emit(const ProductSearchError('Impossible de charger les produits. Veuillez réessayer.'));
     }
   }
 
