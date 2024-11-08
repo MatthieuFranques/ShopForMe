@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum ArrowDirection { left, right }
+enum ArrowDirection { Nord, Sud, Est, Ouest }
 
 // Navigation Event
 abstract class NavigationEvent {}
@@ -29,11 +29,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   NavigationBloc() : super(NavigationLoadingState()) {
     on<LoadNavigationEvent>(_onLoadNavigation);
   }
-
-  void _onLoadNavigation(LoadNavigationEvent event, Emitter<NavigationState> emit) {
+  // TODO Call location_service for navigation
+  void _onLoadNavigation(
+      LoadNavigationEvent event, Emitter<NavigationState> emit) {
     emit(NavigationLoadedState(
       objectName: "Bananes",
-      arrowDirection: ArrowDirection.left,
+      arrowDirection: ArrowDirection.Nord,
       instruction: "Faites 3 pas vers la gauche",
     ));
   }
