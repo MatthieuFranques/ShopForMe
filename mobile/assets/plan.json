@@ -1,0 +1,622 @@
+[
+  [
+    {
+      "isBeacon": true,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": true,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon1",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon2",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon1",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon2",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon1",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon2",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "PLEIN",
+      "name": "PLEIN",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon2",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon2",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon4",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon4",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon4",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon4",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon4",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon2",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon3",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon3",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon3",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon3",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "RAYON",
+      "name": "rayon3",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ],
+  [
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": true,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    },
+    {
+      "isBeacon": false,
+      "type": "VIDE",
+      "name": "X",
+      "size": 0
+    }
+  ]
+]
