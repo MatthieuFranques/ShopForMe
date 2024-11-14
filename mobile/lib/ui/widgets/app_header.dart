@@ -1,8 +1,10 @@
+// app_header.dart
 import 'package:flutter/material.dart';
 import '../../utils/screen_utils.dart';
+import '../../models/shopping_list.dart';
 
 class AppHeader extends StatelessWidget {
-  final List<String> shoppingLists;
+  final List<ShoppingList> shoppingLists;
   final int currentIndex;
   final Function(int) onIndexChanged;
   final VoidCallback onAddList;
@@ -18,7 +20,7 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.getResponsiveSize(120), 
+      height: context.getResponsiveSize(120),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.tertiary,
         borderRadius: BorderRadius.circular(context.getResponsiveSize(8)),
@@ -63,17 +65,31 @@ class AppHeader extends StatelessWidget {
       controller: PageController(initialPage: currentIndex),
       onPageChanged: onIndexChanged,
       itemBuilder: (context, index) {
+        final list = shoppingLists[index];
         return Center(
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(width: context.getResponsiveSize(8)),
               Text(
-                shoppingLists[index],
+                list.date,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: context.getResponsiveFontSize(75),
+                  fontSize: context.getResponsiveFontSize(40),
                   fontWeight: FontWeight.w900,
+                ),
+              ),
+              Text(
+                list.name,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: context.getResponsiveFontSize(23),
+                ),
+              ),
+              Text(
+                '${list.products.length} produits',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: context.getResponsiveFontSize(23),
                 ),
               ),
             ],

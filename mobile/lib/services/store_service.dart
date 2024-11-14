@@ -2,17 +2,25 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mobile/services/cache_service.dart';
 import '../models/product.dart';
+import '../models/shop.dart';
 
 class StoreService {
-  //If we use local back-end
   static const String baseUrl = 'http://127.0.0.1:3001';
-  //If we use remote back-end
-  // static const String baseUrl = 'http://91.121.191.34:8080';
   final CacheService _cacheService;
   final http.Client _client;
+  Shop? _currentShop;
 
   StoreService(this._cacheService, {http.Client? client}) 
       : _client = client ?? http.Client();
+
+  // Getter for current shop
+  Shop? get currentShop => _currentShop;
+
+  // Setter for current shop
+  set currentShop(Shop? shop) {
+    print('🏪 Setting current shop: ${shop?.name ?? "None"}');
+    _currentShop = shop;
+  }
 
   Future<List<Product>> getProducts() async {
     try {
@@ -20,7 +28,7 @@ class StoreService {
       final cachedProducts = _cacheService.getProducts('all');
       if (cachedProducts != null) {
         print('✅ Found ${cachedProducts.length} products in cache');
-        return cachedProducts;
+        return List<Product>.from(cachedProducts);
       }
 
       print('🌐 Fetching products from API');
@@ -33,18 +41,12 @@ class StoreService {
       final Uri url = Uri.parse('$baseUrl/product');
       print('🔗 Requesting URL: ${url.toString()}');
 
-      final response = await _client.get(
-        url,
-        headers: headers,
-      );
-
+      final response = await _client.get(url, headers: headers);
       print('📡 API Response Status: ${response.statusCode}');
       
       if (response.statusCode == 200) {
         try {
-          // Parse la réponse complète d'abord
           final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-          // Extrait la liste de produits
           final List<dynamic> jsonList = jsonResponse['products'];
           print('📦 Successfully decoded JSON response');
           print('📊 Number of products: ${jsonList.length}');
@@ -75,12 +77,28 @@ class StoreService {
       }
     } catch (e) {
       print('❌ Error getting products: $e');
-      // En cas d'erreur, essayer d'utiliser le cache
       final cachedProducts = _cacheService.getProducts('all');
       if (cachedProducts != null) {
         print('⚠️ Using cached products due to error');
-        return cachedProducts;
+        return List<Product>.from(cachedProducts);
       }
+      rethrow;
+    }
+  }
+
+  Future<void> loadCurrentShop(int shopId) async {
+    print('🔍 Loading shop with id: $shopId');
+    try {
+      final shop = _cacheService.getShop(shopId);
+      if (shop != null) {
+        print('✅ Found shop in cache');
+        currentShop = shop;
+      } else {
+        print('⚠️ Shop not found in cache');
+        // Ici vous pourriez ajouter la logique pour charger le shop depuis l'API
+      }
+    } catch (e) {
+      print('❌ Error loading shop: $e');
       rethrow;
     }
   }
