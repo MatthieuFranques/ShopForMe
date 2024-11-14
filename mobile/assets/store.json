@@ -1,0 +1,693 @@
+{
+    "id": 2,
+    "name": "zef",
+    "ville": "zef",
+    "adresse": "zef",
+    "layout": [
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": true
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            }
+        ]
+    ],
+    "createdAt": "2024-10-31T10:26:22.174Z",
+    "updatedAt": "2024-10-31T10:50:45.064Z",
+    "deletedAt": null
+}

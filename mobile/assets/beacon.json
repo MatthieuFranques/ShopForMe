@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Beacon1",
+    "distance": 1.0
+  },
+  {
+    "name": "Beacon2",
+    "distance": 2.5
+  },
+  {
+    "name": "Beacon3",
+    "distance": 3.0
+  }
+]
