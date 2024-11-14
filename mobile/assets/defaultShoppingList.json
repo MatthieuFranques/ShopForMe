@@ -1,0 +1,19 @@
+{
+    "id": "1",
+    "name": "Ma liste de courses",
+    "date": "17/10/2024",
+    "products": [
+      {
+        "id": "101",
+        "name": "Pain",
+        "category": "Boulangerie",
+        "rayon": "Boulangerie"
+      },
+      {
+        "id": "102",
+        "name": "Lait",
+        "category": "Produits laitiers",
+        "rayon": "Produits laitiers"
+      }
+    ]
+  }
