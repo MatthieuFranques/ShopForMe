@@ -10,7 +10,9 @@ export const api = (
     body: any = null
 ) => {
 
-    return fetch("http://localhost:8080/" + url, {
+    const apiUrl = window.location.protocol + "//" + window.location.hostname + ":8080/";
+
+    return fetch(apiUrl + url, {
         method: method,
         body: body ? JSON.stringify(body) : null,
         cache: "no-cache",

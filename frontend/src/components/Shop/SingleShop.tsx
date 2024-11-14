@@ -1,12 +1,13 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import "./form.scss"
-import {Autocomplete, createFilterOptions, TextField, Tooltip} from "@mui/material";
+import {Autocomplete, Button, createFilterOptions, TextField, Tooltip} from "@mui/material";
 import {Product} from "../Product/Product";
 import {ProductModel} from "../../models/Product.model";
 import randomColor from "randomcolor";
 import {ShopModel} from "../../models/Shop.model";
 import {ShopService} from "../../services/shop.service";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export enum PlanType {
     VIDE = "VIDE",
@@ -396,7 +397,7 @@ const Plan = (props: CustomProps) => {
                 </div>
                 <div>
                     <h3>Téléchargement du plan</h3>
-                    <button onClick={downloadPlanAsJSON}>Download Plan as JSON</button>
+                    <button className={"customButton"} onClick={downloadPlanAsJSON}>Download Plan as JSON</button>
                 </div>
             </div>
 
@@ -433,35 +434,77 @@ const SingleShop: React.FC = () => {
         ShopService.getPlanById(id).then((data: ShopModel) => setShop(data))
     }, []);
 
-    const updatePlan = (plan: Array<Array<Cell>>) => {
+    const updatePlan = (plan: Array<Array<Cell>> | null = null) => {
         if (!shop)
             return;
 
-        ShopService.updatePlan(shop?.id, {layout: plan}).then()
+        if (plan)
+            setShop({...shop, layout: plan});
+
+        ShopService.updatePlan(shop?.id, shop).then()
+    }
+
+    useEffect(() => {
+        if (shop)
+            updatePlan()
+    }, [shop]);
+
+    const navigate = useNavigate();
+
+    const removeShop = (id: number) => {
+        ShopService.removePlan(id).then(() => navigate(`/shop`));
     }
 
     return (!shop ? <div>Loading...</div> :
         <div>
-            <button onClick={() => setEdit(!isEdit)}>Current action : {isEdit ? "Edit" : "Not Edit"}</button>
-            <table style={{borderCollapse: 'collapse', width: '100%'}}>
-                <thead>
-                <tr>
-                    <th style={{border: '1px solid black', padding: '8px'}}>ID</th>
-                    <th style={{border: '1px solid black', padding: '8px'}}>Adresse</th>
-                    <th style={{border: '1px solid black', padding: '8px'}}>Name</th>
-                    <th style={{border: '1px solid black', padding: '8px'}}>City</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.id}</td>
-                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.adresse}</td>
-                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.name}</td>
-                    <td style={{border: '1px solid black', padding: '8px'}}>{shop.ville}</td>
-                </tr>
-                </tbody>
-            </table>
-
+            <div className={"topContent"}>
+                <div>
+                    <h2>Id du Shop</h2>
+                    <h3>{shop.id}</h3>
+                </div>
+                <div>
+                    <h2>Nom</h2>
+                    <TextField
+                        id="outlined-controlled"
+                        label="Nombres de rows"
+                        value={shop.name}
+                        type={"text"}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setShop({...shop, name: event.target.value});
+                        }}
+                    />
+                </div>
+                <div>
+                    <h2>Adresse</h2>
+                    <TextField
+                        id="outlined-controlled"
+                        label="Nombres de rows"
+                        value={shop.adresse}
+                        type={"text"}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setShop({...shop, adresse: event.target.value});
+                        }}
+                    />
+                </div>
+                <div>
+                    <h2>Ville</h2>
+                    <TextField
+                        id="outlined-controlled"
+                        label="Nombres de rows"
+                        value={shop.ville}
+                        type={"text"}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setShop({...shop, ville: event.target.value});
+                        }}
+                    />
+                </div>
+                <div>
+                    <h2>Suppression</h2>
+                    <Button color={"error"} onClick={() => removeShop(shop?.id)} variant="outlined" startIcon={<DeleteIcon />}>
+                        Delete
+                    </Button>
+                </div>
+            </div>
             <Plan name={shop.name} storeId={shop.id} onFinish={updatePlan} plan={shop.layout} isEdit={isEdit}/>
         </div>
     );

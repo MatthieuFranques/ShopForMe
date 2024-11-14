@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Autocomplete, Button, createFilterOptions, TextField} from "@mui/material";
 import {ProductModel} from "../../models/Product.model";
-import {productService} from "../../services/product.service"
+import {ProductService} from "../../services/product.service"
 
 interface ProductFormCreateProps {
     onSubmit: (shop: any) => void;
@@ -86,7 +86,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
 
     useEffect(() => {
 
-        productService.getUserProduct(storeId).then((data: ProductModel[]) => {
+        ProductService.getUserProduct(storeId).then((data: ProductModel[]) => {
                 setProducts(data.sort((a, b) => a.name.localeCompare(b.name)))
             }
         )
@@ -110,7 +110,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
                     } else if (newValue) {
                         if (newValue.name.includes("Add \"")) {
                             newValue.name = newValue.name.split("\"")[1]
-                            // TODO : Gerer l'ajout du produit dans la base de données
+                            ProductService.createProduct({name: newValue.name, category: ""}).then()
                         }
                         setValue(newValue);
                     } else {
@@ -158,7 +158,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
                     <TextField {...params} label="List product..."/>
                 )}
             />
-            <button disabled={!value} onClick={() => onSubmit(value)}>Ajouter le produits au rayon</button>
+            <button className={"customButton"} disabled={!value} onClick={() => onSubmit(value)}>Ajouter le produits au rayon</button>
         </div>
     )
 }

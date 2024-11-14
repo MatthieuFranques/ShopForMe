@@ -24,7 +24,7 @@ input {
     box-sizing: border-box;
 }
 
-button {
+.customButton {
     padding: 0.7em;
     color: #fff;
     background-color: #007BFF;
@@ -34,7 +34,7 @@ button {
     width: 100%;
 }
 
-button:hover {
+.customButton:hover {
     background-color: #0056b3;
 }
 
@@ -214,4 +214,33 @@ td {
     >div {
         width: 100%;
     }
+}
+
+.topContent {
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: start;
+
+    h2 {
+        margin-bottom: 20px;
+    }
+    > div {
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        flex-direction: column;
+        padding: 10px;
+        border: 1px solid rgba(17, 17, 17, 0.18);
+        margin: 0 10px;
+        border-radius: 3px;
+        transition: all .2s ease-in-out;
+
+        &:hover {
+            border: 1px solid rgba(17, 17, 17);
+        }
+    }
+
+
 }

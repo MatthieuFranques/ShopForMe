@@ -149,7 +149,6 @@ const Shop: React.FC = () => {
     };
 
     const handleListConsultShop = (shop: string) => {
-        console.log('Shop list: ', shop);
         navigate("/shop/" + shop);
     }
 
