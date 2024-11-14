@@ -14,13 +14,13 @@ class Product extends HiveObject {
   final String category;
 
   @HiveField(3)
-  final List<int> layout;
+  final String rayon;  // Changed from List<int> layout to String rayon
 
   Product({
     required this.id,
     required this.name,
     required this.category,
-    required this.layout,
+    required this.rayon,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -28,7 +28,7 @@ class Product extends HiveObject {
       id: json['id']?.toString() ?? 'unknown',
       name: json['name'] ?? 'Unnamed Product',
       category: json['category'] ?? 'Misc',
-      layout: List<int>.from(json['layout'] ?? [0, 0]),
+      rayon: json['Rayon'] ?? 'Unknown',  // Note the capital R in 'Rayon' to match JSON
     );
   }
 }
