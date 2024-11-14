@@ -10,12 +10,15 @@ class LocationService {
   double distance2 = 0.0;
   double distance3 = 0.0;
 
+  ///Converts the json plan to grid type. To know if the path is passable or not
+  ///@param : String jsonFilePath : market plan
+  ///Return Return the market plan in Grid
   Future<Grid> loadGridFromJson(String jsonFilePath) async {
     final String response = await rootBundle.loadString(jsonFilePath);
     final List<dynamic> jsonData = jsonDecode(response);
 
-    final List<List<int>> grid = List.generate(jsonData.length,
-        (_) => List<int>.filled(jsonData[0].length, 1)); // Grille initiale
+    final List<List<int>> grid = List.generate(
+        jsonData.length, (_) => List<int>.filled(jsonData[0].length, 1));
 
     final List<List<int>> beaconPositions = [];
 
@@ -36,6 +39,8 @@ class LocationService {
     return Grid(jsonData.length, jsonData[0].length, grid);
   }
 
+  ///Function which allows you to retrieve the distance of the beacons from the user
+  ///@param : String jsonFilePath = json text of recive data bluetow
   Future<void> loadDistances(String jsonFilePath) async {
     final String jsonString = await rootBundle.loadString(jsonFilePath);
     final List<dynamic> jsonData = jsonDecode(jsonString);
@@ -49,6 +54,9 @@ class LocationService {
     }
   }
 
+  /// Function which allows us to know the position of our Beacons on our market
+  ///@param : String jsonFilePath = Market
+  ///Return all position of Beacon in the market
   Future<List<List<int>>> getBeaconPositions(String jsonFilePath) async {
     final String response = await rootBundle.loadString(jsonFilePath);
     final List<dynamic> jsonData = jsonDecode(response);
@@ -68,6 +76,11 @@ class LocationService {
     return beaconPositions;
   }
 
+  /// Function that returns the shortest path
+  ///@param : Grid grid       =  Grid of shop
+  ///@param : List<int> start =  Position of matrice of start
+  ///@param : List<int> goal  =  Position of matrice of goal
+  ///Return  the path to the goal  List<List<int>>
   List<List<int>> findShortestPath(Grid grid, List<int> start, List<int> goal) {
     final int n = grid.n;
     final int m = grid.m;
@@ -129,49 +142,14 @@ class LocationService {
     return path;
   }
 
-  Future<List<List<int>>?> findTargetPosition() async {
-    const String jsonFilePath = '../../assets/plan.json';
-    const String jsonDistanceFile = '../../assets/beacon.json';
-    final Grid grid = await loadGridFromJson(jsonFilePath);
-
-    final List<List<int>> beaconPositions =
-        await getBeaconPositions(jsonFilePath);
-
-    await loadDistances(jsonDistanceFile);
-
-    if (beaconPositions.length >= 3) {
-      final List<double> targetPosition = await triangulateData(
-        beaconPositions[0],
-        distance1,
-        beaconPositions[1],
-        distance2,
-        beaconPositions[2],
-        distance3,
-      );
-      //Position actuelle
-      final List<int> currentPosition = [
-        targetPosition[0].round(),
-        targetPosition[1].round()
-      ];
-
-      // TODO Position of product
-      final List<int> end = [5, 8];
-
-      print(
-          "distance1 : $distance1 , distance2 : $distance2 , distance3: $distance3");
-      print("beaconPositions : $beaconPositions");
-      print("currentPosition : $currentPosition");
-      print("End : $end");
-
-      final List<List<int>> path = findShortestPath(grid, currentPosition, end);
-      print("Chemin le plus court : $path");
-      return path;
-    } else {
-      print("Pas assez de beacons pour la triangulation.");
-      return null;
-    }
-  }
-
+  ///Allows you to calculate the user's position
+  ///@param : List<int> pos1 = first beacon position on type [0.0]
+  ///@param : List<int> pos2 = second beacon position on type [0.0]
+  ///@param : List<int> pos3 = third beacon position on type [0.0]
+  ///@param : double r1      = Distance(m or cm)  of the first beacon from the user
+  ///@param : double r2      = Distance(m or cm)  of the second beacon from the user
+  ///@param : double r3      = Distance(m or cm)  of the third beacon from the user
+  ///Return the postion of user on matrix
   Future<List<double>> triangulateData(List<int> pos1, double r1,
       List<int> pos2, double r2, List<int> pos3, double r3) async {
     final double x1 = pos1[0].toDouble();
@@ -202,5 +180,49 @@ class LocationService {
     final double y = (C * D - A * F) / (B * D - A * E);
 
     return [x, y];
+  }
+
+  /// Function that executes all the functions of the service
+  ///@param : Matrice of product
+  ///Return Return the path to the product
+  Future<List<List<int>>?> findTargetPosition(List<int> end) async {
+    // TODO changé par le cache
+    const String jsonFilePath = '../../assets/plan.json';
+    const String jsonDistanceFile = '../../assets/beacon.json';
+    final Grid grid = await loadGridFromJson(jsonFilePath);
+
+    final List<List<int>> beaconPositions =
+        await getBeaconPositions(jsonFilePath);
+
+    await loadDistances(jsonDistanceFile);
+
+    if (beaconPositions.length >= 3) {
+      final List<double> targetPosition = await triangulateData(
+        beaconPositions[0],
+        distance1,
+        beaconPositions[1],
+        distance2,
+        beaconPositions[2],
+        distance3,
+      );
+      //Position actuelle
+      final List<int> currentPosition = [
+        targetPosition[0].round(),
+        targetPosition[1].round()
+      ];
+
+      print(
+          "distance1 : $distance1 , distance2 : $distance2 , distance3: $distance3");
+      print("beaconPositions : $beaconPositions");
+      print("currentPosition : $currentPosition");
+      print("End : $end");
+
+      final List<List<int>> path = findShortestPath(grid, currentPosition, end);
+      print("Chemin le plus court : $path");
+      return path;
+    } else {
+      print("Pas assez de beacons pour la triangulation.");
+      return null;
+    }
   }
 }

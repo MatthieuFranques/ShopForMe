@@ -33,6 +33,13 @@ class NavigationError extends NavigationState {
   NavigationError(this.message);
 }
 
+// TODO Fonction qui permet de savoir sur qu'elle produit on est exactement
+
+// TODO Appel fonction pour connaitre l'emplacement du produit en court de localisation
+
+// TODO Creation d'une fonction qui appelle  LocationService.findTargetPosition() dans un intervalle de temps (1s à 5s)
+
+// TODO Focntion qui change la position des flèche ainsi que le texte pour guidé l'utilisateur
 
 // Bloc
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
