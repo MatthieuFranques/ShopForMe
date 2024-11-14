@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
 import 'package:mobile/ui/widgets/app_header.dart';
-import 'package:mobile/ui/widgets/action_button.dart';
+import 'package:mobile/ui/widgets/shopping_list_items.dart';
 import 'package:mobile/ui/screens/product_search_screen.dart';
 import 'package:mobile/utils/screen_utils.dart';
 
@@ -10,7 +10,7 @@ class ShoppingListScreen extends StatefulWidget {
   const ShoppingListScreen({super.key});
 
   @override
-  State<ShoppingListScreen> createState() => _ShoppingListScreenState();
+  _ShoppingListScreenState createState() => _ShoppingListScreenState();
 }
 
 class _ShoppingListScreenState extends State<ShoppingListScreen> {
@@ -19,7 +19,14 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   @override
   void initState() {
     super.initState();
+    // Charger initialement la liste
     context.read<ShoppingListBloc>().add(LoadShoppingList());
+  }
+
+  void _handleDeleteProduct(int productId) {
+    context
+        .read<ShoppingListBloc>()
+        .add(RemoveProductFromList(productId.toString()));
   }
 
   void _handleIndexChanged(int index) {
@@ -28,10 +35,10 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
       _currentIndex = index;
     });
     final state = context.read<ShoppingListBloc>().state;
-    if (state is ShoppingListLoaded && state.shoppingLists.length > index) {
-      context.read<ShoppingListBloc>().add(
-        SelectShoppingList(state.shoppingLists[index].id)
-      );
+    if (state is ShoppingListLoaded) {
+      context
+          .read<ShoppingListBloc>()
+          .add(SelectShoppingList(state.shoppingLists[index].id));
     }
   }
 
@@ -41,13 +48,13 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   }
 
   void _handleDeleteList() {
-    // Afficher une modal de confirmation
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Supprimer la liste'),
-          content: const Text('Voulez-vous vraiment supprimer cette liste de courses ?'),
+          content: const Text(
+              'Voulez-vous vraiment supprimer cette liste de courses ?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -55,7 +62,11 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             ),
             TextButton(
               onPressed: () {
-                // TODO: Ajouter l'action de suppression
+                final state = context.read<ShoppingListBloc>().state;
+                if (state is ShoppingListLoaded) {
+                  // TODO: Ajouter l'action de suppression
+                  // context.read<ShoppingListBloc>().add(DeleteShoppingList(state.currentList.id));
+                }
                 Navigator.pop(context);
               },
               style: TextButton.styleFrom(
@@ -69,66 +80,109 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     );
   }
 
-  void _handleDeleteProduct(String productId) {
-    context.read<ShoppingListBloc>().add(RemoveProductFromList(productId));
-  }
-
   @override
   Widget build(BuildContext context) {
     ScreenUtils.init(context);
-    
-    final fontListItem = context.getResponsiveFontSize(18);
-    final horizontalPadding = context.getResponsiveSize(24);
     final spacingHeight = context.getResponsiveSize(20);
-    final spacingTop = context.getResponsiveSize(20);
+
     return Scaffold(
-       body: BlocBuilder<ShoppingListBloc, ShoppingListState>(
-        builder: (context, state) {
-          if (state is ShoppingListLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SafeArea(
+        child: BlocBuilder<ShoppingListBloc, ShoppingListState>(
+          builder: (context, state) {
+            if (state is ShoppingListLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (state is ShoppingListLoaded) {
-            return Column(
-              children: [
-                SizedBox(
-                  height: spacingTop,
-                  child: AppHeader(
-                    shoppingLists: state.shoppingLists,
-                    currentIndex: _currentIndex,
-                    onIndexChanged: _handleIndexChanged,
-                    onAddList: _handleAddList,
+            if (state is ShoppingListLoaded) {
+              return Column(
+                children: [
+                  Container(
+                    height: 80, // Hauteur fixe pour l'AppHeader
+                    padding: EdgeInsets.symmetric(
+                        horizontal: context.getResponsiveSize(16)),
+                    child: AppHeader(
+                      shoppingLists: state.shoppingLists,
+                      currentIndex: _currentIndex,
+                      onIndexChanged: _handleIndexChanged,
+                      onAddList: _handleAddList,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: state.currentList.products.isEmpty
-                    ? _buildEmptyState()
-                    : _buildProductsList(state, context),
-                ),
-              ],
-            );
-          }
+                  Expanded(
+                    child: state.currentList.products.isEmpty
+                        ? _buildEmptyState()
+                        : ShoppingListItems(
+                            state: state,
+                            onDeleteProduct: _handleDeleteProduct,
+                          ),
+                  ),
+                  // Bottom Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: context.getResponsiveSize(160),
+                        height: context.getResponsiveSize(100),
+                        margin: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ProductSearchScreen(shopId: 2)),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            size: context.getResponsiveSize(32),
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: context.getResponsiveSize(160),
+                        height: context.getResponsiveSize(100),
+                        margin: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          onPressed: _handleDeleteList,
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.delete,
+                            size: context.getResponsiveSize(32),
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            }
 
-          if (state is ShoppingListError) {
-            return Center(child: Text(state.message));
-          }
+            if (state is ShoppingListError) {
+              return Center(child: Text(state.message));
+            }
 
-          return const Center(child: Text('État inconnu'));
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ProductSearchScreen(shopId: 1),
-          ),
+            return const Center(child: Text('État inconnu'));
+          },
         ),
-        child: const Icon(Icons.add),
       ),
     );
   }
 
-//if there is no product in the list
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -146,55 +200,6 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
           ),
         ],
       ),
-    );
-  }
-
-
-  Widget _buildProductsList(ShoppingListLoaded state, BuildContext context) {
-
-    final fontSizeRayon = context.getResponsiveFontSize(8);
-    final verticalPaddingListItems = context.getResponsiveSize(16);
-    return ListView.separated(
-      padding: EdgeInsets.all(verticalPaddingListItems),
-      itemCount: state.currentList.products.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) {
-        final product = state.currentList.products[index];
-        final isInvalid = state.invalidProducts.contains(product);
-
-        return Container(
-          decoration: BoxDecoration(
-            color: isInvalid ? Colors.red.shade100 : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            title: Text(
-              product.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Text(
-                product.rayon,
-                style: TextStyle(fontSize: fontSizeRayon),
-            overflow: TextOverflow.ellipsis,
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => _handleDeleteProduct(product.id),
-            ),
-          ),
-        );
-      },
     );
   }
 }

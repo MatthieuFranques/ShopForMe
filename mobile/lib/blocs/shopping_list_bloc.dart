@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:mobile/models/product.dart';
 import 'package:mobile/models/shopping_list.dart';
 import 'package:mobile/models/shop.dart';
@@ -283,8 +285,8 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
       emit(ShoppingListLoaded(
         updatedLists,
         newList,
-        validationErrors: [],
-        invalidProducts: [],
+        validationErrors: const [],
+        invalidProducts: const [],
       ));
     }
   }
