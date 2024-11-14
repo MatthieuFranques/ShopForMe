@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
+import '../utils/screen_utils.dart';
 
 class Shop4MeTheme {
-  static ThemeData get lightTheme {
+  static ThemeData getLightTheme(BuildContext context) {
     return ThemeData(
-      primarySwatch: Colors.blue,
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: Colors.blue,
-        accentColor: Colors.orange,
+      colorScheme: ColorScheme.fromSwatch().copyWith(
+        primary: const Color.fromARGB(255, 242, 72, 34),
+        secondary: const Color.fromARGB(255, 18, 67, 166),
+        tertiary: const Color.fromARGB(255, 1, 28, 64),
       ),
-      scaffoldBackgroundColor: Colors.white,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
+      scaffoldBackgroundColor: const Color.fromARGB(255, 242, 238, 216),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orange,
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(const Color.fromARGB(255, 242, 72, 34)),
+          foregroundColor: WidgetStateProperty.all(Colors.white),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 18, 67, 166),
           foregroundColor: Colors.white,
         ),
       ),
-      textTheme: const TextTheme(
-        titleLarge: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: const Color.fromARGB(255, 29, 100, 242),
+        hintStyle: const TextStyle(color: Colors.white),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(context.getResponsiveSize(8)),
+          borderSide: BorderSide.none,
         ),
-        bodyMedium: TextStyle(fontSize: 16),
+      ),
+      textTheme: TextTheme(
+        headlineLarge: TextStyle(fontSize: context.getResponsiveFontSize(32), fontWeight: FontWeight.bold, color: Colors.black),
+        headlineMedium: TextStyle(fontSize: context.getResponsiveFontSize(24), fontWeight: FontWeight.bold, color: Colors.black),
+        titleLarge: TextStyle(fontSize: context.getResponsiveFontSize(20), fontWeight: FontWeight.bold, color: Colors.black),
+        bodyLarge: TextStyle(fontSize: context.getResponsiveFontSize(16), color: Colors.black),
+        bodyMedium: TextStyle(fontSize: context.getResponsiveFontSize(14), color: Colors.black),
       ),
     );
   }
