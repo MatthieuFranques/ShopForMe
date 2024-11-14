@@ -6,6 +6,7 @@ import '../models/shop.dart';
 
 class StoreService {
   static const String baseUrl = 'http://127.0.0.1:3001';
+  // static const String baseUrl = 'url'
   final CacheService _cacheService;
   final http.Client _client;
   Shop? _currentShop;

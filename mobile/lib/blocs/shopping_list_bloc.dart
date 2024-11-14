@@ -1,4 +1,3 @@
-// shopping_list_bloc.dart
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +30,16 @@ class RemoveProductFromList extends ShoppingListEvent {
   List<Object?> get props => [productId];
 }
 
+class SelectShoppingList extends ShoppingListEvent {
+  final String listId;
+  SelectShoppingList(this.listId);
+  
+  @override
+  List<Object?> get props => [listId];
+}
+
+class CreateNewShoppingList extends ShoppingListEvent {}
+
 class ValidateShoppingList extends ShoppingListEvent {}
 
 // States
@@ -42,18 +51,20 @@ abstract class ShoppingListState extends Equatable {
 class ShoppingListLoading extends ShoppingListState {}
 
 class ShoppingListLoaded extends ShoppingListState {
-  final ShoppingList shoppingList;
+  final List<ShoppingList> shoppingLists;
+  final ShoppingList currentList;
   final List<String> validationErrors;
   final List<Product> invalidProducts;
 
   ShoppingListLoaded(
-    this.shoppingList, {
+    this.shoppingLists,
+    this.currentList, {
     this.validationErrors = const [],
     this.invalidProducts = const [],
   });
 
   @override
-  List<Object?> get props => [shoppingList, validationErrors, invalidProducts];
+  List<Object?> get props => [shoppingLists, currentList, validationErrors, invalidProducts];
 }
 
 class ShoppingListError extends ShoppingListState {
@@ -73,16 +84,19 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
     on<AddProductToShoppingList>(_onAddProductToShoppingList);
     on<RemoveProductFromList>(_onRemoveProductFromList);
     on<ValidateShoppingList>(_onValidateShoppingList);
+    on<SelectShoppingList>(_onSelectShoppingList);
+    on<CreateNewShoppingList>(_onCreateNewShoppingList);
   }
 
-  Future<ShoppingList> _loadShoppingListFromAssets() async {
+  Future<List<ShoppingList>> _loadShoppingListsFromAssets() async {
     try {
-      final jsonString = await rootBundle.loadString('assets/datas.json');
+      final jsonString = await rootBundle.loadString('assets/list/defaultShoppingList.json');
       final Map<String, dynamic> jsonData = json.decode(jsonString);
-      return ShoppingList.fromJson(jsonData);
+      final List<dynamic> listsData = jsonData['lists'];
+      return listsData.map((listData) => ShoppingList.fromJson(listData)).toList();
     } catch (e) {
-      print('Error loading shopping list: $e');
-      throw Exception('Failed to load shopping list: $e');
+      print('Error loading shopping lists: $e');
+      throw Exception('Failed to load shopping lists: $e');
     }
   }
 
@@ -103,13 +117,19 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
     emit(ShoppingListLoading());
     
     try {
-      final shoppingList = await _loadShoppingListFromAssets();
+      final shoppingLists = await _loadShoppingListsFromAssets();
+      if (shoppingLists.isEmpty) {
+        emit(ShoppingListError('Aucune liste de courses trouvée'));
+        return;
+      }
+
+      final currentList = shoppingLists.first;
       final validationErrors = <String>[];
       final invalidProducts = <Product>[];
 
       // Validate each product's rayon if we have a shop
       if (currentShop != null) {
-        for (final product in shoppingList.products) {
+        for (final product in currentList.products) {
           if (!_isRayonValid(product.rayon)) {
             validationErrors.add(
               'Le rayon "${product.rayon}" pour le produit "${product.name}" n\'existe pas dans ce magasin'
@@ -120,7 +140,8 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
       }
 
       emit(ShoppingListLoaded(
-        shoppingList,
+        shoppingLists,
+        currentList,
         validationErrors: validationErrors,
         invalidProducts: invalidProducts,
       ));
@@ -146,18 +167,23 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
         invalidProducts.add(event.product);
       }
 
-      final updatedProducts = List<Product>.from(currentState.shoppingList.products)
+      final updatedProducts = List<Product>.from(currentState.currentList.products)
         ..add(event.product);
 
-      final updatedShoppingList = ShoppingList(
-        id: currentState.shoppingList.id,
-        name: currentState.shoppingList.name,
-        date: currentState.shoppingList.date,
+      final updatedList = ShoppingList(
+        id: currentState.currentList.id,
+        name: currentState.currentList.name,
+        date: currentState.currentList.date,
         products: updatedProducts,
       );
 
+      final updatedLists = currentState.shoppingLists.map((list) =>
+        list.id == updatedList.id ? updatedList : list
+      ).toList();
+
       emit(ShoppingListLoaded(
-        updatedShoppingList,
+        updatedLists,
+        updatedList,
         validationErrors: validationErrors,
         invalidProducts: invalidProducts,
       ));
@@ -172,7 +198,7 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
       final currentState = state as ShoppingListLoaded;
       
       // Remove the product
-      final updatedProducts = currentState.shoppingList.products
+      final updatedProducts = currentState.currentList.products
           .where((product) => product.id != event.productId)
           .toList();
 
@@ -186,17 +212,79 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
           .where((error) => !error.contains(event.productId))
           .toList();
 
-      final updatedShoppingList = ShoppingList(
-        id: currentState.shoppingList.id,
-        name: currentState.shoppingList.name,
-        date: currentState.shoppingList.date,
+      final updatedList = ShoppingList(
+        id: currentState.currentList.id,
+        name: currentState.currentList.name,
+        date: currentState.currentList.date,
         products: updatedProducts,
       );
 
+      final updatedLists = currentState.shoppingLists.map((list) =>
+        list.id == updatedList.id ? updatedList : list
+      ).toList();
+
       emit(ShoppingListLoaded(
-        updatedShoppingList,
+        updatedLists,
+        updatedList,
         validationErrors: updatedErrors,
         invalidProducts: updatedInvalidProducts,
+      ));
+    }
+  }
+
+  Future<void> _onSelectShoppingList(
+    SelectShoppingList event,
+    Emitter<ShoppingListState> emit,
+  ) async {
+    if (state is ShoppingListLoaded) {
+      final currentState = state as ShoppingListLoaded;
+      final selectedList = currentState.shoppingLists
+          .firstWhere((list) => list.id == event.listId);
+      
+      final validationErrors = <String>[];
+      final invalidProducts = <Product>[];
+
+      if (currentShop != null) {
+        for (final product in selectedList.products) {
+          if (!_isRayonValid(product.rayon)) {
+            validationErrors.add(
+              'Le rayon "${product.rayon}" pour le produit "${product.name}" n\'existe pas dans ce magasin'
+            );
+            invalidProducts.add(product);
+          }
+        }
+      }
+
+      emit(ShoppingListLoaded(
+        currentState.shoppingLists,
+        selectedList,
+        validationErrors: validationErrors,
+        invalidProducts: invalidProducts,
+      ));
+    }
+  }
+
+  Future<void> _onCreateNewShoppingList(
+    CreateNewShoppingList event,
+    Emitter<ShoppingListState> emit,
+  ) async {
+    if (state is ShoppingListLoaded) {
+      final currentState = state as ShoppingListLoaded;
+      final newList = ShoppingList(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: "Nouvelle liste",
+        date: DateTime.now().toString(),
+        products: [],
+      );
+      
+      final updatedLists = List<ShoppingList>.from(currentState.shoppingLists)
+        ..add(newList);
+      
+      emit(ShoppingListLoaded(
+        updatedLists,
+        newList,
+        validationErrors: [],
+        invalidProducts: [],
       ));
     }
   }
@@ -211,7 +299,7 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
       final invalidProducts = <Product>[];
 
       if (currentShop != null) {
-        for (final product in currentState.shoppingList.products) {
+        for (final product in currentState.currentList.products) {
           if (!_isRayonValid(product.rayon)) {
             validationErrors.add(
               'Le rayon "${product.rayon}" pour le produit "${product.name}" n\'existe pas dans ce magasin'
@@ -222,7 +310,8 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
       }
 
       emit(ShoppingListLoaded(
-        currentState.shoppingList,
+        currentState.shoppingLists,
+        currentState.currentList,
         validationErrors: validationErrors,
         invalidProducts: invalidProducts,
       ));

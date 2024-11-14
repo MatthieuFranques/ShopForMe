@@ -28,7 +28,7 @@ class Product extends HiveObject {
       id: json['id']?.toString() ?? 'unknown',
       name: json['name'] ?? 'Unnamed Product',
       category: json['category'] ?? 'Misc',
-      rayon: json['Rayon'] ?? 'Unknown',  // Note the capital R in 'Rayon' to match JSON
+      rayon: json['rayon'] ?? 'Unknown',
     );
   }
 }

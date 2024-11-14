@@ -1,18 +1,22 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/models/shopping_lists_collection.dart';
+
+import '../../utils/screen_utils.dart';
+import '../widgets/action_button.dart';
+import '../widgets/app_header.dart';
+import '../widgets/start_button.dart';
 import 'package:mobile/blocs/product_search_bloc.dart';
+import 'package:mobile/blocs/shopping_list_bloc.dart';
+import 'package:mobile/models/shopping_lists_collection.dart';
 import 'package:mobile/services/store_service.dart';
+
 import 'package:mobile/ui/screens/navigation_screen.dart';
 import 'package:mobile/ui/screens/product_search_screen.dart';
-import '../../utils/screen_utils.dart';
 import 'package:mobile/ui/screens/shopping_list_screen.dart';
-import 'package:mobile/blocs/shopping_list_bloc.dart';
-import '../widgets/app_header.dart';
-import '../widgets/action_button.dart';
-import '../widgets/start_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -80,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
           create: (context) => ShoppingListBloc(
             currentShop: context.read<StoreService>().currentShop,
           ),
-          child: const ShoppingListPage(),
+          child: const ShoppingListScreen(),
         ),
       ),
     );

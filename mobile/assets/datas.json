@@ -7,409 +7,409 @@
       "id": "101",
       "name": "Pomme",
       "category": "Fruits",
-      "Rayon": "Fruits"
+      "rayon": "Fruits"
     },
     {
       "id": "102",
       "name": "Banane",
       "category": "Fruits",
-      "Rayon": "Fruits"
+      "rayon": "Fruits"
     },
     {
       "id": "103",
       "name": "Carotte",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "104",
       "name": "Pain",
       "category": "Boulangerie",
-      "Rayon": "Boulangerie"
+      "rayon": "Boulangerie"
     },
     {
       "id": "105",
       "name": "Lait",
       "category": "Produits laitiers",
-      "Rayon": "Produits laitiers"
+      "rayon": "Produits laitiers"
     },
     {
       "id": "106",
       "name": "Poulet",
       "category": "Viandes",
-      "Rayon": "Viandes"
+      "rayon": "Viandes"
     },
     {
       "id": "107",
       "name": "Poisson",
       "category": "Poissons",
-      "Rayon": "Poissons"
+      "rayon": "Poissons"
     },
     {
       "id": "108",
       "name": "Riz",
       "category": "Céréales",
-      "Rayon": "Céréales"
+      "rayon": "Céréales"
     },
     {
       "id": "109",
       "name": "Camembert",
       "category": "Fromages",
-      "Rayon": "Fromages"
+      "rayon": "Fromages"
     },
     {
       "id": "110",
       "name": "Yaourt",
       "category": "Produits laitiers",
-      "Rayon": "Produits laitiers"
+      "rayon": "Produits laitiers"
     },
     {
       "id": "111",
       "name": "Tomate",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "112",
       "name": "Orange",
       "category": "Fruits",
-      "Rayon": "Fruits"
+      "rayon": "Fruits"
     },
     {
       "id": "113",
       "name": "Pâtes",
       "category": "Céréales",
-      "Rayon": "Céréales"
+      "rayon": "Céréales"
     },
     {
       "id": "114",
       "name": "Oeufs",
       "category": "Produits laitiers",
-      "Rayon": "Produits laitiers"
+      "rayon": "Produits laitiers"
     },
     {
       "id": "115",
       "name": "Beurre",
       "category": "Produits laitiers",
-      "Rayon": "Produits laitiers"
+      "rayon": "Produits laitiers"
     },
     {
       "id": "116",
       "name": "Jambon",
       "category": "Viandes",
-      "Rayon": "Viandes"
+      "rayon": "Viandes"
     },
     {
       "id": "117",
       "name": "Saumon",
       "category": "Poissons",
-      "Rayon": "Poissons"
+      "rayon": "Poissons"
     },
     {
       "id": "118",
       "name": "Chocolat",
       "category": "Confiseries",
-      "Rayon": "Confiseries"
+      "rayon": "Confiseries"
     },
     {
       "id": "119",
       "name": "Café",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "120",
       "name": "Thé",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "121",
       "name": "Eau",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "122",
       "name": "Jus d'orange",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "123",
       "name": "Biscottes",
       "category": "Boulangerie",
-      "Rayon": "Boulangerie"
+      "rayon": "Boulangerie"
     },
     {
       "id": "124",
       "name": "Confiture",
       "category": "Confiseries",
-      "Rayon": "Confiseries"
+      "rayon": "Confiseries"
     },
     {
       "id": "125",
       "name": "Miel",
       "category": "Confiseries",
-      "Rayon": "Confiseries"
+      "rayon": "Confiseries"
     },
     {
       "id": "126",
       "name": "Céréales",
       "category": "Céréales",
-      "Rayon": "Céréales"
+      "rayon": "Céréales"
     },
     {
       "id": "127",
       "name": "Jus de pomme",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "128",
       "name": "Limonade",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "129",
       "name": "Bière",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "130",
       "name": "Vin",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "131",
       "name": "Champagne",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "132",
       "name": "Whisky",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "133",
       "name": "Vodka",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "134",
       "name": "Gin",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "135",
       "name": "Rhum",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "136",
       "name": "Tequila",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "137",
       "name": "Pastis",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "138",
       "name": "Soda",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "139",
       "name": "Eau gazeuse",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "140",
       "name": "Eau minérale",
       "category": "Boissons",
-      "Rayon": "Boissons"
+      "rayon": "Boissons"
     },
     {
       "id": "141",
       "name": "Salade",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "142",
       "name": "Poivron",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "143",
       "name": "Courgette",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "144",
       "name": "Aubergine",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "145",
       "name": "Brocoli",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "146",
       "name": "Chou-fleur",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "147",
       "name": "Épinards",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "148",
       "name": "Haricots verts",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "149",
       "name": "Petits pois",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "150",
       "name": "Lentilles",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "151",
       "name": "Pois chiches",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "152",
       "name": "Ail",
       "category": "Condiments",
-      "Rayon": "Condiments"
+      "rayon": "Condiments"
     },
     {
       "id": "153",
       "name": "Oignon",
       "category": "Condiments",
-      "Rayon": "Condiments"
+      "rayon": "Condiments"
     },
     {
       "id": "154",
       "name": "Échalote",
       "category": "Condiments",
-      "Rayon": "Condiments"
+      "rayon": "Condiments"
     },
     {
       "id": "155",
       "name": "Persil",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "156",
       "name": "Basilic",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "157",
       "name": "Thym",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "158",
       "name": "Romarin",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "159",
       "name": "Menthe",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "160",
       "name": "Ciboulette",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "161",
       "name": "Aneth",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "162",
       "name": "Coriandre",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "163",
       "name": "Origan",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "164",
       "name": "Laurier",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "165",
       "name": "Sauge",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "166",
       "name": "Estragon",
       "category": "Herbes",
-      "Rayon": "Herbes"
+      "rayon": "Herbes"
     },
     {
       "id": "167",
       "name": "Céleri",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     },
     {
       "id": "168",
       "name": "Radis",
       "category": "Légumes",
-      "Rayon": "Légumes"
+      "rayon": "Légumes"
     }
   ]
 }
