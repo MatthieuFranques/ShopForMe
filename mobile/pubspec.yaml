@@ -38,5 +38,6 @@ flutter:
     - assets/datas.json
     - assets/plan.json
     - assets/beacon.json
+    - assets/list/defaultShoppingList.json
 
 
