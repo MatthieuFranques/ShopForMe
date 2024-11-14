@@ -14,6 +14,60 @@
         "name": "Lait",
         "category": "Produits laitiers",
         "rayon": "Produits laitiers"
+      },
+      {
+        "id": "169",
+        "name": "Fromage de chèvre",
+        "category": "Fromages",
+        "rayon": "Fromages"
+      },
+      {
+        "id": "170",
+        "name": "Huile d'olive",
+        "category": "Condiments",
+        "rayon": "Condiments"
+      },
+      {
+        "id": "171",
+        "name": "Baguette",
+        "category": "Boulangerie",
+        "rayon": "Boulangerie"
+      },
+      {
+        "id": "172",
+        "name": "Beurre d'amande",
+        "category": "Produits laitiers",
+        "rayon": "Produits laitiers"
+      },
+      {
+        "id": "173",
+        "name": "Tisane",
+        "category": "Boissons",
+        "rayon": "Boissons"
+      },
+      {
+        "id": "174",
+        "name": "Moutarde",
+        "category": "Condiments",
+        "rayon": "Condiments"
+      },
+      {
+        "id": "175",
+        "name": "Baguette au sésame",
+        "category": "Boulangerie",
+        "rayon": "Boulangerie"
+      },
+      {
+        "id": "176",
+        "name": "Lait d'amande",
+        "category": "Produits laitiers",
+        "rayon": "Produits laitiers"
+      },
+      {
+        "id": "177",
+        "name": "Smoothie aux fruits",
+        "category": "Boissons",
+        "rayon": "Boissons"
       }
     ]
   }
