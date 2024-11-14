@@ -16,3 +16,9 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
+### Hive model needs to build each time, model is changed or added
+`flutter pub run build_runner build`
+
+### Architecture of the project and documentation
+
+https://shop-for-me.atlassian.net/wiki/x/AYDDAQ
