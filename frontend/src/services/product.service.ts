@@ -8,5 +8,9 @@ export const ProductService = {
 
     createProduct: (body: any) => {
         return api("POST", `product/`, body)
+    },
+
+    addNewProductToRayonP: (body: any) => {
+        return api("POST", `product/addNewProductToRayonP`, body)
     }
 }

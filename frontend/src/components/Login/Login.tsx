@@ -25,7 +25,6 @@ export default function Login() {
             alignItems: "center",
             justifyContent: "center",
             minHeight: "100vh",
-            backgroundColor: "#f5f5f5",
             padding: "20px"
         }}>
             <form onSubmit={handleSubmit} style={{

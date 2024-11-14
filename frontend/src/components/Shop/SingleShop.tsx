@@ -8,6 +8,7 @@ import randomColor from "randomcolor";
 import {ShopModel} from "../../models/Shop.model";
 import {ShopService} from "../../services/shop.service";
 import DeleteIcon from '@mui/icons-material/Delete';
+import {ProductService} from "../../services/product.service";
 
 export enum PlanType {
     VIDE = "VIDE",
@@ -220,14 +221,16 @@ const Plan = (props: CustomProps) => {
 
     };
 
-    const affectProduitRayon = (_: ProductModel) => {
+    const affectProduitRayon = (product: ProductModel) => {
 
         if (!value) {
             setInfo({open: true, message: "Veuillez choisir un rayon", type: "error"});
             return
         }
 
-        // TODO : Gerer la base de données
+        ProductService.addNewProductToRayonP({storeId: props.storeId, productId: product.id, name: value}).then(response => {
+            console.log(response);
+        })
     }
 
     const updateOpen = (newOpen: boolean) => {
@@ -293,6 +296,11 @@ const Plan = (props: CustomProps) => {
         handleChangeCols()
     }, [cols])
 
+    const getTitleTooltip = (col: Cell) => {
+        let tmp = col.type === PlanType.RAYON ? col.name : ""
+        return tmp + (col.isBeacon ? " + beacon" : "")
+    }
+
     return (
         <div className={"single_shop"}>
             {info.open ? <div className={"info " + info.type}>
@@ -322,6 +330,7 @@ const Plan = (props: CustomProps) => {
                     <Autocomplete
                         value={value}
                         onChange={(_, newValue) => {
+                            setCurrentDraw(PlanType.RAYON)
                             if (typeof newValue === 'string') {
                                 if (newValue.includes("Add \"")) {
                                     setValue(newValue.split("\"")[1]);
@@ -401,13 +410,13 @@ const Plan = (props: CustomProps) => {
                 </div>
             </div>
 
-            <table>
+            <table className={"plan"}>
                 <tbody>
                 {plan.map((row: Array<Cell>, rowIndex: any) => {
                     return (
                         <tr key={rowIndex}>
                             {row.map((col: Cell, colIndex) => (
-                                <Tooltip title={col.type === PlanType.RAYON ? col.name : ""} key={colIndex}
+                                <Tooltip title={getTitleTooltip(col)} key={colIndex}
                                          placement={"top"}>
                                     <td onClick={() => props.isEdit ? toggleCell(rowIndex, colIndex) : ""}
                                         className={getCellClass(rowIndex, colIndex)} style={getStyleRayon(col)}></td>

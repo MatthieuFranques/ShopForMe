@@ -5,4 +5,22 @@
 
 * {
     font-family: 'Marcelus', serif;
+    box-sizing: border-box;
+}
+
+body {
+    /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    background: radial-gradient(73.23% 106% at 34.94% 108.33%, #F7CBFD 0%, #7758D1 100%) no-repeat;
+    min-height: 100vh;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: row;
+
+    >div {
+        width: calc(100% - 200px);
+        transform :translateX(200px);
+        height: 100%;
+    }
 }

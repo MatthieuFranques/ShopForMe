@@ -39,7 +39,6 @@ export async function create(shop: CreateProductDto) {
     }
 }
 
-
 export async function get(): Promise<ProductModel[] | null> {
     try {
         return await prisma.product.findMany();
@@ -63,4 +62,50 @@ export async function getFree(storeId: number): Promise<ProductModel[] | null> {
     } catch (error) {
         throw error;
     }
+}
+
+export async function getAllProductByShop(storeId: number): Promise<any> {
+    try {
+
+        const products = await prisma.product.findMany({
+            where: {
+                sections: {
+                    some: {
+                        storeId: storeId,
+                    },
+                },
+            },
+            include: {
+                sections: {
+                    where: {
+                        storeId: storeId,
+                    },
+                },
+            },
+        });
+
+        return products.map(product => ({
+            ...product,
+            rayon: product.sections.length > 0 ? product.sections[0].name : null,
+            sections: undefined,
+        }));
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function addNewProductToRayon(storeId: number, productId: number, name: string): Promise<any> {
+    return prisma.section.create({
+        data: {
+            name,
+            price: 0,
+            store: {
+                connect: {id: storeId},
+            },
+            product: {
+                connect: {id: productId},
+            },
+        },
+    });
 }

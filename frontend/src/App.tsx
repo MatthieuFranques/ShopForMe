@@ -9,7 +9,7 @@ import SingleShop from "./components/Shop/SingleShop";
 
 function App() {
     return (
-        <div>
+        <div className={"app-container"}>
             <BrowserRouter>
                 <NavBar />
                 <Routes>

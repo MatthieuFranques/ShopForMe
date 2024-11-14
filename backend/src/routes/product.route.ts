@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import { createProduct, getAllProducts, getProductById, updateProduct, getFreeProduct } from '../controllers/product.controller';
+import {
+    createProduct,
+    getAllProducts,
+    getProductById,
+    updateProduct,
+    getFreeProduct,
+    getAllProductByShopP,
+    addNewProductToRayonP
+} from '../controllers/product.controller';
 
 const shopRouter = Router();
 
@@ -23,6 +31,10 @@ const shopRouter = Router();
  *         description: Produit non trouvé
  */
 shopRouter.get('/getFree/:id', getFreeProduct);
+
+shopRouter.get('/getAllProductByShop/:id', getAllProductByShopP);
+
+shopRouter.post('/addNewProductToRayonP', addNewProductToRayonP);
 
 /**
  * @swagger
