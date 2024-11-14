@@ -31,19 +31,35 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
   String data = 'No data yet';
 
   void requestPermissions() async {
-    if (await Permission.bluetoothScan.request().isGranted &&
-        await Permission.bluetoothConnect.request().isGranted &&
-        await Permission.locationWhenInUse.request().isGranted) {
+    if (await checkPermissions()) {
       // Permissions granted, start the scan
       _bluetoothService.startScan((BluetoothDevice device) {
         setState(() {
           devicesList.add(device.name);
         });
-        _bluetoothService.connectToDevice(device);
+
+        // Connect to the device and listen for JSON data
+        _bluetoothService.connectToDevice(device, (receivedData) {
+          setState(() {
+            data = receivedData; // Updates the data received
+          });
+        });
       });
     } else {
       // Handle permissions not granted
       print('Permissions not granted');
+    }
+  }
+
+  Future<bool> checkPermissions() async {
+    if (await Permission.bluetoothScan.request().isGranted &&
+        await Permission.bluetoothConnect.request().isGranted &&
+        await Permission.locationWhenInUse.request().isGranted) {
+      // if everything is OK, return true
+      return true;
+    } else {
+      // otherwise, false
+      return false;
     }
   }
 
