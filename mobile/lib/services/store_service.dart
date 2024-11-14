@@ -4,7 +4,10 @@ import 'package:mobile/services/cache_service.dart';
 import '../models/product.dart';
 
 class StoreService {
+  //If we use local back-end
   static const String baseUrl = 'http://127.0.0.1:3001';
+  //If we use remote back-end
+  // static const String baseUrl = 'http://91.121.191.34:8080';
   final CacheService _cacheService;
   final http.Client _client;
 
