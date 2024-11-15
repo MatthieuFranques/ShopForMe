@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
-import 'package:mobile/blocs/product_search_bloc.dart';
 import 'package:mobile/ui/screens/shopping_list_screen.dart';
 import 'package:mobile/ui/widgets/app_header.dart';
 import 'package:mobile/ui/widgets/action_button.dart';
