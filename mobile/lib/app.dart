@@ -1,8 +1,8 @@
-// 3. app.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/navigation_bloc.dart';
 import 'package:mobile/blocs/product_search_bloc.dart';
+import 'package:mobile/blocs/shopping_list_bloc.dart';
 import 'ui/screens/home_screen.dart';
 import 'config/theme.dart';
 import 'utils/screen_utils.dart';
@@ -18,7 +18,8 @@ class Shop4MeApp extends StatelessWidget {
     required this.storeService,
     required this.cacheService,
   });
-@override
+
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
@@ -34,7 +35,12 @@ class Shop4MeApp extends StatelessWidget {
           BlocProvider(
             create: (context) => ProductSearchBloc(storeService),
           ),
-        ],
+          BlocProvider(
+          create: (context) => ShoppingListBloc(
+            currentShop: storeService.currentShop,
+          )..add(LoadShoppingList()
+          ), // Dispatch de l'événement ici
+        ),        ],
         child: Builder(
           builder: (context) {
             ScreenUtils.init(context);

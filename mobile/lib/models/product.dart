@@ -14,7 +14,7 @@ class Product extends HiveObject {
   final String category;
 
   @HiveField(3)
-  final String rayon;  // Changed from List<int> layout to String rayon
+  final String rayon;
 
   Product({
     required this.id,
@@ -24,11 +24,29 @@ class Product extends HiveObject {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['id']?.toString() ?? 'unknown',
-      name: json['name'] ?? 'Unnamed Product',
-      category: json['category'] ?? 'Misc',
-      rayon: json['rayon'] ?? 'Unknown',
-    );
+    try {
+      return Product(
+        id: json['id']?.toString() ?? 'unknown',
+        name: json['name']?.toString() ?? 'Unnamed Product',
+        category: json['category']?.toString() ?? 'Misc',
+        rayon: json['rayon']?.toString() ?? 'Unknown',
+      );
+    } catch (e) {
+      print('❌ Error creating Product from JSON: $e');
+      print('❌ Problematic JSON: $json');
+      rethrow;
+    }
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'category': category,
+    'rayon': rayon,
+  };
+
+  @override
+  String toString() {
+    return 'Product(id: $id, name: $name, category: $category, rayon: $rayon)';
   }
 }

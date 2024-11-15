@@ -70,6 +70,14 @@ class ProductSearchBloc extends Bloc<ProductSearchEvent, ProductSearchState> {
     LoadProducts event,
     Emitter<ProductSearchState> emit,
   ) async {
+        if (_allProducts.isNotEmpty) {
+      emit(ProductSearchLoaded(
+        products: _allProducts,
+        filteredProducts: _allProducts,
+      ));
+      return;
+    }
+
     emit(ProductSearchLoading());
     try {
       print('🔄 Loading products');

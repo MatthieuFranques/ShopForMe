@@ -7,7 +7,7 @@ class CacheService {
   static const String productBox = 'products';
 
   late Box<Shop> _shopBox;
-  late Box<List<Product>> _productBox;
+  late Box<dynamic> _productBox;  // Changé en Box<dynamic>
 
   Future<void> init() async {
     await Hive.initFlutter();
@@ -16,11 +16,14 @@ class CacheService {
       Hive.registerAdapter(ShopAdapter());
     }
     if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(ShopCellAdapter());
+    }
+    if (!Hive.isAdapterRegistered(2)) {
       Hive.registerAdapter(ProductAdapter());
     }
 
     _shopBox = await Hive.openBox<Shop>(shopBox);
-    _productBox = await Hive.openBox<List<Product>>(productBox);
+    _productBox = await Hive.openBox(productBox);  // Ouvert comme Box générique
   }
 
   Future<void> cacheShop(Shop shop) async {
@@ -32,11 +35,53 @@ class CacheService {
   }
 
   Future<void> cacheProducts(String key, List<Product> products) async {
-    await _productBox.put(key, products);
+    try {
+      print('💾 Attempting to cache ${products.length} products');
+      await _productBox.put(key, products);
+      print('✅ Successfully cached products');
+    } catch (e) {
+      print('❌ Error caching products: $e');
+      rethrow;
+    }
   }
 
   List<Product>? getProducts(String key) {
-    return _productBox.get(key);
+    try {
+      print('🔍 Retrieving products from cache');
+      final dynamic data = _productBox.get(key);
+      
+      if (data == null) {
+        print('⚠️ No products found in cache');
+        return null;
+      }
+
+      if (data is List<Product>) {
+        print('✅ Found ${data.length} products in cache');
+        return data;
+      }
+
+      if (data is List) {
+        print('🔄 Converting cached data to Product list');
+        final products = data.map((item) {
+          if (item is Product) return item;
+          
+          if (item is Map) {
+            return Product.fromJson(Map<String, dynamic>.from(item));
+          }
+          
+          throw TypeError();
+        }).toList();
+        
+        print('✅ Successfully converted ${products.length} products');
+        return products.cast<Product>();
+      }
+
+      print('❌ Invalid cache data format');
+      return null;
+    } catch (e) {
+      print('❌ Error retrieving products from cache: $e');
+      return null;
+    }
   }
 
   Future<void> clearCache() async {

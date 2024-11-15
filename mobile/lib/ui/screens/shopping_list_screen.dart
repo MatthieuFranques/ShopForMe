@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
+import 'package:mobile/blocs/product_search_bloc.dart';
 import 'package:mobile/ui/widgets/app_header.dart';
 import 'package:mobile/ui/widgets/shopping_list_items.dart';
 import 'package:mobile/ui/screens/product_search_screen.dart';
@@ -19,14 +20,12 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   @override
   void initState() {
     super.initState();
-    // Charger initialement la liste
+    print('📝 Loading shopping list');
     context.read<ShoppingListBloc>().add(LoadShoppingList());
   }
 
   void _handleDeleteProduct(int productId) {
-    context
-        .read<ShoppingListBloc>()
-        .add(RemoveProductFromList(productId.toString()));
+    context.read<ShoppingListBloc>().add(RemoveProductFromList(productId.toString()));
   }
 
   void _handleIndexChanged(int index) {
@@ -35,10 +34,10 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
       _currentIndex = index;
     });
     final state = context.read<ShoppingListBloc>().state;
-    if (state is ShoppingListLoaded) {
-      context
-          .read<ShoppingListBloc>()
-          .add(SelectShoppingList(state.shoppingLists[index].id));
+    if (state is ShoppingListLoaded && state.shoppingLists.length > index) {
+      context.read<ShoppingListBloc>().add(
+        SelectShoppingList(state.shoppingLists[index].id)
+      );
     }
   }
 
@@ -48,13 +47,15 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   }
 
   void _handleDeleteList() {
+    final state = context.read<ShoppingListBloc>().state;
+    if (state is! ShoppingListLoaded) return;
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Supprimer la liste'),
-          content: const Text(
-              'Voulez-vous vraiment supprimer cette liste de courses ?'),
+          content: Text('Voulez-vous vraiment supprimer "${state.currentList.name}" ?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -62,12 +63,9 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             ),
             TextButton(
               onPressed: () {
-                final state = context.read<ShoppingListBloc>().state;
-                if (state is ShoppingListLoaded) {
-                  // TODO: Ajouter l'action de suppression
-                  // context.read<ShoppingListBloc>().add(DeleteShoppingList(state.currentList.id));
-                }
                 Navigator.pop(context);
+                // TODO: Implémenter la suppression de la liste
+                // context.read<ShoppingListBloc>().add(DeleteShoppingList(state.currentList.id));
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
@@ -80,10 +78,28 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     );
   }
 
+  void _navigateToProductSearch() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(
+              value: context.read<ShoppingListBloc>(),
+            ),
+            BlocProvider.value(
+              value: context.read<ProductSearchBloc>()..add(LoadProducts()),
+            ),
+          ],
+          child: const ProductSearchScreen(shopId: 1),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtils.init(context);
-    final spacingHeight = context.getResponsiveSize(20);
 
     return Scaffold(
       body: SafeArea(
@@ -97,9 +113,10 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
               return Column(
                 children: [
                   Container(
-                    height: 80, // Hauteur fixe pour l'AppHeader
+                    height: 80,
                     padding: EdgeInsets.symmetric(
-                        horizontal: context.getResponsiveSize(16)),
+                      horizontal: context.getResponsiveSize(16),
+                    ),
                     child: AppHeader(
                       shoppingLists: state.shoppingLists,
                       currentIndex: _currentIndex,
@@ -109,75 +126,84 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                   ),
                   Expanded(
                     child: state.currentList.products.isEmpty
-                        ? _buildEmptyState()
-                        : ShoppingListItems(
-                            state: state,
-                            onDeleteProduct: _handleDeleteProduct,
-                          ),
+                      ? _buildEmptyState()
+                      : ShoppingListItems(
+                          state: state,
+                          onDeleteProduct: _handleDeleteProduct,
+                        ),
                   ),
-                  // Bottom Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        width: context.getResponsiveSize(160),
-                        height: context.getResponsiveSize(100),
-                        margin: const EdgeInsets.all(16.0),
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ProductSearchScreen(shopId: 2)),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            size: context.getResponsiveSize(32),
-                            color: Colors.white,
-                          ),
-                        ),
+                      _buildActionButton(
+                        icon: Icons.add,
+                        onPressed: _navigateToProductSearch,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                      Container(
-                        width: context.getResponsiveSize(160),
-                        height: context.getResponsiveSize(100),
-                        margin: const EdgeInsets.all(16.0),
-                        child: ElevatedButton(
-                          onPressed: _handleDeleteList,
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.delete,
-                            size: context.getResponsiveSize(32),
-                            color: Colors.white,
-                          ),
-                        ),
+                      _buildActionButton(
+                        icon: Icons.delete,
+                        onPressed: _handleDeleteList,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ],
-                  )
+                  ),
                 ],
               );
             }
 
             if (state is ShoppingListError) {
-              return Center(child: Text(state.message));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: context.getResponsiveSize(48),
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: context.getResponsiveFontSize(16),
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             return const Center(child: Text('État inconnu'));
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return Container(
+      width: context.getResponsiveSize(80),
+      height: context.getResponsiveSize(80),
+      margin: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Icon(
+          icon,
+          size: context.getResponsiveSize(32),
+          color: Colors.white,
         ),
       ),
     );
@@ -190,13 +216,15 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         children: [
           Icon(
             Icons.shopping_basket_outlined,
-            size: 64,
+            size: context.getResponsiveSize(64),
             color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: context.getResponsiveSize(16)),
+          Text(
             'Aucun produit dans la liste',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(
+              fontSize: context.getResponsiveFontSize(18),
+            ),
           ),
         ],
       ),
