@@ -301,6 +301,14 @@ const Plan = (props: CustomProps) => {
         return tmp + (col.isBeacon ? " + beacon" : "")
     }
 
+    const changeColors = () => {
+        rayons.map(rayon => {
+            localStorage.removeItem(rayon)
+        })
+
+        setColorRayons(rayons.length)
+    }
+
     return (
         <div className={"single_shop"}>
             {info.open ? <div className={"info " + info.type}>
@@ -335,7 +343,7 @@ const Plan = (props: CustomProps) => {
                                 if (newValue.includes("Add \"")) {
                                     setValue(newValue.split("\"")[1]);
                                     setRayons([...rayons, newValue.split("\"")[1]]);
-                                    setColorRayons(rayons.length);
+                                    setColorRayons(rayons.length + 1);
                                 } else {
                                     setValue(newValue);
                                 }
@@ -403,6 +411,10 @@ const Plan = (props: CustomProps) => {
                             setCols(parseInt(event.target.value));
                         }}
                     />
+                </div>
+                <div>
+                    <h3>Couleurs des rayons</h3>
+                    <button className={"customButton"} onClick={changeColors}>Changer les couleurs</button>
                 </div>
                 <div>
                     <h3>Téléchargement du plan</h3>
