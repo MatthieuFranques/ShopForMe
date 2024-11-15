@@ -1,15 +1,16 @@
 form {
-    width: 300px;
     margin: auto;
     padding: 1em;
-    border: 1px solid #ccc;
-    background-color: rgba(255, 255, 255, 0.79);
     transition: all .1s ease-in-out;
     cursor: pointer;
     border-radius: 5px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
 
-    &:hover {
-        background-color: rgb(255, 255, 255);
+    .MuiInputBase-root {
+        background-color: rgb(255, 255, 255) !important;
     }
 }
 
@@ -34,19 +35,19 @@ input {
 
 .customButton {
     padding: 15px 20px;
-    color: #6f42c1;
     border: #6f42c1 2px solid;
     border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.59);
     cursor: pointer;
     width: 100%;
+    color: #ffffff;
+    background-color: #6f42c1;
     font-size: 1.1em;
     transition: all .1s ease-in-out;
 }
 
 .customButton:hover {
-    color: white;
-    background-color: #6f42c1;
+    color: #6f42c1;
+    background-color: rgb(255, 255, 255);
 }
 
 table {
@@ -72,7 +73,9 @@ td {
     position: absolute;
     top: 0;
     left: 0;
-    border: 1px solid rgb(255, 255, 255);
+}
+
+.cell:hover {
     box-shadow: 0 0 10px 1px rgb(255, 255, 255);
 }
 
@@ -154,8 +157,23 @@ td {
     display: flex;
     justify-content: space-around;
 
+    p {
+        margin-bottom: 20px;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.78);
+    }
+
     h1 {
         margin: 20px 0;
+    }
+
+    >div {
+        width: 50%;
+        background-color: #160C2C;
+        margin: 10px;
+        color: white;
+        padding: 10px 30px;
+        border-radius: 2px;
     }
 }
 

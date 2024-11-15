@@ -81,7 +81,7 @@ const ShopFormCreate: React.FC<ShopFormCreateProps> = ({onSubmit}) => {
                     onChange={handleChange}
                 />
             </div>
-            <Button variant="contained" type={"submit"}>Create Shop</Button>
+            <button className="customButton" type={"submit"}>Create Shop</button>
         </form>
     );
 };
@@ -123,6 +123,7 @@ const ShopFormList: React.FC<ShopFormListProps> = ({onSubmit}) => {
             <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Select Shop:</InputLabel>
                 <Select
+                    fullWidth
                     variant={"filled"}
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -135,7 +136,7 @@ const ShopFormList: React.FC<ShopFormListProps> = ({onSubmit}) => {
                     ))}
                 </Select>
             </FormControl>
-            <Button variant="contained" type={"submit"}>Visit Shop</Button>
+            <button className={"customButton"} type={"submit"}>Visit Shop</button>
         </form>
     );
 };
@@ -155,12 +156,14 @@ const Shop: React.FC = () => {
     return (
         <div className={"shop_container"}>
             <div>
-                <h1>Create a new Shop</h1>
+                <h1>Créer un nouveau Magasin</h1>
+                <p>Remplir les informations suivantes pour créer un nouveau magasin qui vous correspond !</p>
                 <ShopFormCreate onSubmit={handleCreateShop}/>
             </div>
 
             <div>
-                <h1>Consult a Shop</h1>
+                <h1>Consulter un Magasin</h1>
+                <p>Rechercher un de vos magasin pour venir le modifier a votre guise !</p>
                 <ShopFormList onSubmit={handleListConsultShop}/>
             </div>
         </div>
