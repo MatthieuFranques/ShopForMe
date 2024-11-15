@@ -1,12 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mobile/services/cache_service.dart';
+import 'package:mobile/utils/constants.dart'; // Importer constants.dart
 import '../models/product.dart';
 import '../models/shop.dart';
 
 class StoreService {
   //replace with good URL when ready
-  static const String baseUrl = 'http://127.0.0.1:3001';
   
   final CacheService _cacheService;
   final http.Client _client;

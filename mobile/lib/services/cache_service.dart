@@ -1,4 +1,5 @@
-import 'package:hive_flutter/hive_flutter.dart';
+// lib/services/cache_service.dart
+import 'package:hive/hive.dart';
 import '../models/product.dart';
 import '../models/shop.dart';
 
@@ -7,10 +8,10 @@ class CacheService {
   static const String productBox = 'products';
 
   late Box<Shop> _shopBox;
-  late Box<dynamic> _productBox;  // Changé en Box<dynamic>
+  late Box<dynamic> _productBox;
 
   Future<void> init() async {
-    await Hive.initFlutter();
+    // Suppression de Hive.initFlutter()
 
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(ShopAdapter());
@@ -23,7 +24,7 @@ class CacheService {
     }
 
     _shopBox = await Hive.openBox<Shop>(shopBox);
-    _productBox = await Hive.openBox(productBox);  // Ouvert comme Box générique
+    _productBox = await Hive.openBox(productBox);
   }
 
   Future<void> cacheShop(Shop shop) async {
@@ -49,7 +50,7 @@ class CacheService {
     try {
       print('🔍 Retrieving products from cache');
       final dynamic data = _productBox.get(key);
-      
+
       if (data == null) {
         print('⚠️ No products found in cache');
         return null;
@@ -64,14 +65,14 @@ class CacheService {
         print('🔄 Converting cached data to Product list');
         final products = data.map((item) {
           if (item is Product) return item;
-          
+
           if (item is Map) {
             return Product.fromJson(Map<String, dynamic>.from(item));
           }
-          
+
           throw TypeError();
         }).toList();
-        
+
         print('✅ Successfully converted ${products.length} products');
         return products.cast<Product>();
       }
