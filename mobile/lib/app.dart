@@ -30,17 +30,18 @@ class Shop4MeApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => NavigationBloc(storeService)
-              ..add(LoadNavigationEvent()),
+              ..add(LoadNavigationEvent(products: [])), // Initialisation avec une liste vide
           ),
           BlocProvider(
             create: (context) => ProductSearchBloc(storeService),
           ),
           BlocProvider(
-          create: (context) => ShoppingListBloc(
-            currentShop: storeService.currentShop,
-          )..add(LoadShoppingList()
-          ), // Dispatch de l'événement ici
-        ),        ],
+            create: (context) => ShoppingListBloc(
+              currentShop: storeService.currentShop,
+            )..add(LoadShoppingList()
+            ), // Dispatch de l'événement ici
+          ),
+        ],
         child: Builder(
           builder: (context) {
             ScreenUtils.init(context);

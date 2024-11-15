@@ -1,24 +1,28 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mobile/services/cache_service.dart';
-import 'package:mobile/utils/constants.dart'; // Importer constants.dart
+import 'package:mobile/utils/constants.dart';
 import '../models/product.dart';
 import '../models/shop.dart';
 
 class StoreService {
-  //replace with good URL when ready
-  
   final CacheService _cacheService;
   final http.Client _client;
   Shop? _currentShop;
+  static const int defaultShopId = 2; // ID du magasin par défaut
 
   StoreService(this._cacheService, {http.Client? client}) 
-      : _client = client ?? http.Client();
+      : _client = client ?? http.Client() {
+    // Charger le magasin par défaut dans le constructeur
+    loadCurrentShop(defaultShopId).then((_) {
+      print('✅ Default shop initialized (ID: $defaultShopId)');
+    }).catchError((error) {
+      print('❌ Error initializing default shop: $error');
+    });
+  }
 
-  // Getter for current shop
   Shop? get currentShop => _currentShop;
 
-  // Setter for current shop
   set currentShop(Shop? shop) {
     print('🏪 Setting current shop: ${shop?.name ?? "None"}');
     _currentShop = shop;
@@ -91,13 +95,40 @@ class StoreService {
   Future<void> loadCurrentShop(int shopId) async {
     print('🔍 Loading shop with id: $shopId');
     try {
-      final shop = _cacheService.getShop(shopId);
-      if (shop != null) {
+      // 1. Vérifier le cache d'abord
+      final cachedShop = _cacheService.getShop(shopId);
+      if (cachedShop != null) {
         print('✅ Found shop in cache');
+        currentShop = cachedShop;
+        return;
+      }
+
+      // 2. Si pas en cache, essayer l'API
+      print('🌐 Fetching shop from API');
+      final headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+      };
+
+      final Uri url = Uri.parse('$baseUrl/shop/$shopId');
+      final response = await _client.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final shop = Shop.fromJson(jsonData);
+        
+        // Mettre en cache
+        await _cacheService.cacheShop(shop);
         currentShop = shop;
+        print('✅ Shop loaded and cached successfully');
+      } else if (shopId == defaultShopId) {
+        // Si c'est le magasin par défaut qui échoue, lancer une erreur
+        print('❌ Failed to load default shop');
+        throw Exception('Failed to load default shop');
       } else {
-        print('⚠️ Shop not found in cache');
-        // Ici vous pourriez ajouter la logique pour charger le shop depuis l'API
+        // Si ce n'est pas le magasin par défaut, essayer de charger le magasin par défaut à la place
+        print('⚠️ Failed to load requested shop, falling back to default shop');
+        await loadCurrentShop(defaultShopId);
       }
     } catch (e) {
       print('❌ Error loading shop: $e');

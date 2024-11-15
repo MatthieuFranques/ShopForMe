@@ -1,10 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/navigation_bloc.dart';
+import 'package:mobile/models/product.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
-class NavigationPage extends StatelessWidget {
-  const NavigationPage({super.key});
+class NavigationPage extends StatefulWidget {
+  final List<Product> shoppingList;
+
+  const NavigationPage({
+    super.key,
+    required this.shoppingList,
+  });
+
+  @override
+  State<NavigationPage> createState() => _NavigationPageState();
+}
+
+class _NavigationPageState extends State<NavigationPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Charger la liste initiale
+    context.read<NavigationBloc>().add(LoadNavigationEvent(
+      products: widget.shoppingList,
+    ));
+  }
+
+  void _handleProductFound(BuildContext context, NavigationLoadedState state) {
+    if (state.isLastProduct) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const FinalNavigationScreen()),
+      );
+    } else {
+      context.read<NavigationBloc>().add(ProductFoundEvent(
+        product: widget.shoppingList[0], // Le produit actuel
+      ));
+    }
+  }
+
+  void _handleSkipProduct(BuildContext context) {
+    context.read<NavigationBloc>().add(ProductFoundEvent(
+      product: widget.shoppingList[0], // Le produit actuel
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +64,24 @@ class NavigationPage extends StatelessWidget {
         elevation: 0,
         backgroundColor: const Color.fromARGB(255, 242, 238, 216),
       ),
-      body: BlocBuilder<NavigationBloc, NavigationState>(
+      body: BlocConsumer<NavigationBloc, NavigationState>(
+        listener: (context, state) {
+          if (state is NavigationError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
         builder: (context, state) {
+          if (state is NavigationLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
           if (state is NavigationLoadedState) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -58,9 +113,7 @@ class NavigationPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Icon(
-                    state.arrowDirection == ArrowDirection.nord
-                        ? Icons.arrow_back
-                        : Icons.arrow_forward,
+                    _getDirectionIcon(state.arrowDirection),
                     size: screenWidth * 0.65,
                     color: const Color.fromARGB(255, 1, 28, 64),
                   ),
@@ -79,29 +132,20 @@ class NavigationPage extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Padding(
+                // Boutons de contrôle
+                if (!state.isLastProduct) Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Row(
                     children: [
                       Expanded(
-                        // Bouton de validation
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const FinalNavigationScreen()),
-                            );
-                          },
+                          onPressed: () => _handleProductFound(context, state),
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
                             ),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            foregroundColor: Colors.white,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                           ),
                           child: Container(
                             width: double.infinity,
@@ -116,19 +160,14 @@ class NavigationPage extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        // Bouton de skip pour passer à un autre aliment
                         child: ElevatedButton(
-                          onPressed: () {
-                            // to do
-                          },
+                          onPressed: () => _handleSkipProduct(context),
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.zero,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
                             ),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            foregroundColor: Colors.white,
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
                           ),
                           child: Container(
                             width: double.infinity,
@@ -147,14 +186,26 @@ class NavigationPage extends StatelessWidget {
                 ),
               ],
             );
-          } else {
-            // Loader si les données ne sont pas encore chargées
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
           }
+
+          return const Center(
+            child: Text('Une erreur est survenue'),
+          );
         },
       ),
     );
+  }
+
+  IconData _getDirectionIcon(ArrowDirection direction) {
+    switch (direction) {
+      case ArrowDirection.nord:
+        return Icons.arrow_upward;
+      case ArrowDirection.sud:
+        return Icons.arrow_downward;
+      case ArrowDirection.est:
+        return Icons.arrow_forward;
+      case ArrowDirection.ouest:
+        return Icons.arrow_back;
+    }
   }
 }

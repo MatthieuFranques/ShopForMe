@@ -44,6 +44,14 @@ class CreateNewShoppingList extends ShoppingListEvent {}
 
 class ValidateShoppingList extends ShoppingListEvent {}
 
+class DeleteShoppingList extends ShoppingListEvent {
+  final String listId;
+  DeleteShoppingList(this.listId);
+
+  @override
+  List<Object?> get props => [listId];
+}
+
 // States
 abstract class ShoppingListState extends Equatable {
   @override
@@ -88,6 +96,7 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
     on<ValidateShoppingList>(_onValidateShoppingList);
     on<SelectShoppingList>(_onSelectShoppingList);
     on<CreateNewShoppingList>(_onCreateNewShoppingList);
+    on<DeleteShoppingList>(_onDeleteShoppingList);
   }
 
   Future<List<ShoppingList>> _loadShoppingListsFromAssets() async {
@@ -265,6 +274,54 @@ class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {
       ));
     }
   }
+
+Future<void> _onDeleteShoppingList(
+    DeleteShoppingList event,
+    Emitter<ShoppingListState> emit,
+  ) async {
+    if (state is ShoppingListLoaded) {
+      final currentState = state as ShoppingListLoaded;
+      
+      // Vérifier s'il reste plus d'une liste
+      if (currentState.shoppingLists.length <= 1) {
+        emit(ShoppingListError('Impossible de supprimer la dernière liste'));
+        return;
+      }
+
+      // Filtrer la liste à supprimer
+      final updatedLists = currentState.shoppingLists
+          .where((list) => list.id != event.listId)
+          .toList();
+
+      // Sélectionner la première liste comme liste courante si la liste supprimée était la liste courante
+      final newCurrentList = currentState.currentList.id == event.listId
+          ? updatedLists.first
+          : currentState.currentList;
+
+      // Vérifier la validité des produits de la nouvelle liste courante
+      final validationErrors = <String>[];
+      final invalidProducts = <Product>[];
+
+      if (currentShop != null) {
+        for (final product in newCurrentList.products) {
+          if (!_isRayonValid(product.rayon)) {
+            validationErrors.add(
+              'Le rayon "${product.rayon}" pour le produit "${product.name}" n\'existe pas dans ce magasin'
+            );
+            invalidProducts.add(product);
+          }
+        }
+      }
+
+      emit(ShoppingListLoaded(
+        updatedLists,
+        newCurrentList,
+        validationErrors: validationErrors,
+        invalidProducts: invalidProducts,
+      ));
+    }
+  }
+
 
   Future<void> _onCreateNewShoppingList(
     CreateNewShoppingList event,

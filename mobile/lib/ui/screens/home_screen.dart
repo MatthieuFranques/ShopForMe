@@ -1,13 +1,16 @@
-// lib/ui/screens/home_screen.dart
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
-import 'package:mobile/ui/screens/shopping_list_screen.dart';
-import 'package:mobile/ui/widgets/app_header.dart';
-import 'package:mobile/ui/widgets/action_button.dart';
-import 'package:mobile/ui/widgets/start_button.dart';
-import 'package:mobile/ui/screens/product_search_screen.dart';
+
 import 'package:mobile/ui/screens/navigation_screen.dart';
+import 'package:mobile/ui/screens/product_search_screen.dart';
+import 'package:mobile/ui/screens/shopping_list_screen.dart';
+
+import 'package:mobile/ui/widgets/action_button.dart';
+import 'package:mobile/ui/widgets/app_header.dart';
+import 'package:mobile/ui/widgets/start_button.dart';
+
 import 'package:mobile/utils/screen_utils.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,16 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Aucun chargement manuel ici, le ShoppingListBloc gère cela
   }
 
+/// Functions to handle user actions
   void _navigateToEditList(BuildContext context, ShoppingListLoaded state) {
     if (state.shoppingLists.isEmpty) {
-      print('⚠️ Cannot edit: No shopping lists available');
+      _showErrorSnackBar(context, 'Aucune liste de courses disponible');
       return;
     }
 
-    print('📝 Navigating to edit current shopping list');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -44,39 +46,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _searchProduct(BuildContext context, ShoppingListLoaded state) {
     if (state.shoppingLists.isEmpty) {
-      print('⚠️ Cannot search: No shopping lists available');
+      _showErrorSnackBar(context, 'Aucune liste de courses disponible');
       return;
     }
 
-    print('🔍 Opening product search');
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const ProductSearchScreen(shopId: 1),
+        builder: (context) => const ProductSearchScreen(shopId: 2),
       ),
     );
   }
 
   void _startShopping(BuildContext context, ShoppingListLoaded state) {
     if (state.shoppingLists.isEmpty) {
-      print('⚠️ Cannot start: No shopping lists available');
+      _showErrorSnackBar(context, 'Aucune liste de courses disponible');
       return;
     }
 
-    print('🛒 Starting shopping navigation');
+    if (state.currentList.products.isEmpty) {
+      _showErrorSnackBar(context, 'La liste de courses est vide');
+      return;
+    }
+
+    print('Starting shopping with list: ${state.currentList.products}');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const NavigationPage()),
+      MaterialPageRoute(
+      builder: (context) => NavigationPage(
+        shoppingList: state.currentList.products,
+      ),
+      ),
+    );
+    }
+
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
 
   void _handleAddList(BuildContext context) {
-    print('➕ Creating new shopping list');
     context.read<ShoppingListBloc>().add(CreateNewShoppingList());
   }
 
   void _handleIndexChanged(BuildContext context, int index, ShoppingListLoaded state) {
-    print('📑 Switching to shopping list $index');
     setState(() {
       currentIndex = index;
     });
@@ -102,8 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                // TODO: Implémenter la suppression de la liste
-                // context.read<ShoppingListBloc>().add(DeleteShoppingList(state.currentList.id));
+                context.read<ShoppingListBloc>().add(
+                      DeleteShoppingList(state.currentList.id),
+                    );
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
@@ -116,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+/// Build method
   @override
   Widget build(BuildContext context) {
     ScreenUtils.init(context);
@@ -132,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is ShoppingListLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-
+/// Main content
             if (state is ShoppingListLoaded) {
               return SingleChildScrollView(
                 child: Padding(
@@ -180,19 +200,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: spacingHeight),
+                      SizedBox(height: spacingHeight * 2),
                       Center(
                         child: StartButton(
-                          onPressed: () => _startShopping(context, state),
+                          onPressed: () {
+                            if (state.shoppingLists.isNotEmpty) {
+                              _startShopping(context, state);
+                            }
+                          },
                         ),
                       ),
-                      SizedBox(height: spacingHeight),
+                      if (state.shoppingLists.isNotEmpty) ...[
+                        SizedBox(height: spacingHeight),
+                        Center(
+                          child: TextButton.icon(
+                            onPressed: () => _handleDeleteList(context, state),
+                            icon: const Icon(Icons.delete_outline),
+                            label: const Text('Supprimer la liste'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
               );
             }
-
+/// Error state
             if (state is ShoppingListError) {
               return Center(
                 child: Column(
@@ -212,11 +248,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.red,
                       ),
                     ),
+                    TextButton(
+                      onPressed: () {
+                        context.read<ShoppingListBloc>().add(LoadShoppingList());
+                      },
+                      child: const Text('Réessayer'),
+                    ),
                   ],
                 ),
               );
             }
-
+/// Default state
             return const Center(child: Text('État inconnu'));
           },
         ),
