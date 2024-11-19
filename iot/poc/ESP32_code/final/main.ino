@@ -1,4 +1,11 @@
-﻿// ANCHOR
+﻿/**
+ * @file main.ino
+ * @brief This file must be uploaded to the ESP32, which will serve as the anchor.
+ * @details Its role will be to make the Bluetooth link between the tags and the phone.
+ * The anchor must receive the positions and send them.
+ */
+
+// ANCHOR
 #include <SPI.h>
 #include "DW1000Ranging.h"
 
@@ -33,10 +40,10 @@ const int MAX_TAGS = 3; // Maximum number of tags to track
 unsigned long previousMillis = 0; // Variable to store the previous time
 const long interval = 1000;       // Log interval (1 second)
 
-// Addition of a constant offset of 70 cm
+/// @brief Addition of a constant offset of 70 cm
 const float DISTANCE_OFFSET = 0.7;
 
-// Structure for storing tag distances
+/// @brief Structure for storing tag distances
 struct Tag {
     uint8_t address[8]; // Use an array of 8 bytes for the long address
     float distance;
@@ -46,9 +53,10 @@ struct Tag {
 Tag tags[MAX_TAGS];
 int numTags = 0;
 
-// MAP
+/// @brief Data to be sent in JSON format to the application
 std::map<String, float> dataToSend;
 
+/// @brief Class to handle BLE server events for connection and disconnection
 class MyServerCallbacks: public BLEServerCallbacks {
 
     void onConnect(BLEServer* pServer) {
@@ -60,6 +68,10 @@ class MyServerCallbacks: public BLEServerCallbacks {
     }
 };
 
+/**
+ * @brief Initialise the necessary modules (Bluetooth and UWB).
+ * @details This function is called once when the programme is started.
+ */
 void setup() {
     Serial.begin(115200);
     delay(1000);
@@ -76,6 +88,10 @@ void setup() {
     initBluetooth();
 }
 
+/**
+ * @brief Main loop executed continuously.
+ * @details This function reads distances and sends them via Bluetooth.
+ */
 void loop() {
     DW1000Ranging.loop();
 
@@ -96,6 +112,15 @@ void loop() {
     }
 }
 
+/**
+ * @brief Initializes the Bluetooth Low Energy (BLE) module on the ESP32.
+ * @details Configures and starts the BLE server, a service, and a feature,  
+ *          then launch advertising to make the ESP32 detectable by other devices.
+ * 
+ * @note This method must only be called once in the `setup` function.
+ * 
+ * @remarks The method uses the Arduino BLE library to manage BLE connectivity.
+ */
 void initBluetooth() {
 
     Serial.begin(115200);
@@ -128,15 +153,12 @@ void initBluetooth() {
     Serial.print("BLUETOOTH initialized and detectable...");
 }
 
-void logDistances(const uint8_t* address, float range) {
-    Serial.print("ANCHOR: Range to TAG ");
-    printAddress(address);
-    Serial.print("\t Range: ");
-    Serial.print(range);
-    Serial.print(" m");
-    Serial.println();
-}
-
+/**
+ * @brief Updates or adds a remote device to the list of tracked beacons with its current distance.
+ * @details This method retrieves information from a remote tag (address and distance) via the `DW1000Ranging` library. 
+ *          If the tag already exists in the list, it updates its distance and marks the tag as active. 
+ *          If the tag is not found and there is still room in the list, it is added as a new tag.
+ */
 void newRange() {
     DW1000Device* distantDevice = DW1000Ranging.getDistantDevice();
     uint8_t* address = distantDevice->getByteAddress(); // Use the long address as an array of bytes
@@ -165,6 +187,14 @@ void newRange() {
     }
 }
 
+/**
+ * @brief Checks whether a device is already in the list of tracked beacons and displays a message if the device is new.
+ * @details This method compares the device address with those of existing tags in the list. 
+ *          If the address is not found, it displays a message indicating that a new device has been added.
+ * 
+ * @param[in] device Pointer to a `DW1000Device` object representing the detected device. 
+ *                   The device address is used for verification.
+ */
 void newDevice(DW1000Device *device) {
     uint8_t* address = device->getByteAddress(); // Use the long address as an array of bytes
     bool found = false;
@@ -180,6 +210,16 @@ void newDevice(DW1000Device *device) {
     }
 }
 
+/**
+ * @brief Removes an inactive device from the list of tracked beacons.
+ * @details This method checks whether the address of the inactive device is present in the list of tags. 
+ *          If it is found, the device is removed from the list, and the remaining entries are reorganised.
+ * 
+ * @param[in] device Pointer to a `DW1000Device` object representing the inactive device.
+ * 
+ * @note The list of tags is assumed to be stored in a `tags` array with a global counter `numTags`.
+ *       Deletion involves shifting elements in the table to maintain consistency.
+ */
 void inactiveDevice(DW1000Device *device) {
     uint8_t* address = device->getByteAddress(); // Address of inactive device
     bool found = false;
@@ -206,35 +246,21 @@ void inactiveDevice(DW1000Device *device) {
     }
 }
 
-
-void printAddress(const uint8_t* address) {
-    for (int i = 0; i < 8; i++) {
-        if (address[i] < 0x10) Serial.print("0");
-        Serial.print(address[i], HEX);
-        if (i < 7) Serial.print(":");
-    }
-}
-
-String getAddress(const uint8_t* address) {
-    String addressStr = "";
-    for (int i = 0; i < 8; i++) {
-        if (address[i] < 0x10) {
-            addressStr += "0";  // Add a zero before values below 0x10
-        }
-        addressStr += String(address[i], HEX);  // Convert each byte to hex and add to the string
-        if (i < 7) {
-            addressStr += ":";  // Add a ‘:’ between the bytes
-        }
-    }
-
-    return addressStr;
-}
-
+/**
+ * @brief Sends a JSON notification via Bluetooth
+ * @details This method constructs a JSON string from the data supplied and sends it to
+ *          to a device connected via Bluetooth using the notification function.
+ * 
+ * @param[in] dataToSend A map containing the data to be included in the JSON. 
+ *                       The keys (String) represent the addresses of the beacons, 
+ *                       and the values (float) represent the associated distances.
+ * 
+ * @note The method only sends if a device is connected to the BLE device.
+ */
 void sendJson(std::map<String, float> dataToSend) {
     // If a device is connected, send a notification every 'notifyInterval' milliseconds
     if (deviceConnected) {
 
-        //TODO
         String jsonString = constructJson(dataToSend);
 
         // Mettre à jour la valeur de la caractéristique avec la chaîne JSON
@@ -244,10 +270,28 @@ void sendJson(std::map<String, float> dataToSend) {
         pCharacteristic->notify();
 
         // Wait before sending the next notification
-        //delay(notifyInterval);
+        delay(notifyInterval);
     }
 }
 
+/**
+ * @brief Builds a data package and sends a JSON when all the data has been retrieved (the 3 tags).
+ * @details This method adds a new entry (address and distance) to a data map. 
+ *          When the map contains exactly three entries, it generates and sends a JSON via the `sendJson` method, 
+ *          then clean up the map for resending.
+ * 
+ * @param[in] address The address (identifier) of the tag in string form.
+ * @param[in] range The distance associated with the beacon, expressed in metres.
+ * 
+ * @note This method assumes that a maximum of three tags must be included in the package before sending.
+ * 
+ * @code
+ * // Example of use :
+ * constructPackage("Beacon1", 3.14);
+ * constructPackage("Beacon2", 2.71);
+ * constructPackage("Beacon3", 1.61);
+ * @endcode
+ */
 void constructPackage(String address, float range)  {
     // Add a new key-value entry
     if (dataToSend.size() <= 3)
@@ -260,9 +304,27 @@ void constructPackage(String address, float range)  {
         // Cleaning up the data to be sent for the next round
         dataToSend.clear();
     }
-  
 }
 
+/**
+ * @brief Builds a JSON string from the data supplied.
+ * @details This method generates a JSON string containing a timestamp and a list of objects representing tags,
+ *          each tag having a name (address) and an associated distance.
+ * 
+ * @param[in] dataToSend A map containing the data to be included in the JSON. 
+ *                       Keys (String) represent the addresses of the beacons, 
+ *                       and the values (float) represent the associated distances.
+ * @return A JSON string representing the data in the following format :
+ * @code
+ * {
+ *     "timestamp": 123456,
+ *     "beacons": [
+ *         {"name": "Beacon1", "distance": 3.14},
+ *         {"name": "Beacon2", "distance": 2.71}
+ *     ]
+ * }
+ * @endcode
+ */
 String constructJson(std::map<String, float> dataToSend) {
     // Create a JSON object
     StaticJsonDocument<300> doc;  // 300-byte capacity
@@ -290,4 +352,54 @@ String constructJson(std::map<String, float> dataToSend) {
     serializeJson(doc, jsonString);  // Serialise the JSON object in a string
 
     return jsonString;
+}
+
+/**
+ * @brief Displays the distance calculated between an anchor and a UWB tag.
+ * @details This method displays the beacon address and the corresponding distance on the serial monitor.
+ * 
+ * @param[in] address Pointer to the address of the UWB tag (byte array).
+ * @param[in] range Calculated distance between the anchor and the beacon, in metres.
+ */
+void logDistances(const uint8_t* address, float range) {
+    Serial.print("ANCHOR: Range to TAG ");
+    printAddress(address);
+    Serial.print("\t Range: ");
+    Serial.print(range);
+    Serial.print(" m");
+    Serial.println();
+}
+
+/**
+ * @brief Displays a UWB address in readable hexadecimal format.
+ * 
+ * @param[in] address Pointer to the byte array containing the UWB address (8 bytes).
+ */
+void printAddress(const uint8_t* address) {
+    for (int i = 0; i < 8; i++) {
+        if (address[i] < 0x10) Serial.print("0");
+        Serial.print(address[i], HEX);
+        if (i < 7) Serial.print(":");
+    }
+}
+
+/**
+ * @brief Converts a UWB address into a readable hexadecimal string.
+ * 
+ * @param[in] address Pointer to the byte array containing the UWB address (8 bytes).
+ * @return A formatted string representing the address in hexadecimal format.
+ */
+String getAddress(const uint8_t* address) {
+    String addressStr = "";
+    for (int i = 0; i < 8; i++) {
+        if (address[i] < 0x10) {
+            addressStr += "0";  // Add a zero before values below 0x10
+        }
+        addressStr += String(address[i], HEX);  // Convert each byte to hex and add to the string
+        if (i < 7) {
+            addressStr += ":";  // Add a ‘:’ between the bytes
+        }
+    }
+
+    return addressStr;
 }
