@@ -73,18 +73,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
  * @details This function is called once when the programme is started.
  */
 void setup() {
-    Serial.begin(115200);
-    delay(1000);
-    Serial.println("Starting as ANCHOR...");
-
-    SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
-    DW1000Ranging.initCommunication(PIN_RST, PIN_SS, PIN_IRQ); // Reset, CS, IRQ pin
-    DW1000Ranging.attachNewRange(newRange);
-    DW1000Ranging.attachNewDevice(newDevice);
-    DW1000Ranging.attachInactiveDevice(inactiveDevice);
-
-    DW1000Ranging.startAsAnchor(ANCHOR_ADDRESS, DW1000.MODE_LONGDATA_RANGE_LOWPOWER);
-    Serial.println("ANCHOR initialized and running...");
+    
     initBluetooth();
 }
 
@@ -110,6 +99,28 @@ void loop() {
             }
         }
     }
+}
+
+/**
+ * @brief Initializes the ESP32 as an anchor in the UWB positioning system.
+ * @details Configures SPI communications, initializes DW1000Ranging library, 
+ *          and attach callbacks to manage distances and new devices, 
+ *          and inactive devices. The ESP32 starts in anchor mode with a defined address.
+ */
+void initAnchor() {
+
+    Serial.begin(115200);
+    delay(1000);
+    Serial.println("Starting as ANCHOR...");
+
+    SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
+    DW1000Ranging.initCommunication(PIN_RST, PIN_SS, PIN_IRQ); // Reset, CS, IRQ pin
+    DW1000Ranging.attachNewRange(newRange);
+    DW1000Ranging.attachNewDevice(newDevice);
+    DW1000Ranging.attachInactiveDevice(inactiveDevice);
+
+    DW1000Ranging.startAsAnchor(ANCHOR_ADDRESS, DW1000.MODE_LONGDATA_RANGE_LOWPOWER);
+    Serial.println("ANCHOR initialized and running...");
 }
 
 /**
