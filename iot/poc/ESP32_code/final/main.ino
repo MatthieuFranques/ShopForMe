@@ -73,7 +73,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
  * @details This function is called once when the programme is started.
  */
 void setup() {
-    
+    initAnchor();
     initBluetooth();
 }
 
