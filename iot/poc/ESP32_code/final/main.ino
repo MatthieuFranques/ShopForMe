@@ -73,6 +73,8 @@ class MyServerCallbacks: public BLEServerCallbacks {
  * @details This function is called once when the programme is started.
  */
 void setup() {
+    Serial.begin(115200);
+
     initAnchor();
     initBluetooth();
 }
@@ -109,7 +111,6 @@ void loop() {
  */
 void initAnchor() {
 
-    Serial.begin(115200);
     delay(1000);
     Serial.println("Starting as ANCHOR...");
 
@@ -133,8 +134,6 @@ void initAnchor() {
  * @remarks The method uses the Arduino BLE library to manage BLE connectivity.
  */
 void initBluetooth() {
-
-    Serial.begin(115200);
     BLEDevice::init("ESP32_BLE"); // Name of BLE device
 
     pServer = BLEDevice::createServer(); // Create a BLE server
@@ -269,6 +268,7 @@ void inactiveDevice(DW1000Device *device) {
  * @note The method only sends if a device is connected to the BLE device.
  */
 void sendJson(std::map<String, float> dataToSend) {
+    Serial.println(constructJson(dataToSend));
     // If a device is connected, send a notification every 'notifyInterval' milliseconds
     if (deviceConnected) {
 
