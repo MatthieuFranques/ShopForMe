@@ -88,17 +88,53 @@ void loop() {
         // Log distances for each active tag
         for (int i = 0; i < numTags; i++) {
             if (tags[i].active) {
-                Serial.print("ANCHOR: Range to TAG ");
-                printAddress(tags[i].address);
-                Serial.print("\t Range: ");
-                Serial.print(tags[i].distance);
-                Serial.print(" m");
-                Serial.println();
+                logDistances(tags[i].address, tags[i].distance);
 
                 constructPackage(getAddress(tags[i].address), tags[i].distance);
             }
         }
     }
+}
+
+void initBluetooth() {
+
+    Serial.begin(115200);
+    BLEDevice::init("ESP32_BLE"); // Name of BLE device
+
+    pServer = BLEDevice::createServer(); // Create a BLE server
+    pServer->setCallbacks(new MyServerCallbacks()); // Set callbacks for connection events
+
+    // Create a BLE service with a specific UUID
+    BLEService *pService = pServer->createService(BLEUUID((uint16_t)0x180D));
+
+    // Create a BLE characteristic with read and notify properties
+    pCharacteristic = pService->createCharacteristic(
+                        BLEUUID((uint16_t)0x2A37),
+                        BLECharacteristic::PROPERTY_READ |
+                        BLECharacteristic::PROPERTY_NOTIFY
+                      );
+
+    pCharacteristic->addDescriptor(new BLE2902());
+
+    pCharacteristic->setValue("-- TEST Notification from ESP32 --"); // Set the initial value of the characteristic
+
+    // Start the BLE service
+    pService->start();
+
+    // Start advertising so the device can be discovered
+    BLEAdvertising *pAdvertising = pServer->getAdvertising();
+    pAdvertising->start();
+
+    Serial.print("BLUETOOTH initialized and detectable...");
+}
+
+void logDistances(const uint8_t* address, float range) {
+    Serial.print("ANCHOR: Range to TAG ");
+    printAddress(address);
+    Serial.print("\t Range: ");
+    Serial.print(range);
+    Serial.print(" m");
+    Serial.println();
 }
 
 void newRange() {
@@ -150,8 +186,6 @@ void inactiveDevice(DW1000Device *device) {
 
     for (int i = 0; i < numTags; i++) {
       
-        Serial.println("Il faudrait passer ICI");
-        Serial.println(memcmp(tags[i].address, address, 8));
         if (memcmp(tags[i].address, address, 8) == 0) {
             Serial.print("ANCHOR: Inactive device removed -> ");
             printAddress(address);
@@ -196,40 +230,7 @@ String getAddress(const uint8_t* address) {
     return addressStr;
 }
 
-void initBluetooth() {
-
-    Serial.begin(115200);
-    BLEDevice::init("ESP32_BLE"); // Name of BLE device
-
-    pServer = BLEDevice::createServer(); // Create a BLE server
-    pServer->setCallbacks(new MyServerCallbacks()); // Set callbacks for connection events
-
-    // Create a BLE service with a specific UUID
-    BLEService *pService = pServer->createService(BLEUUID((uint16_t)0x180D));
-
-    // Create a BLE characteristic with read and notify properties
-    pCharacteristic = pService->createCharacteristic(
-                        BLEUUID((uint16_t)0x2A37),
-                        BLECharacteristic::PROPERTY_READ |
-                        BLECharacteristic::PROPERTY_NOTIFY
-                      );
-
-    pCharacteristic->addDescriptor(new BLE2902());
-
-    pCharacteristic->setValue("-- TEST Notification from ESP32 --"); // Set the initial value of the characteristic
-
-    // Start the BLE service
-    pService->start();
-
-    // Start advertising so the device can be discovered
-    BLEAdvertising *pAdvertising = pServer->getAdvertising();
-    pAdvertising->start();
-    Serial.print("BLUETOOTH OK");
-}
-
 void sendJson(std::map<String, float> dataToSend) {
-    constructJson(dataToSend);
-
     // If a device is connected, send a notification every 'notifyInterval' milliseconds
     if (deviceConnected) {
 
@@ -287,8 +288,6 @@ String constructJson(std::map<String, float> dataToSend) {
     // Convert JSON document to string
     String jsonString;
     serializeJson(doc, jsonString);  // Serialise the JSON object in a string
-
-    Serial.println(jsonString);
 
     return jsonString;
 }
