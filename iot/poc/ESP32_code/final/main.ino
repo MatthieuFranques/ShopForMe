@@ -6,32 +6,34 @@
  */
 
 // ANCHOR
+/** @brief SPI library for serial communication with peripherals. */
 #include <SPI.h>
+/** @brief DW1000Ranging library for UWB distance measurements. */
 #include "DW1000Ranging.h"
 
 // BLUETOOTH
+/** @brief BLEDevice library for initializing and managing the BLE device. */
 #include <BLEDevice.h>
+/** @brief BLEServer library for managing BLE server functionality. */
 #include <BLEServer.h>
+/** @brief BLEUtils library for BLE utilities like UUID generation. */
 #include <BLEUtils.h>
+/** @brief BLE2902 library for managing BLE descriptors. */
 #include <BLE2902.h>
 
 // GENERAL
+/** @brief C++ map library for storing key-value pairs. */
 #include <map>
+/** @brief ArduinoJson library for creating and manipulating JSON data. */
 #include <ArduinoJson.h> 
 
+// INIT FOR THE ANCHOR
 #define ANCHOR_ADDRESS "82:17:5B:D5:A9:9A:E2:9C"
 #define SPI_SCK 18
 #define SPI_MISO 19
 #define SPI_MOSI 23
 #define DW_CS 4
 
-// INIT FOR THE BLUETOOTH
-BLEServer *pServer = NULL;
-BLECharacteristic *pCharacteristic = NULL;
-bool deviceConnected = false; // Variable to track connection status
-const int notifyInterval = 20000; // Notification interval in milliseconds (20 second)
-
-// INIT FOR THE ANCHOR
 const uint8_t PIN_RST = 27; // reset pin
 const uint8_t PIN_IRQ = 34; // irq pin
 const uint8_t PIN_SS = 4;   // spi select pin
@@ -55,6 +57,13 @@ int numTags = 0;
 
 /// @brief Data to be sent in JSON format to the application
 std::map<String, float> dataToSend;
+
+// INIT FOR THE BLUETOOTH
+BLEServer *pServer = NULL;
+BLECharacteristic *pCharacteristic = NULL;
+bool deviceConnected = false; // Variable to track connection status
+const int notifyInterval = 20000; // Notification interval in milliseconds (20 second)
+
 
 /// @brief Class to handle BLE server events for connection and disconnection
 class MyServerCallbacks: public BLEServerCallbacks {
