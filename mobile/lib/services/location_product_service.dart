@@ -12,7 +12,7 @@ class LocationProductService {
   /// @returns Liste [x, y] représentant la position dans la matrice
   Future<List<int>> getProductPosition(Product product) async {
     final Shop? currentShop = _storeService.currentShop;
-    
+
     if (currentShop == null) {
       throw Exception('Aucun magasin sélectionné');
     }
