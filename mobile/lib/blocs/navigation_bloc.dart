@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/product.dart';
 import '../services/store_service.dart';
 import '../services/location_service.dart';
@@ -34,6 +35,7 @@ class UpdatePositionEvent extends NavigationEvent {
 abstract class NavigationState {}
 
 class NavigationInitial extends NavigationState {}
+
 class NavigationLoading extends NavigationState {}
 
 class NavigationLoadedState extends NavigationState {
@@ -66,7 +68,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   NavigationBloc(this._storeService) : super(NavigationInitial()) {
     _locationService = LocationService();
     _locationProductService = LocationProductService(_storeService);
-    
+
     on<LoadNavigationEvent>(_onLoadNavigation);
     on<UpdateNavigationEvent>(_onUpdateNavigation);
     on<ProductFoundEvent>(_onProductFound);
@@ -93,16 +95,19 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   ) async {
     emit(NavigationLoading());
     try {
-      _products = event.products;
-      _currentProductIndex = 0;
+      final bool permission = await checkPermissions();
+      if (permission == true) {
+        _products = event.products;
+        _currentProductIndex = 0;
 
-      if (_products.isEmpty) {
-        emit(NavigationError('Aucun produit dans la liste'));
-        return;
+        if (_products.isEmpty) {
+          emit(NavigationError('Aucun produit dans la liste'));
+          return;
+        }
+
+        await _updateNavigation(_products[_currentProductIndex], emit);
+        _startNavigationUpdates(_products[_currentProductIndex]);
       }
-
-      await _updateNavigation(_products[_currentProductIndex], emit);
-      _startNavigationUpdates(_products[_currentProductIndex]);
     } catch (e) {
       emit(NavigationError(e.toString()));
     }
@@ -128,7 +133,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     _navigationUpdateTimer?.cancel();
     try {
       _currentProductIndex++;
-      
+
       if (_currentProductIndex >= _products.length) {
         emit(NavigationLoadedState(
           objectName: "Terminé !",
@@ -157,9 +162,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  Future<void> _updateNavigation(Product product, Emitter<NavigationState> emit) async {
-    final productPosition = await _locationProductService.getProductPosition(product);
-    final currentPath = await _locationService.findTargetPosition(productPosition);
+  Future<void> _updateNavigation(
+      Product product, Emitter<NavigationState> emit) async {
+    final productPosition =
+        await _locationProductService.getProductPosition(product);
+    final currentPath =
+        await _locationService.findTargetPosition(productPosition);
 
     if (currentPath != null && currentPath.isNotEmpty) {
       final direction = _calculateDirection(currentPath);
@@ -201,6 +209,18 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         return "Orientation à 3H00 , Avancez de $distance pas";
       case ArrowDirection.ouest:
         return "Orientation à 9H00 , Avancez de $distance pas";
+    }
+  }
+
+  Future<bool> checkPermissions() async {
+    if (await Permission.bluetoothScan.request().isGranted &&
+        await Permission.bluetoothConnect.request().isGranted &&
+        await Permission.locationWhenInUse.request().isGranted) {
+      // if everything is OK, return true
+      return true;
+    } else {
+      // otherwise, false
+      return false;
     }
   }
 }

@@ -14,6 +14,7 @@ class BluetoothScanService {
   void startScan(Function(BluetoothDevice) onDeviceFound) {
     flutterBlue.scan().listen((scanResult) {
       if (scanResult.device.name == 'ESP32_BLE') {
+        print("On est la l'équipe dans : startScan");
         flutterBlue.stopScan();
         onDeviceFound(scanResult.device);
       }
@@ -21,11 +22,16 @@ class BluetoothScanService {
   }
 
   // Connect to a found device
-  void connectToDevice(BluetoothDevice device, Function(String) onDataReceived) async {
+  void connectToDevice(
+      BluetoothDevice device, Function(String) onDataReceived) async {
     await device.connect();
     connectedDevice = device;
+    print(
+        "On est la l'équipe dans : connectToDevice   après await device.connect");
 
     device.discoverServices().then((services) {
+      print("On est la l'équipe dans : discoverServices");
+
       for (var service in services) {
         for (var characteristic in service.characteristics) {
           if (characteristic.properties.notify) {
@@ -35,7 +41,8 @@ class BluetoothScanService {
             // Listen to the data stream sent by the ESP32
             dataStream?.listen((data) {
               String jsonString = utf8.decode(data); // Decode the data received
-              onDataReceived(jsonString); // Send the JSON to the UI
+              onDataReceived(jsonString);
+              print("jsonString : ${jsonString}"); // Send the JSON to the UI
             });
           }
         }
