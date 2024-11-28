@@ -22,15 +22,15 @@ app.use(cors(options))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/user', userRouter);
-app.use('/shop', shopRouter);
-app.use('/product', productRoute);
+app.use('/users', userRouter);
+app.use('/shops', shopRouter);
+app.use('/products', productRoute);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World');
+    res.send('Bienvenue sur notre API !');
 });
 
 app.listen(port, () => {

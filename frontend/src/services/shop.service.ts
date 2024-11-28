@@ -3,22 +3,22 @@ import {api} from "../utils/utils";
 export const ShopService = {
 
     getAllShop: () => {
-        return api("GET", `shop`)
+        return api("GET", `shops`)
     },
 
     createShop: (fromData: any) => {
-        return api("POST", `shop`, fromData)
+        return api("POST", `shops`, fromData)
     },
 
     getPlanById: (id: string | undefined) => {
-        return api("GET", `shop/${id}`)
+        return api("GET", `shops/${id}`)
     },
 
     updatePlan: (id: number, body: any) => {
-        return api("PUT", `shop/${id}`, body);
+        return api("PUT", `shops/${id}`, body);
     },
 
     removePlan: (id: number) => {
-        return api("DELETE", `shop/${id}`);
+        return api("DELETE", `shops/${id}`);
     },
 }

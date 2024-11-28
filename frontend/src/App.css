@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Marcelus';
-    src: url("./fonts/ebrima.ttf");
+    src: url("./fonts/Park.ttf");
 }
 
 * {
@@ -9,9 +9,8 @@
 }
 
 body {
-    /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
-    background: radial-gradient(73.23% 106% at 34.94% 108.33%, #F7CBFD 0%, #7758D1 100%) no-repeat;
     min-height: 100vh;
+    background-color: #f2f8ff;
 }
 
 .app-container {

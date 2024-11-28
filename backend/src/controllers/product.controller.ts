@@ -7,6 +7,7 @@ import {
     getFree,
     getAllProductByShop,
     addNewProductToRayon,
+    getProductsBySectionName
 } from "../services/product.service";
 
 
@@ -70,6 +71,16 @@ export const addNewProductToRayonP = async (req: Request, res: Response) => {
     try {
         const {storeId, productId, name} = req.body;
         const shops = await addNewProductToRayon(storeId, productId, name);
+        return res.status(200).json(shops);
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error", error});
+    }
+}
+
+export const getProductsBySectionNameP = async (req: Request, res: Response) => {
+    try {
+        const name = req.params.id;
+        const shops = await getProductsBySectionName(name);
         return res.status(200).json(shops);
     } catch (error) {
         return res.status(500).json({message: "Internal Server Error", error});

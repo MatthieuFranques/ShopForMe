@@ -109,3 +109,27 @@ export async function addNewProductToRayon(storeId: number, productId: number, n
         },
     });
 }
+
+export async function getProductsBySectionName(sectionName: string) {
+    try {
+        // Rechercher une section par son nom et inclure les produits associés
+        const section = await prisma.section.findMany({
+            where: {
+                name: sectionName,
+            },
+            include: {
+                product: true, // Inclure les produits liés
+            },
+        });
+
+        if (!section) {
+            return []
+        }
+
+        // Retourner les produits associés
+        return section;
+    } catch (error) {
+        console.error('Error fetching products by section name:', error);
+        throw error;
+    }
+}
