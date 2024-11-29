@@ -1,38 +1,39 @@
 import React from "react";
 import './accueil.scss'
+import image1 from "../../images/imag1.png"
+import image2 from "../../images/image2.png"
+import image3 from "../../images/image3.png"
+import apple from "../../images/telecharger-apple-app-store_francais.png"
+import google from "../../images/en_badge_web_generic.png"
 
-import bg from "../../images/bg.mp4"
 
 export default function Accueil() {
 
     return (
-        <div className="video-container">
-            <video autoPlay loop muted playsInline className="background-video">
-                <source src={bg} type="video/mp4"/>
-                Votre navigateur ne supporte pas la balise vidéo.
-            </video>
-            <div className="content">
-                <h1>L'application qui vous aide à faire vos courses</h1>
-                <a href={"#start"}>Explorer</a>
+        <div className={"accueil_container"}>
+            <h1>Vos courses, votre autonomie.</h1>
+            <p>Découvrez notre application innovante conçue pour simplifier les courses des personnes malvoyantes en
+                magasin. Grâce à des outils d'accessibilité avancés et une interface intuitive, elle guide les
+                utilisateurs dans leurs achats, leur offrant autonomie et confort. Une solution technologique au service
+                de l'inclusion et de l'indépendance au quotidien.</p>
+
+            <div className={"images_app"}>
+                <img src={image1} alt=""/>
+                <img src={image2} alt=""/>
+                <img src={image3} alt=""/>
             </div>
 
-            <h2 id={"start"}>Lorem ipsum</h2>
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos ex, excepturi fugit impedit
-                magnam maiores nisi nostrum perferendis recusandae suscipit. Ex id incidunt inventore nesciunt obcaecati
-                praesentium quas quisquam soluta.
+            <div className={"download_app"}>
+                <img src={apple} alt=""/>
+                <img src={google} alt=""/>
             </div>
-            <div>Aut consectetur, cupiditate debitis deleniti dolores eligendi facilis fugiat illo illum labore nam,
-                nisi nulla perspiciatis repellendus saepe tempora ut, voluptas? Aliquam cumque debitis ipsam minima quia
-                repudiandae ullam unde.
-            </div>
-            <div>Adipisci assumenda dolores eum explicabo illo modi odit perferendis, repudiandae tempora totam. A,
-                alias dicta doloremque excepturi facere fugiat hic illo iusto molestias nisi nulla officiis quas qui,
-                sapiente suscipit?
-            </div>
-            <div>Corporis deserunt ducimus earum eos et in molestiae reprehenderit similique totam. A asperiores at cum
-                delectus deleniti esse et explicabo, iusto laboriosam nihil pariatur perferendis quis saepe totam vero
-                voluptate.
-            </div>
+
+            <h2>A props de nous</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet corporis, exercitationem illo
+                iste obcaecati quisquam quo repellat sed sunt suscipit tenetur ut, voluptas. Aliquam doloremque numquam
+                ratione sapiente vero.</p>
+
+
         </div>
     )
 }

@@ -5,7 +5,6 @@ export interface ProductModel {
     createdAt: Date;
     updatedAt: Date | null;
     deletedAt: Date | null;
-    storeId: number | null;
 }
 
 export interface CreateProductDto {

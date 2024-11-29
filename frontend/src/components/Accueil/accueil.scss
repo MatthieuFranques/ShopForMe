@@ -1,45 +1,41 @@
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-}
+.accueil_container {
 
-.background-video {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -1;
-}
-
-.content {
-    position: relative;
-    z-index: 1;
-    color: white;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.76);
-    height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    padding: 50px;
+    color: #171d21;
 
     h1 {
-        font-size: 50px;
+        font-size: 70px;
+    }
+    p {
+        width: 70%;
+        text-align: center;
+        font-style: italic;
+        margin-top: 20px;
     }
 
-    a {
-        text-decoration: none;
-        color: white;
-        transition: all .2s ease;
-        padding: 16px;
-        border: 1px solid white;
-        cursor: pointer;
-        margin-top: 20px;
-        font-size: 30px;
-        &:hover {
-            background-color: white;
-            color: black;
+    .images_app {
+        margin-top: 100px;
+        margin-bottom: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 300px;
+            margin: 0 20px;
+            border-radius: 10px;
+            border: 3px solid #1e1d29;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.56);
+        }
+    }
+
+    .download_app {
+        img {
+            width: 200px;
         }
     }
 }

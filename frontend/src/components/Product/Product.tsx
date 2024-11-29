@@ -85,12 +85,21 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
     const [produits, setProducts] = useState<Array<ProductModel>>([])
 
     useEffect(() => {
+        getFreeProduct()
+    }, [])
 
+    const getFreeProduct = () => {
         ProductService.getUserProduct(storeId).then((data: ProductModel[]) => {
                 setProducts(data.sort((a, b) => a.name.localeCompare(b.name)))
             }
         )
-    }, [])
+    }
+
+    const ajoutProduit = () => {
+        console.log("HERE")
+        getFreeProduct()
+        onSubmit(value)
+    }
 
     const [value, setValue] = React.useState<ProductModel  | null>(null);
 
@@ -158,7 +167,7 @@ const Get: React.FC<ProductFormCreateProps> = ({onSubmit, storeId}) => {
                     <TextField {...params} label="List product..."/>
                 )}
             />
-            <button className={"customButton"} disabled={!value} onClick={() => onSubmit(value)}>Ajouter le produits au rayon</button>
+            <button className={"customButton"} onClick={() => ajoutProduit()}>Ajouter le produits au rayon</button>
         </div>
     )
 }

@@ -134,6 +134,7 @@ const Plan = (props: CustomProps) => {
         const classes = ["cell", plan[rowIndex][colIndex].name]
 
         classes.push(plan[rowIndex][colIndex].isBeacon ? "BEACON" : "");
+        classes.push(plan[rowIndex][colIndex].name === value ? "selectedRayon" : "");
 
         return classes.join(" ");
     }
@@ -240,13 +241,17 @@ const Plan = (props: CustomProps) => {
 
     const affectProduitRayon = (product: ProductModel) => {
 
+        if (!product) {
+            setInfo({open: true, message: "Veuillez choisir un produit !", type: "error"});
+            return
+        }
+
         if (!value) {
-            setInfo({open: true, message: "Veuillez choisir un rayon", type: "error"});
+            setInfo({open: true, message: "Veuillez choisir un rayon !", type: "error"});
             return
         }
 
         ProductService.addNewProductToRayonP({storeId: props.storeId, productId: product.id, name: value}).then(response => {
-            console.log(response);
             setInfo({open: true, message: "L'affection a été enregistrée !", type: "success"});
         })
     }
@@ -471,7 +476,9 @@ const Plan = (props: CustomProps) => {
                                 <Tooltip title={getTitleTooltip(col)} key={colIndex}
                                          placement={"top"}>
                                     <td onClick={() => props.isEdit ? toggleCell(rowIndex, colIndex) : ""}
-                                        className={getCellClass(rowIndex, colIndex)} style={getStyleRayon(col)}></td>
+                                        className={getCellClass(rowIndex, colIndex)} style={getStyleRayon(col)}>
+                                        <div className={"select"}/>
+                                    </td>
                                 </Tooltip>
                             ))}
                         </tr>
@@ -505,7 +512,7 @@ const Plan = (props: CustomProps) => {
                                 renderInput={(params) => <TextField {...params} label="Liste des rayons"/>}
                             />
                         </div>
-                        <div>
+                        <div className={"chips"}>
                             {produitRayon.map((product: ProductModel) => <Chip label={product.name}
                                                                                onClick={handleClickProduitRayon}/>)}
                         </div>
