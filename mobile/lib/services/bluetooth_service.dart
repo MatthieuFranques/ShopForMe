@@ -14,40 +14,69 @@ class BluetoothScanService {
   void startScan(Function(BluetoothDevice) onDeviceFound) {
     flutterBlue.scan().listen((scanResult) {
       if (scanResult.device.name == 'ESP32_BLE') {
-        print("On est la l'équipe dans : startScan");
         flutterBlue.stopScan();
         onDeviceFound(scanResult.device);
       }
     });
   }
 
-  // Connect to a found device
-  void connectToDevice(
-      BluetoothDevice device, Function(String) onDataReceived) async {
-    await device.connect();
-    connectedDevice = device;
-    print(
-        "On est la l'équipe dans : connectToDevice   après await device.connect");
+  /// Méthode pour se connecter à un périphérique BLE et écouter les données
+  void connectToDevice(BluetoothDevice device,
+      Function(Map<String, dynamic>) onDataReceived) async {
+    try {
+      // Connexion au périphérique
+      print("Connexion au périphérique : ${device.name}");
+      await device.connect();
+      connectedDevice = device;
 
-    device.discoverServices().then((services) {
-      print("On est la l'équipe dans : discoverServices");
-
+      // Découverte des services et caractéristiques
+      print("Découverte des services...");
+      List<BluetoothService> services = await device.discoverServices();
       for (var service in services) {
         for (var characteristic in service.characteristics) {
+          // Si une caractéristique permet la notification
           if (characteristic.properties.notify) {
-            characteristic.setNotifyValue(true);
+            print(
+                "Caractéristique trouvée avec notifications : ${characteristic.uuid}");
+            await characteristic.setNotifyValue(true);
             dataStream = characteristic.value.asBroadcastStream();
 
-            // Listen to the data stream sent by the ESP32
-            dataStream?.listen((data) {
-              String jsonString = utf8.decode(data); // Decode the data received
-              onDataReceived(jsonString);
-              print("jsonString : ${jsonString}"); // Send the JSON to the UI
+            // Écoute des données envoyées par l'ESP32
+            dataStream?.listen((data) async {
+              try {
+                print("Données reçues (bytes) : $data");
+
+                // Décodage des données reçues en texte
+                String decodedData = utf8.decode(data);
+                print("Données reçues (texte) : $decodedData");
+
+                if (decodedData.isNotEmpty) {
+                  try {
+                    // Traitement des données sous forme de nombres séparés par "/"
+                    List<String> values = decodedData.split('/');
+                    Map<String, dynamic> parsedData = {};
+
+                    for (int i = 0; i < values.length; i++) {
+                      parsedData['Tag $i'] = double.tryParse(values[i]);
+                    }
+
+                    print("Données parsées : $parsedData");
+                    onDataReceived(
+                        parsedData); // Retourner les données traitées
+                  } catch (e) {
+                    print("Erreur lors du traitement des données : $e");
+                  }
+                }
+              } catch (e) {
+                print("Erreur lors du décodage des données : $e");
+              }
             });
           }
         }
       }
-    });
+    } catch (e) {
+      print("Erreur lors de la connexion : $e");
+    }
   }
 
   // Disconnect from device

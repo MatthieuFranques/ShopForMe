@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+import 'package:mobile/services/bluetooth_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../models/product.dart';
 import '../services/store_service.dart';
@@ -61,6 +64,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   final StoreService _storeService;
   late final LocationService _locationService;
   late final LocationProductService _locationProductService;
+  late final BluetoothScanService _bluetoothService = BluetoothScanService();
+
   Timer? _navigationUpdateTimer;
   List<Product> _products = [];
   int _currentProductIndex = 0;
@@ -94,9 +99,32 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) async {
     emit(NavigationLoading());
+    //Test blue
+    final List<String> devicesList = [];
+    // BluetoothDevice deviceDeMerde;
+    Map<String, dynamic> data = {};
+
     try {
       final bool permission = await checkPermissions();
       if (permission == true) {
+        _bluetoothService.startScan((BluetoothDevice device) {
+          devicesList.add(device.name);
+          print("Discovered device: ${device.name}");
+
+          _bluetoothService.connectToDevice(device, (receivedData) {
+            // Process received data
+            print("Received data: $receivedData");
+            if (receivedData != {}) {
+              data = receivedData;
+              String jsonString = jsonEncode(data);
+              _locationService.findTargetPosition2(jsonString);
+            }
+          });
+        });
+        // String jsonString = jsonEncode(data);
+        // _locationService.findTargetPosition2(jsonString);
+        // print("///////////////////////////Data : ${data}");
+
         _products = event.products;
         _currentProductIndex = 0;
 

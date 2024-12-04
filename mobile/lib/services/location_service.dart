@@ -53,6 +53,43 @@ class LocationService {
     }
   }
 
+  ///Function which allows you to retrieve the distance of the beacons from the user
+  ///@param : String jsonFilePath = json text of recive data bluetow
+  Future<List<String>> loadDistances2(String jsonInput) async {
+    String jsonString;
+
+    // Vérifier si l'entrée est une chaîne JSON brute ou un chemin
+    if (jsonInput.startsWith('{') || jsonInput.startsWith('[')) {
+      // Traiter comme une chaîne JSON brute
+      jsonString = jsonInput;
+    } else {
+      // Traiter comme un chemin vers un fichier d'assets
+      jsonString = await rootBundle.loadString(jsonInput);
+    }
+
+    // Décoder le JSON en Map
+    final Map<String, dynamic> jsonData = jsonDecode(jsonString);
+
+    // Vérifier que les clés nécessaires existent
+    if (jsonData.containsKey('Tag 0') &&
+        jsonData.containsKey('Tag 1') &&
+        jsonData.containsKey('Tag 2')) {
+      // Lire les valeurs
+      distance1 = jsonData['Tag 0'];
+      distance2 = jsonData['Tag 1'];
+      distance3 = jsonData['Tag 2'];
+
+      // Créer une liste des résultats
+      return [
+        distance1.toString(),
+        distance2.toString(),
+        distance3.toString(),
+      ];
+    } else {
+      throw Exception('Le JSON ne contient pas les balises nécessaires.');
+    }
+  }
+
   /// Function which allows us to know the position of our Beacons on our market
   ///@param : String jsonFilePath = Market
   ///Return all position of Beacon in the market
@@ -157,10 +194,10 @@ class LocationService {
     final double y2 = pos2[1].toDouble();
     final double x3 = pos3[0].toDouble();
     final double y3 = pos3[1].toDouble();
-
-    final double d1 = r1;
-    final double d2 = r2;
-    final double d3 = r3;
+    // TODO a revérifier si il faut bien faire comme ca sur le / 100
+    final double d1 = r1 / 100;
+    final double d2 = r2 / 100;
+    final double d3 = r3 / 100;
 
     final double A = 2 * (x2 - x1);
     final double B = 2 * (y2 - y1);
@@ -217,6 +254,74 @@ class LocationService {
       print("End : $end");
 
       final List<List<int>> path = findShortestPath(grid, currentPosition, end);
+      print("Chemin le plus court : $path");
+      return path;
+    } else {
+      print("Pas assez de beacons pour la triangulation.");
+      return null;
+    }
+  }
+
+  Future<List<int>> getProductPosition(String jsonFilePath) async {
+    // TODO uncomment
+    // final String response = await rootBundle.loadString(jsonFilePath);
+    // final List<dynamic> jsonData = jsonDecode(response);
+
+    final List<int> productPositions = [2, 8];
+
+    // for (int rowIndex = 0; rowIndex < jsonData.length; rowIndex++) {
+    //   final List<dynamic> row = jsonData[rowIndex];
+    //   for (int colIndex = 0; colIndex < row.length; colIndex++) {
+    //     final Map<String, dynamic> cell = row[colIndex];
+    // TODO Mettre la condition qui est bonne
+    // if (cell['isBeacon'] == true) {
+    //   productPositions.add([rowIndex, colIndex]);
+    // }
+    // }
+    // }
+
+    return productPositions;
+  }
+
+  Future<List<List<int>>?> findTargetPosition2(String jsonDistanceFile) async {
+    // TODO changé par le cache
+    print("Enter in FindTargetPosition2");
+    const String jsonFilePath = 'assets/plan.json';
+    final Grid grid = await loadGridFromJson(jsonFilePath);
+    print("After grid ");
+
+    final List<List<int>> beaconPositions =
+        await getBeaconPositions(jsonFilePath);
+    print("After getBeaconPositions ");
+
+    // Mettre un fonction qui permet de savoir ou est
+    final List<int> productPosition = await getProductPosition(jsonFilePath);
+
+    await loadDistances2(jsonDistanceFile);
+
+    if (beaconPositions.length >= 3) {
+      final List<double> targetPosition = await triangulateData(
+        beaconPositions[0],
+        distance1,
+        beaconPositions[1],
+        distance2,
+        beaconPositions[2],
+        distance3,
+      );
+      //Position actuelle
+      final List<int> currentPosition = [
+        targetPosition[0].round(),
+        targetPosition[1].round()
+      ];
+
+      print(
+          "distance1 : $distance1 , distance2 : $distance2 , distance3: $distance3");
+      print("beaconPositions : $beaconPositions");
+      print("currentPosition : $currentPosition");
+      print("End : $productPosition");
+
+      final List<List<int>> path =
+          findShortestPath(grid, currentPosition, productPosition);
       print("Chemin le plus court : $path");
       return path;
     } else {
