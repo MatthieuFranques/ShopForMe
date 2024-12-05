@@ -29,3 +29,15 @@ String getAddress(const uint8_t *address)
     }
     return addressStr;
 }
+
+void printAddress(const uint8_t *address) // Ajoutez cette définition
+{
+    for (int i = 0; i < 8; i++)
+    {
+        if (address[i] < 0x10)
+            Serial.print("0");
+        Serial.print(address[i], HEX);
+        if (i < 7)
+            Serial.print(":");
+    }
+}

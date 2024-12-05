@@ -4,9 +4,9 @@
 #include <Arduino.h>
 #include <map>
 
-// Déclaration des fonctions de gestion des données
+// Data handling functions
 void constructPackage(String address, float range);
-void sendJson(std::map<String, float> dataToSend);
-String constructJson(std::map<String, float> dataToSend);
+void sendData(std::map<String, float> dataToSend);
+String constructString(std::map<String, float> dataToSend);
 
 #endif // DATA_HANDLER_H

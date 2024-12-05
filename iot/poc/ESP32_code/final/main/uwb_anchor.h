@@ -4,7 +4,7 @@
 #include <SPI.h>
 #include <DW1000Ranging.h>
 
-// Configuration des broches pour SPI et UWB
+// SPI and UWB pin configuration
 #define ANCHOR_ADDRESS "82:17:5B:D5:A9:9A:E2:9C"
 #define SPI_SCK 18
 #define SPI_MISO 19
@@ -12,12 +12,12 @@
 #define PIN_RST 27
 #define PIN_IRQ 34
 #define PIN_SS 4
-z
-// Constantes pour l'anchor
+
+// Anchor constants
 const float DISTANCE_OFFSET = 0.7;
 const long interval = 3000;
 
-// Structure pour stocker les données des tags
+// Tag structure
 struct Tag
 {
     uint8_t address[8];
@@ -25,12 +25,12 @@ struct Tag
     bool active;
 };
 
-// Déclaration des variables globales
+// Global variables
 extern Tag tags[3];
 extern int numTags;
 extern unsigned long previousMillis;
 
-// Fonctions principales de l'anchor
+// Anchor functions
 void initAnchor();
 void handleAnchorLoop();
 void newRange();

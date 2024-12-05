@@ -1,62 +1,78 @@
 #include "data_handler.h"
-#include <ArduinoJson.h>
 #include <BLECharacteristic.h>
 
-// Variable externe pour BLECharacteristic
+// External BLECharacteristic variable
 extern BLECharacteristic *pCharacteristic;
 
-// Implémentation de la fonction pour construire un paquet
+// Function to construct and send a package
 void constructPackage(String address, float range)
 {
     static std::map<String, float> dataToSend;
 
     if (dataToSend.size() < 3)
     {
-        Serial.printf("Ajout de l'adresse %s avec distance %.2f\n", address.c_str(), range);
         dataToSend[address] = range;
     }
 
     if (dataToSend.size() == 3)
     {
-        sendJson(dataToSend);
-        dataToSend.clear(); // Réinitialiser les données après l'envoi
+        bool validData = true;
+
+        for (const auto &[key, value] : dataToSend)
+        {
+            if (value > 50.0f || value < 0.0f)
+            {
+                validData = false;
+                break;
+            }
+        }
+
+        if (validData)
+        {
+            sendData(dataToSend);
+        }
+        else
+        {
+            Serial.println("Invalid data detected. Package not sent.");
+        }
+
+        dataToSend.clear(); // Clear data after sending
     }
 }
 
-// Implémentation de la fonction pour envoyer des données JSON via Bluetooth
-void sendJson(std::map<String, float> dataToSend)
+// Function to send data via Bluetooth
+void sendData(std::map<String, float> dataToSend)
 {
     if (pCharacteristic != nullptr)
     {
-        String jsonString = constructJson(dataToSend);
+        String constructedData = constructString(dataToSend);
 
-        pCharacteristic->setValue(jsonString.c_str());
+        pCharacteristic->setValue(constructedData.c_str());
         pCharacteristic->notify();
 
-        Serial.println("JSON envoyé :");
-        Serial.println(jsonString);
+        Serial.println("Data sent:");
+        Serial.println(constructedData);
     }
     else
     {
-        Serial.println("Erreur : pCharacteristic est nul.");
+        Serial.println("Error: BLE characteristic is null.");
     }
 }
 
-// Implémentation de la fonction pour construire un JSON
-String constructJson(std::map<String, float> dataToSend)
+// Function to construct the data string
+String constructString(std::map<String, float> dataToSend)
 {
-    StaticJsonDocument<300> doc;
-    doc["timestamp"] = millis() / 1000;
+    String data;
+    size_t counter = 0;
 
-    JsonArray beaconArray = doc.createNestedArray("beacons");
     for (const auto &entry : dataToSend)
     {
-        JsonObject beacon = beaconArray.createNestedObject();
-        beacon["name"] = entry.first;
-        beacon["distance"] = entry.second;
+        data += String(int(trunc(entry.second * 100))); // Convert to integer representation
+        if (counter < dataToSend.size() - 1)
+        {
+            data += "/";
+        }
+        counter++;
     }
-
-    String jsonString;
-    serializeJson(doc, jsonString);
-    return jsonString;
+    return data;
 }

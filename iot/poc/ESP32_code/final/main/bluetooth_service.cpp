@@ -36,6 +36,6 @@ void handleBluetoothLoop()
 {
     if (deviceConnected)
     {
-        // Gestion des notifications Bluetooth
+        // Logic to handle Bluetooth notifications (if needed)
     }
 }

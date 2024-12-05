@@ -2,12 +2,12 @@
 #include "utils.h"
 #include "data_handler.h"
 
-// Définition des variables globales
+// Global variables
 Tag tags[3];
 int numTags = 0;
 unsigned long previousMillis = 0;
 
-// Implémentation de l'initialisation de l'anchor
+// Anchor initialization
 void initAnchor()
 {
     SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
@@ -19,7 +19,7 @@ void initAnchor()
     Serial.println("Anchor initialized and running...");
 }
 
-// Implémentation de la boucle principale de l'anchor
+// Anchor loop logic
 void handleAnchorLoop()
 {
     DW1000Ranging.loop();
@@ -39,7 +39,7 @@ void handleAnchorLoop()
     }
 }
 
-// Implémentation de la fonction appelée lors d'une nouvelle mesure de distance
+// New range detection
 void newRange()
 {
     DW1000Device *distantDevice = DW1000Ranging.getDistantDevice();
@@ -67,23 +67,16 @@ void newRange()
     }
 }
 
-// Implémentation de la fonction appelée lorsqu'un nouveau périphérique est détecté
+// New device detected
 void newDevice(DW1000Device *device)
 {
     uint8_t *address = device->getByteAddress();
     Serial.print("New device detected: ");
-    for (int i = 0; i < 8; i++)
-    {
-        if (address[i] < 0x10)
-            Serial.print("0");
-        Serial.print(address[i], HEX);
-        if (i < 7)
-            Serial.print(":");
-    }
+    printAddress(address);
     Serial.println();
 }
 
-// Implémentation de la fonction appelée lorsqu'un périphérique devient inactif
+// Inactive device removed
 void inactiveDevice(DW1000Device *device)
 {
     uint8_t *address = device->getByteAddress();
