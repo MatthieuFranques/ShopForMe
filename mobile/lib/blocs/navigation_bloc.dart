@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:mobile/services/bluetooth_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../models/product.dart';
 import '../services/store_service.dart';
 import '../services/location_service.dart';
 import '../services/location_product_service.dart';
 
+// Énumération des directions possibles pour la navigation
 enum ArrowDirection { nord, sud, est, ouest }
 
-// Events
+// Définition des événements qui peuvent être traités par le Bloc
 abstract class NavigationEvent {}
 
 class LoadNavigationEvent extends NavigationEvent {
@@ -34,7 +35,7 @@ class UpdatePositionEvent extends NavigationEvent {
   UpdatePositionEvent(this.currentProduct);
 }
 
-// States
+// Définition des états possibles du Bloc
 abstract class NavigationState {}
 
 class NavigationInitial extends NavigationState {}
@@ -60,71 +61,44 @@ class NavigationError extends NavigationState {
   NavigationError(this.message);
 }
 
+// Implémentation principale du Bloc de navigation
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   final StoreService _storeService;
   late final LocationService _locationService;
   late final LocationProductService _locationProductService;
-  late final BluetoothScanService _bluetoothService = BluetoothScanService();
 
-  Timer? _navigationUpdateTimer;
+  // Liste des produits à trouver et index du produit courant
   List<Product> _products = [];
   int _currentProductIndex = 0;
+
+  // Gestion des souscriptions pour le nettoyage
+  StreamSubscription? _bluetoothDataSubscription;
+  Timer? _navigationUpdateTimer;
 
   NavigationBloc(this._storeService) : super(NavigationInitial()) {
     _locationService = LocationService();
     _locationProductService = LocationProductService(_storeService);
 
+    // Enregistrement des gestionnaires d'événements
     on<LoadNavigationEvent>(_onLoadNavigation);
     on<UpdateNavigationEvent>(_onUpdateNavigation);
     on<ProductFoundEvent>(_onProductFound);
     on<UpdatePositionEvent>(_onUpdatePosition);
   }
 
-  @override
-  Future<void> close() {
-    _navigationUpdateTimer?.cancel();
-    return super.close();
-  }
-
-  void _startNavigationUpdates(Product product) {
-    _navigationUpdateTimer?.cancel();
-    _navigationUpdateTimer = Timer.periodic(
-      const Duration(seconds: 2),
-      (_) => add(UpdatePositionEvent(product)),
-    );
-  }
-
+  // Gestion du chargement initial de la navigation
   Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
+    print("DEBUG: Début de LoadNavigation");
     emit(NavigationLoading());
-    //Test blue
-    final List<String> devicesList = [];
-    // BluetoothDevice deviceDeMerde;
-    Map<String, dynamic> data = {};
 
     try {
       final bool permission = await checkPermissions();
-      if (permission == true) {
-        _bluetoothService.startScan((BluetoothDevice device) {
-          devicesList.add(device.name);
-          print("Discovered device: ${device.name}");
+      print("DEBUG: Permissions vérifiées: $permission");
 
-          _bluetoothService.connectToDevice(device, (receivedData) {
-            // Process received data
-            print("Received data: $receivedData");
-            if (receivedData != {}) {
-              data = receivedData;
-              String jsonString = jsonEncode(data);
-              _locationService.findTargetPosition2(jsonString);
-            }
-          });
-        });
-        // String jsonString = jsonEncode(data);
-        // _locationService.findTargetPosition2(jsonString);
-        // print("///////////////////////////Data : ${data}");
-
+      if (permission) {
         _products = event.products;
         _currentProductIndex = 0;
 
@@ -133,85 +107,240 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           return;
         }
 
-        await _updateNavigation(_products[_currentProductIndex], emit);
-        _startNavigationUpdates(_products[_currentProductIndex]);
+        // Configuration de la communication Bluetooth
+        FlutterBlue.instance.scan().listen((scanResult) {
+          if (scanResult.device.name == 'ESP32_BLE') {
+            print("DEBUG: ESP32 trouvé");
+            FlutterBlue.instance.stopScan();
+
+            scanResult.device.connect().then((_) async {
+              print("DEBUG: Connecté à l'ESP32");
+              final services = await scanResult.device.discoverServices();
+
+              await _setupBluetoothCharacteristic(services, emit);
+            });
+          }
+        });
+      } else {
+        emit(NavigationError('Permissions refusées'));
       }
     } catch (e) {
-      emit(NavigationError(e.toString()));
-    }
-  }
-
-  Future<void> _onUpdateNavigation(
-    UpdateNavigationEvent event,
-    Emitter<NavigationState> emit,
-  ) async {
-    emit(NavigationLoading());
-    try {
-      await _updateNavigation(event.product, emit);
-      _startNavigationUpdates(event.product);
-    } catch (e) {
-      emit(NavigationError(e.toString()));
-    }
-  }
-
-  Future<void> _onProductFound(
-    ProductFoundEvent event,
-    Emitter<NavigationState> emit,
-  ) async {
-    _navigationUpdateTimer?.cancel();
-    try {
-      _currentProductIndex++;
-
-      if (_currentProductIndex >= _products.length) {
-        emit(NavigationLoadedState(
-          objectName: "Terminé !",
-          instruction: "Tous les produits ont été trouvés",
-          arrowDirection: ArrowDirection.nord,
-          isLastProduct: true,
-        ));
-        return;
+      print("DEBUG: Erreur globale: $e");
+      if (!emit.isDone) {
+        emit(NavigationError(e.toString()));
       }
-
-      await _updateNavigation(_products[_currentProductIndex], emit);
-      _startNavigationUpdates(_products[_currentProductIndex]);
-    } catch (e) {
-      emit(NavigationError(e.toString()));
     }
   }
 
+  // Configuration des caractéristiques Bluetooth
+  Future<void> _setupBluetoothCharacteristic(
+    List<BluetoothService> services,
+    Emitter<NavigationState> emit,
+  ) async {
+    print("DEBUG: Début de _setupBluetoothCharacteristic");
+
+    // Annulation de toute souscription existante
+    await _bluetoothDataSubscription?.cancel();
+
+    for (var service in services) {
+      for (var characteristic in service.characteristics) {
+        if (characteristic.properties.notify) {
+          print("DEBUG: Caractéristique avec notification trouvée");
+          await characteristic.setNotifyValue(true);
+
+          _bluetoothDataSubscription = characteristic.value.listen(
+            (data) async {
+              print("DEBUG: Données Bluetooth reçues");
+              if (emit.isDone) {
+                await _processBluetoothData(data, emit);
+              } else {
+                print("DEBUG: Émetteur terminé, données ignorées");
+              }
+            },
+            onError: (error) {
+              print("DEBUG: Erreur dans la réception Bluetooth: $error");
+              if (!emit.isDone) {
+                emit(NavigationError(error.toString()));
+              }
+            },
+            cancelOnError: false,
+          );
+
+          print("DEBUG: Souscription Bluetooth configurée");
+        }
+      }
+    }
+    print("DEBUG: Fin de _setupBluetoothCharacteristic");
+  }
+
+  // Traitement des données reçues via Bluetooth
+  Future<void> _processBluetoothData(
+    List<int> data,
+    Emitter<NavigationState> emit,
+  ) async {
+    print("DEBUG: Début de _processBluetoothData");
+    print("DEBUG: État de emit.isDone: ${emit.isDone}");
+
+    if (emit.isDone) {
+      try {
+        print("DEBUG: Décodage des données");
+        final decodedData = utf8.decode(data);
+        print("DEBUG: Données décodées: $decodedData");
+
+        if (decodedData.isNotEmpty) {
+          print("DEBUG: Traitement des données non vides");
+          final values = decodedData.split('/');
+          print("DEBUG: Valeurs séparées: $values");
+
+          final parsedData = <String, dynamic>{};
+          for (int i = 0; i < values.length; i++) {
+            parsedData['Tag $i'] = double.tryParse(values[i]);
+          }
+          print("DEBUG: Données parsées: $parsedData");
+
+          print("DEBUG: Appel de findTargetPosition2");
+          final shortestPath = await _locationService.findTargetPosition2(
+            jsonEncode(parsedData),
+          );
+          print("DEBUG: Chemin le plus court reçu: $shortestPath");
+
+          print("DEBUG: Avant _updateNavigationWithPath");
+          print("DEBUG: État de emit.isDone avant mise à jour: ${emit.isDone}");
+          await _updateNavigationWithPath(shortestPath, emit);
+          print("DEBUG: Après _updateNavigationWithPath");
+        }
+      } catch (e) {
+        print("DEBUG: Erreur traitement données: $e");
+        if (!emit.isDone) {
+          emit(NavigationError(e.toString()));
+        }
+      }
+    } else {
+      print("DEBUG: _processBluetoothData ignoré car emit.isDone est true");
+    }
+    print("DEBUG: Fin de _processBluetoothData");
+  }
+
+  // Mise à jour de la navigation avec le nouveau chemin calculé
+  Future<void> _updateNavigationWithPath(
+    List<List<int>>? shortestPath,
+    Emitter<NavigationState> emit,
+  ) async {
+    if (emit.isDone &&
+        shortestPath != null &&
+        !listEquals(shortestPath, [
+          [-1000, -1000]
+        ])) {
+      final instruction = _generateInstruction(shortestPath);
+      final arrowDirection = _calculateDirection(shortestPath);
+
+      emit(NavigationLoadedState(
+        objectName: _products[_currentProductIndex].name,
+        arrowDirection: arrowDirection,
+        instruction: instruction,
+        isLastProduct: _currentProductIndex == _products.length - 1,
+      ));
+    }
+  }
+
+  // Gestion de la mise à jour de position
   Future<void> _onUpdatePosition(
     UpdatePositionEvent event,
     Emitter<NavigationState> emit,
   ) async {
+    if (!emit.isDone) {
+      try {
+        await _updateNavigation(event.currentProduct, emit);
+      } catch (e) {
+        if (!emit.isDone) {
+          emit(NavigationError(e.toString()));
+        }
+      }
+    }
+  }
+
+  // Gestion de la mise à jour de navigation
+  Future<void> _onUpdateNavigation(
+    UpdateNavigationEvent event,
+    Emitter<NavigationState> emit,
+  ) async {
+    if (!emit.isDone) {
+      emit(NavigationLoading());
+      try {
+        await _updateNavigation(event.product, emit);
+      } catch (e) {
+        if (!emit.isDone) {
+          emit(NavigationError(e.toString()));
+        }
+      }
+    }
+  }
+
+  // Gestion d'un produit trouvé
+  Future<void> _onProductFound(
+    ProductFoundEvent event,
+    Emitter<NavigationState> emit,
+  ) async {
     try {
-      await _updateNavigation(event.currentProduct, emit);
+      _currentProductIndex++;
+
+      if (_currentProductIndex >= _products.length) {
+        if (!emit.isDone) {
+          emit(NavigationLoadedState(
+            objectName: "Terminé !",
+            instruction: "Tous les produits ont été trouvés",
+            arrowDirection: ArrowDirection.nord,
+            isLastProduct: true,
+          ));
+        }
+        return;
+      }
+
+      if (!emit.isDone) {
+        await _updateNavigation(_products[_currentProductIndex], emit);
+      }
     } catch (e) {
-      emit(NavigationError(e.toString()));
+      if (!emit.isDone) {
+        emit(NavigationError(e.toString()));
+      }
     }
   }
 
+  // Mise à jour de la navigation pour un produit donné
   Future<void> _updateNavigation(
-      Product product, Emitter<NavigationState> emit) async {
-    final productPosition =
-        await _locationProductService.getProductPosition(product);
-    final currentPath =
-        await _locationService.findTargetPosition(productPosition);
+    Product product,
+    Emitter<NavigationState> emit,
+  ) async {
+    if (emit.isDone) return;
 
-    if (currentPath != null && currentPath.isNotEmpty) {
-      final direction = _calculateDirection(currentPath);
-      final instruction = _generateInstruction(currentPath);
+    try {
+      final productPosition =
+          await _locationProductService.getProductPosition(product);
+      final currentPath =
+          await _locationService.findTargetPosition(productPosition);
 
-      emit(NavigationLoadedState(
-        objectName: product.name,
-        arrowDirection: direction,
-        instruction: instruction,
-        isLastProduct: _currentProductIndex == _products.length - 1,
-      ));
-    } else {
-      emit(NavigationError("Impossible de trouver un chemin vers le produit"));
+      if (!emit.isDone && currentPath != null && currentPath.isNotEmpty) {
+        final direction = _calculateDirection(currentPath);
+        final instruction = _generateInstruction(currentPath);
+
+        emit(NavigationLoadedState(
+          objectName: product.name,
+          arrowDirection: direction,
+          instruction: instruction,
+          isLastProduct: _currentProductIndex == _products.length - 1,
+        ));
+      } else if (!emit.isDone) {
+        emit(
+            NavigationError("Impossible de trouver un chemin vers le produit"));
+      }
+    } catch (e) {
+      if (!emit.isDone) {
+        emit(NavigationError(e.toString()));
+      }
     }
   }
 
+  // Calcul de la direction à partir du chemin
   ArrowDirection _calculateDirection(List<List<int>> path) {
     if (path.length < 2) return ArrowDirection.nord;
 
@@ -224,6 +353,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     return ArrowDirection.est;
   }
 
+  // Génération des instructions de navigation
   String _generateInstruction(List<List<int>> path) {
     final distance = path.length - 1;
     final direction = _calculateDirection(path);
@@ -240,15 +370,18 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
+  // Vérification des permissions nécessaires
   Future<bool> checkPermissions() async {
-    if (await Permission.bluetoothScan.request().isGranted &&
+    return await Permission.bluetoothScan.request().isGranted &&
         await Permission.bluetoothConnect.request().isGranted &&
-        await Permission.locationWhenInUse.request().isGranted) {
-      // if everything is OK, return true
-      return true;
-    } else {
-      // otherwise, false
-      return false;
-    }
+        await Permission.locationWhenInUse.request().isGranted;
+  }
+
+  // Nettoyage des ressources à la fermeture du Bloc
+  @override
+  Future<void> close() async {
+    await _bluetoothDataSubscription?.cancel();
+    _navigationUpdateTimer?.cancel();
+    return super.close();
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_blue/flutter_blue.dart';
@@ -7,80 +8,90 @@ class BluetoothScanService {
   BluetoothDevice? connectedDevice;
   BluetoothCharacteristic? characteristic;
 
-  // Stream for device data
-  Stream<List<int>>? dataStream;
+  // Création d'un StreamController pour gérer les données
+  final _dataController = StreamController<Map<String, dynamic>>.broadcast();
+  Stream<Map<String, dynamic>> get dataStream => _dataController.stream;
 
-  // Start scanning for devices
-  void startScan(Function(BluetoothDevice) onDeviceFound) {
-    flutterBlue.scan().listen((scanResult) {
-      if (scanResult.device.name == 'ESP32_BLE') {
-        flutterBlue.stopScan();
-        onDeviceFound(scanResult.device);
-      }
-    });
+  Future<void> startScanAndConnect() async {
+    print("Début du scan Bluetooth");
+
+    try {
+      await flutterBlue.scan().firstWhere((scanResult) {
+        return scanResult.device.name == 'ESP32_BLE';
+      }).then((scanResult) async {
+        print("Appareil ESP32_BLE trouvé");
+        await flutterBlue.stopScan();
+        await _connectToDevice(scanResult.device);
+      });
+    } catch (e) {
+      print("Erreur lors du scan : $e");
+      _dataController.addError(e);
+    }
   }
 
-  /// Méthode pour se connecter à un périphérique BLE et écouter les données
-  void connectToDevice(BluetoothDevice device,
-      Function(Map<String, dynamic>) onDataReceived) async {
+  Future<void> _connectToDevice(BluetoothDevice device) async {
     try {
-      // Connexion au périphérique
       print("Connexion au périphérique : ${device.name}");
       await device.connect();
       connectedDevice = device;
 
-      // Découverte des services et caractéristiques
       print("Découverte des services...");
-      List<BluetoothService> services = await device.discoverServices();
+      final services = await device.discoverServices();
+
       for (var service in services) {
         for (var characteristic in service.characteristics) {
-          // Si une caractéristique permet la notification
           if (characteristic.properties.notify) {
             print(
-                "Caractéristique trouvée avec notifications : ${characteristic.uuid}");
+                "Caractéristique avec notifications trouvée : ${characteristic.uuid}");
             await characteristic.setNotifyValue(true);
-            dataStream = characteristic.value.asBroadcastStream();
 
-            // Écoute des données envoyées par l'ESP32
-            dataStream?.listen((data) async {
-              try {
-                print("Données reçues (bytes) : $data");
-
-                // Décodage des données reçues en texte
-                String decodedData = utf8.decode(data);
-                print("Données reçues (texte) : $decodedData");
-
-                if (decodedData.isNotEmpty) {
-                  try {
-                    // Traitement des données sous forme de nombres séparés par "/"
-                    List<String> values = decodedData.split('/');
-                    Map<String, dynamic> parsedData = {};
-
-                    for (int i = 0; i < values.length; i++) {
-                      parsedData['Tag $i'] = double.tryParse(values[i]);
-                    }
-
-                    print("Données parsées : $parsedData");
-                    onDataReceived(
-                        parsedData); // Retourner les données traitées
-                  } catch (e) {
-                    print("Erreur lors du traitement des données : $e");
-                  }
-                }
-              } catch (e) {
-                print("Erreur lors du décodage des données : $e");
-              }
+            characteristic.value.listen((data) {
+              _processData(data);
+            }, onError: (error) {
+              print("Erreur de réception des données : $error");
+              _dataController.addError(error);
             });
           }
         }
       }
     } catch (e) {
-      print("Erreur lors de la connexion : $e");
+      print("Erreur de connexion : $e");
+      _dataController.addError(e);
     }
   }
 
-  // Disconnect from device
-  void disconnect() {
-    connectedDevice?.disconnect();
+  void _processData(List<int> data) {
+    try {
+      final decodedData = utf8.decode(data);
+      print("Données décodées : $decodedData");
+
+      if (decodedData.isNotEmpty) {
+        final values = decodedData.split('/');
+        final parsedData = <String, dynamic>{};
+
+        for (int i = 0; i < values.length; i++) {
+          parsedData['Tag $i'] = double.tryParse(values[i]);
+        }
+
+        print("Données traitées : $parsedData");
+        _dataController.add(parsedData);
+      }
+    } catch (e) {
+      print("Erreur de traitement des données : $e");
+      _dataController.addError(e);
+    }
+  }
+
+  Future<void> disconnect() async {
+    try {
+      await connectedDevice?.disconnect();
+      await _dataController.close();
+    } catch (e) {
+      print("Erreur lors de la déconnexion : $e");
+    }
+  }
+
+  void dispose() {
+    disconnect();
   }
 }

@@ -283,7 +283,7 @@ class LocationService {
     return productPositions;
   }
 
-  Future<List<List<int>>?> findTargetPosition2(String jsonDistanceFile) async {
+  Future<List<List<int>>> findTargetPosition2(String jsonDistanceFile) async {
     // TODO changé par le cache
     print("Enter in FindTargetPosition2");
     const String jsonFilePath = 'assets/plan.json';
@@ -326,7 +326,9 @@ class LocationService {
       return path;
     } else {
       print("Pas assez de beacons pour la triangulation.");
-      return null;
+      return [
+        [-1000, -1000]
+      ];
     }
   }
 }
