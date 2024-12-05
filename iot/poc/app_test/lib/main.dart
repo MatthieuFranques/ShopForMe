@@ -41,7 +41,7 @@ class _BluetoothScreenState extends State<BluetoothScreen> {
         // Connect to the device and listen for JSON data
         _bluetoothService.connectToDevice(device, (receivedData) {
           setState(() {
-            data = receivedData; // Updates the data received
+            data = receivedData as String; // Updates the data received
           });
         });
       });

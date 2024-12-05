@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter_blue/flutter_blue.dart';
 
 class BluetoothScanService {
@@ -20,8 +20,8 @@ class BluetoothScanService {
     });
   }
 
-  // Connect to a found device
-  void connectToDevice(BluetoothDevice device, Function(String) onDataReceived) async {
+// Connect to a found device
+  void connectToDevice(BluetoothDevice device, Function(Map<String, dynamic>) onDataReceived) async {
     await device.connect();
     connectedDevice = device;
 
@@ -32,10 +32,34 @@ class BluetoothScanService {
             characteristic.setNotifyValue(true);
             dataStream = characteristic.value.asBroadcastStream();
 
-            // Listen to the data stream sent by the ESP32
-            dataStream?.listen((data) {
-              String jsonString = utf8.decode(data); // Decode the data received
-              onDataReceived(jsonString); // Send the JSON to the UI
+            // Écoute des données envoyées par l'ESP32
+            dataStream?.listen((data) async {
+              try {
+                print("Données reçues (bytes) : $data");
+
+                // Convertir les données reçues en une chaîne de caractères
+                String decodedData = utf8.decode(data);
+                print("Données reçues (texte) : $decodedData");
+
+                if (decodedData.isNotEmpty) {
+                  try {
+                    // Si les données sont sous forme de chaînes de nombres séparées par des "/"
+                    List<String> values = decodedData.split('/');
+                    Map<String, dynamic> parsedData = {};
+
+                    for (int i = 0; i < values.length; i++) {
+                      parsedData['Tag $i'] = double.tryParse(values[i]);
+                    }
+
+                    print("Données parsées : $parsedData");
+                    onDataReceived(parsedData); // Retourner les données traitées à la fonction de rappel
+                  } catch (e) {
+                    print("Erreur lors du traitement des données : $e");
+                  }
+                }
+              } catch (e) {
+                print("Erreur lors du décodage des données : $e");
+              }
             });
           }
         }
@@ -47,4 +71,5 @@ class BluetoothScanService {
   void disconnect() {
     connectedDevice?.disconnect();
   }
+
 }
