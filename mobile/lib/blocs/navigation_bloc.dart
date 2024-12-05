@@ -48,12 +48,14 @@ class NavigationLoadedState extends NavigationState {
   final String instruction;
   final ArrowDirection arrowDirection;
   final bool isLastProduct;
+  final bool isDone;
  
   NavigationLoadedState({
     required this.objectName,
     required this.instruction,
     required this.arrowDirection,
     this.isLastProduct = false,
+    this.isDone = false,
   });
 }
  
@@ -101,61 +103,56 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   LoadNavigationEvent event,
   Emitter<NavigationState> emit,
 ) async {
-  final List<String> devicesList = [];
-  BluetoothDevice deviceDeMerde;
-  Map<String, dynamic> data = {};
- 
   try {
+    // Check permissions
     final bool permission = await checkPermissions();
-    if (permission) {
-      print("before _bluetoothService.startScan2");
-      deviceDeMerde = await _bluetoothService.startScan2();
-      if (deviceDeMerde == null) {
-        throw Exception("No device found!");
-      }
- 
-      print("deviceDeMerde: ${deviceDeMerde}");
-      emit(NavigationLoadedState(
-        objectName: "blabla",
-        instruction: "",
-        arrowDirection: ArrowDirection.nord,
-        isLastProduct: true,
-      ));
- 
-      ReceivePort receivePort = ReceivePort();
-      print("ReceivePort created");
-      print("Before spawning Isolate!!");
-      final test = await Isolate.spawn(this.test, receivePort.sendPort);
-
-      receivePort.listen((message) {
-        print("Message from isolate: $message");
-      });
-      // final jsonData = await Isolate.spawn(
-      //     _bluetoothService.connectToDevice, receivePort.sendPort);
-      // print("Isolate spawned");
-
-      
- 
-      // receivePort.listen((message) {
-      //   print("Message from isolate: $message");
-      //   emit(NavigationLoadedState(
-      //     objectName: "blabla",
-      //     instruction: "",
-      //     arrowDirection: ArrowDirection.nord,
-      //     isLastProduct: true,
-      //   ));
-      // });
+    if (!permission) {
+      throw Exception("Permissions not granted.");
     }
+
+    // Start Bluetooth scanning
+    print("Starting Bluetooth scan...");
+    final device = await _bluetoothService.startScan2();
+    if (device == null) {
+      throw Exception("No device found!");
+    }
+
+    final bool jesuisfalse = false;
+    
+      await _bluetoothService.connectToDevice(
+        device,
+        onDataReceived: (String decodedData) async {
+          if (decodedData != ""){
+            final values = decodedData.split('/');
+            final parsedData = <String, dynamic>{};
+            // Construction du map de données
+            for (int i = 0; i < values.length; i++) {
+              parsedData['Tag $i'] = double.tryParse(values[i]);
+            }
+            
+
+            final List<List<int>> shortestPath = await _locationService.findTargetPosition2(jsonEncode(parsedData));
+            if (shortestPath != [-1000, -1000]){
+              
+            // As data is received, update the UI with the latest information
+            emit(NavigationLoadedState(
+              objectName: "Banane",
+              instruction: _generateInstruction(shortestPath),
+              arrowDirection: _calculateDirection(shortestPath),
+              isLastProduct: false,
+              isDone: false, // Connection and data reception are still ongoing
+            ));
+            }
+          } 
+        },
+      );
+      await Future.delayed(Duration(seconds: 200000));
   } catch (e) {
-    emit(NavigationError(e.toString()));
-  }
-}
-
-void test(SendPort sendPort) async {
-    while(true){
-      sleep(new Duration(seconds: 3));
-      sendPort.send("test!!");
+    print("Error: $e");
+    if (!emit.isDone) {
+      emit(NavigationError(e.toString()));
     }
+  }
 }
  
   Future<void> _onUpdateNavigation(

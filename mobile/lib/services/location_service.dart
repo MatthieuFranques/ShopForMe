@@ -285,14 +285,11 @@ class LocationService {
 
   Future<List<List<int>>> findTargetPosition2(String jsonDistanceFile) async {
     // TODO changé par le cache
-    print("Enter in FindTargetPosition2");
     const String jsonFilePath = 'assets/plan.json';
     final Grid grid = await loadGridFromJson(jsonFilePath);
-    print("After grid ");
 
     final List<List<int>> beaconPositions =
         await getBeaconPositions(jsonFilePath);
-    print("After getBeaconPositions ");
 
     // Mettre un fonction qui permet de savoir ou est
     final List<int> productPosition = await getProductPosition(jsonFilePath);

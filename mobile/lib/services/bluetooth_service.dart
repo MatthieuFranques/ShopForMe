@@ -11,156 +11,86 @@ class BluetoothScanService {
   BluetoothDevice? connectedDevice;
   BluetoothCharacteristic? characteristic;
   late SharedService sharedService;
+  final _dataController = StreamController<Map<String, dynamic>>.broadcast();
  
   // Stream for device data
   Stream<List<int>>? dataStream;
  
-  // Start scanning for devices
-  void startScan(Function(BluetoothDevice) onDeviceFound) async {
-    flutterBlue.scan().listen((scanResult) {
-      if (scanResult.device.name == 'ESP32_BLE') {
-        flutterBlue.stopScan();
-        onDeviceFound(scanResult.device);
-      }
-    });
-  }
+  // // Start scanning for devices
+  // void startScan(Function(BluetoothDevice) onDeviceFound) async {
+  //   flutterBlue.scan().listen((scanResult) {
+  //     if (scanResult.device.name == 'ESP32_BLE') {
+  //       flutterBlue.stopScan();
+  //       onDeviceFound(scanResult.device);
+  //     }
+  //   });
+  // }
  
   /// Méthode pour se connecter à un périphérique BLE et écouter les données
    
-void connectToDevice(SendPort sendPort) async {
+Future<void> connectToDevice(
+  BluetoothDevice device, {
+  required Future<void> Function(String decodedData) onDataReceived,
+}) async {
   try {
-    print("In connectToDevice!!");
-    BluetoothDevice device = await startScan2();
-    print("enter connectToDevice");
-    print("device : ${device.name}");
-    while (true){
-      sleep(new Duration(seconds: 3));
-      sendPort.send("connecToDevice");
-      }
-    }
-  catch (e){
-    print("Error connectToDevice!!!");
-    print(e);
-  }
-  //   // Connect to the device
-  //   print("Connecting to device: ${device.name}");
-  //   await device.connect();
-  //   print("after device.connect()");
- 
-  //   // Discover services and characteristics
-  //   print("Discovering services...");
-  //   List<BluetoothService> services = await device.discoverServices();
-  //   for (var service in services) {
-  //     for (var characteristic in service.characteristics) {
-  //       // If a characteristic allows notification
-  //       if (characteristic.properties.notify) {
-  //         print("Characteristic found with notifications: ${characteristic.uuid}");
-  //         await characteristic.setNotifyValue(true);
-  //         Stream<List<int>> dataStream = characteristic.value.asBroadcastStream();
- 
-  //         // Listen to data sent by the ESP32
-  //         dataStream.listen((data) async {
-  //           try {
-  //             print("Data received (bytes): $data");
- 
-  //             // Decode the received data to text
-  //             String decodedData = utf8.decode(data);
-  //             print("Data received (text): $decodedData");
-  //             sendPort.send(decodedData);
- 
-  //             if (decodedData.isNotEmpty) {
-  //               try {
-  //                 // Process data as numbers separated by "/"
-  //                 List<String> values = decodedData.split('/');
-  //                 Map<String, dynamic> parsedData = {};
- 
-  //                 for (int i = 0; i < values.length; i++) {
-  //                   parsedData['Tag $i'] = double.tryParse(values[i]);
-  //                 }
- 
-  //                 print("Parsed data: $parsedData");
-  //               } catch (e) {
-  //                 print("Error processing data: $e");
-  //               }
-  //             }
-  //           } catch (e) {
-  //             print("Error decoding data: $e");
-  //           }
-  //         });
-  //       }
-  //     }
-  //   }
-  // } catch (e) {
-  //   print("Error connecting to device: $e");
-  // }
-}
- 
-  Future<String> connectToDeviceString(BluetoothDevice device) async {
-    try {
-      // Connexion au périphérique
-      print("Connexion au périphérique : ${device.name}");
-      await device.connect();
-      connectedDevice = device;
- 
-      // Découverte des services et caractéristiques
-      print("Découverte des services...");
-      List<BluetoothService> services = await device.discoverServices();
- 
-      for (var service in services) {
-        for (var characteristic in service.characteristics) {
-          // Si une caractéristique permet la notification
-          if (characteristic.properties.notify) {
-            print(
-                "Caractéristique trouvée avec notifications : ${characteristic.uuid}");
-            await characteristic.setNotifyValue(true);
-            dataStream = characteristic.value.asBroadcastStream();
- 
-            // Écoute des données envoyées par l'ESP32
-            await for (var data in dataStream!) {
-              try {
-                print("Données reçues (bytes) : $data");
- 
-                // Décodage des données reçues en texte
-                String decodedData = utf8.decode(data);
-                print("Données reçues (texte) : $decodedData");
- 
-                if (decodedData.isNotEmpty) {
-                  try {
-                    // Traitement des données sous forme de nombres séparés par "/"
-                    List<String> values = decodedData.split('/');
-                    Map<String, dynamic> parsedData = {};
- 
-                    for (int i = 0; i < values.length; i++) {
-                      parsedData['Tag $i'] = double.tryParse(values[i]);
-                    }
- 
-                    print("Données parsées : $parsedData");
- 
-                    // Retourner les données traitées sous forme de chaîne
-                    return jsonEncode(
-                        parsedData); // Vous pouvez modifier ici pour renvoyer une chaîne spécifique
-                  } catch (e) {
-                    print("Erreur lors du traitement des données : $e");
-                    return "Erreur lors du traitement des données.";
-                  }
-                } else {
-                  connectToDeviceString(device);
-                  return "Aucune donnée reçue";
-                }
-              } catch (e) {
-                print("Erreur lors du décodage des données : $e");
-                return "Erreur lors du décodage des données.";
-              }
+    print("Connecting to device: ${device.name}");
+    await device.disconnect();
+    await device.connect();
+    print("Connected to device.");
+
+    // Discover services and characteristics
+    print("Discovering services...");
+    final services = await device.discoverServices();
+    for (final service in services) {
+      for (final characteristic in service.characteristics) {
+        // If a characteristic allows notification
+        if (characteristic.properties.notify) {
+          print("Characteristic with notifications found: ${characteristic.uuid}");
+          await characteristic.setNotifyValue(true);
+
+          // Listen for data
+          characteristic.value.listen((data) async {
+            try {
+              final decodedData = utf8.decode(data);
+              print("Data received: $decodedData");
+              await onDataReceived(decodedData); // Ensure this callback is awaited
+            } catch (e) {
+              print("Error decoding data: $e");
             }
-          }
+          });
         }
       }
-      return "Aucune caractéristique avec notifications trouvée.";
+    }
+  } catch (e) {
+    print("Error connecting to device: $e");
+    rethrow; // Allow the caller to handle the error
+  }
+}
+
+ /// Traite les données reçues du périphérique Bluetooth
+ void _processData(List<int> data) {
+    try {
+      final decodedData = utf8.decode(data);
+      print("Données décodées : $decodedData");
+
+      if (decodedData.isNotEmpty) {
+        final values = decodedData.split('/');
+        final parsedData = <String, dynamic>{};
+
+        // Construction du map de données
+        for (int i = 0; i < values.length; i++) {
+          parsedData['Tag $i'] = double.tryParse(values[i]);
+        }
+
+        print("Données traitées : $parsedData");
+        _dataController.add(parsedData);
+      }
     } catch (e) {
-      print("Erreur lors de la connexion : $e");
-      return "Erreur lors de la connexion : $e";
+      print("Erreur de traitement des données : $e");
+      _dataController.addError(e);
     }
   }
+
  
   Future<BluetoothDevice> startScan2() async {
     print("startScan2 FUTURE");
