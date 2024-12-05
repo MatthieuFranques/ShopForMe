@@ -40,7 +40,6 @@ const uint8_t PIN_SS = 4;   // spi select pin
 
 const int MAX_TAGS = 3; // Maximum number of tags to track
 unsigned long previousMillis = 0; // Variable to store the previous time
-const long interval = 1000;       // Log interval (1 second)
 
 /// @brief Addition of a constant offset of 70 cm
 const float DISTANCE_OFFSET = 0.7;
@@ -98,11 +97,12 @@ void loop() {
     unsigned long currentMillis = millis();
 
     // If a second has passed, log the distances
-    if (currentMillis - previousMillis >= interval) {
+    if (currentMillis - previousMillis >= 3000) {
         previousMillis = currentMillis; // Reset the previous time
 
         // Log distances for each active tag
         for (int i = 0; i < numTags; i++) {
+            delay(500);
             if (tags[i].active) {
                 logDistances(tags[i].address, tags[i].distance);
 
@@ -119,8 +119,6 @@ void loop() {
  *          and inactive devices. The ESP32 starts in anchor mode with a defined address.
  */
 void initAnchor() {
-
-    delay(1000);
     Serial.println("Starting as ANCHOR...");
 
     SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
@@ -266,35 +264,6 @@ void inactiveDevice(DW1000Device *device) {
 }
 
 /**
- * @brief Sends a JSON notification via Bluetooth
- * @details This method constructs a JSON string from the data supplied and sends it to
- *          to a device connected via Bluetooth using the notification function.
- * 
- * @param[in] dataToSend A map containing the data to be included in the JSON. 
- *                       The keys (String) represent the addresses of the beacons, 
- *                       and the values (float) represent the associated distances.
- * 
- * @note The method only sends if a device is connected to the BLE device.
- */
-void sendJson(std::map<String, float> dataToSend) {
-    Serial.println(constructJson(dataToSend));
-    // If a device is connected, send a notification every 'notifyInterval' milliseconds
-    if (deviceConnected) {
-
-        String jsonString = constructJson(dataToSend);
-
-        // Mettre à jour la valeur de la caractéristique avec la chaîne JSON
-        pCharacteristic->setValue(jsonString.c_str());
-
-        // Notify connected device with the new JSON value
-        pCharacteristic->notify();
-
-        // Wait before sending the next notification
-        delay(notifyInterval);
-    }
-}
-
-/**
  * @brief Builds a data package and sends a JSON when all the data has been retrieved (the 3 tags).
  * @details This method adds a new entry (address and distance) to a data map. 
  *          When the map contains exactly three entries, it generates and sends a JSON via the `sendJson` method, 
@@ -312,67 +281,64 @@ void sendJson(std::map<String, float> dataToSend) {
  * constructPackage("Beacon3", 1.61);
  * @endcode
  */
-void constructPackage(String address, float range)  {
-    // Add a new key-value entry
+void constructPackage(String address, float range) {
+    bool verif = true;
+
+    // Ajouter une nouvelle paire clé-valeur
     if (dataToSend.size() <= 3)
         dataToSend.emplace(address, range);
-    
-    // Send the JSON when it contains all three tag positions
-    if (dataToSend.size() == 3) {
-        sendJson(dataToSend);
 
-        // Cleaning up the data to be sent for the next round
+    // Envoyer les données JSON lorsque toutes les positions de tags sont présentes
+    if (dataToSend.size() == 3) {
+        for (const auto& [key, value] : dataToSend) {
+            if (value > 50.0f || value < 0.0f) { // Vérifier si une valeur dépasse 50
+                verif = false;
+                break;
+            }
+        }
+
+        if (verif)
+            sendData(dataToSend);
+        else
+            Serial.println("Data incorrect.");
+
+        // Nettoyer la map pour la prochaine itération
         dataToSend.clear();
     }
 }
 
-/**
- * @brief Builds a JSON string from the data supplied.
- * @details This method generates a JSON string containing a timestamp and a list of objects representing tags,
- *          each tag having a name (address) and an associated distance.
- * 
- * @param[in] dataToSend A map containing the data to be included in the JSON. 
- *                       Keys (String) represent the addresses of the beacons, 
- *                       and the values (float) represent the associated distances.
- * @return A JSON string representing the data in the following format :
- * @code
- * {
- *     "timestamp": 123456,
- *     "beacons": [
- *         {"name": "Beacon1", "distance": 3.14},
- *         {"name": "Beacon2", "distance": 2.71}
- *     ]
- * }
- * @endcode
- */
-String constructJson(std::map<String, float> dataToSend) {
-    // Create a JSON object
-    StaticJsonDocument<300> doc;  // 300-byte capacity
-
-    // Get the current time in timestamp (in seconds)
-    unsigned long timestamp = millis() / 1000;
-
-    // Add the timestamp to the JSON document
-    doc["timestamp"] = timestamp;
-
-    // Create a table for the data (name, distance)
-    JsonArray beaconArray = doc.createNestedArray("beacons");
-
-    // Browse the map and add each element as an object in the table
-    for (const auto& entry : dataToSend) {
-        // Create an object for each beacon
-        JsonObject beacon = beaconArray.createNestedObject();
-
-        beacon["name"] = entry.first;  // ‘name’ is the address (key to the map)
-        beacon["distance"] = entry.second;  // ‘distance’ is the value of the map
+void sendData(std::map<String, float> dataToSend) {
+    Serial.println(constructString(dataToSend));
+    if (deviceConnected) {
+        // Construire la chaîne
+        String data = constructString(dataToSend);
+        const char* charArray = data.c_str();
+        // Envoyer les données via BLE
+        pCharacteristic->setValue(data.c_str()); // Cast en uint8_t* requis pour setValue
+        pCharacteristic->notify();
+    } else {
+      Serial.println("Retry bluetooth connection");
     }
-
-    // Convert JSON document to string
-    String jsonString;
-    serializeJson(doc, jsonString);  // Serialise the JSON object in a string
-
-    return jsonString;
 }
+
+String constructString(std::map<String, float> dataToSend) {
+    String data;
+    size_t counter = 0;
+
+    for (const auto& entry : dataToSend) {
+        // On convertit en int avant de l'envoyer
+        data += String(int(trunc(entry.second*100)));
+
+        if (counter < dataToSend.size() - 1)
+            data += "/";
+
+        counter++;
+    }
+    Serial.println(data);
+
+    return data;
+}
+
 
 /**
  * @brief Displays the distance calculated between an anchor and a UWB tag.
@@ -412,13 +378,12 @@ void printAddress(const uint8_t* address) {
 String getAddress(const uint8_t* address) {
     String addressStr = "";
     for (int i = 0; i < 8; i++) {
-        if (address[i] < 0x10) {
+        if (address[i] < 0x10)
             addressStr += "0";  // Add a zero before values below 0x10
-        }
+        
         addressStr += String(address[i], HEX);  // Convert each byte to hex and add to the string
-        if (i < 7) {
+        if (i < 7)
             addressStr += ":";  // Add a ‘:’ between the bytes
-        }
     }
 
     return addressStr;
