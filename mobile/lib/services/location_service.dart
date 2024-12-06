@@ -195,9 +195,9 @@ class LocationService {
     final double x3 = pos3[0].toDouble();
     final double y3 = pos3[1].toDouble();
     // TODO a revérifier si il faut bien faire comme ca sur le / 100
-    final double d1 = r1 / 50;
-    final double d2 = r2 / 50;
-    final double d3 = r3 / 50;
+    final double d1 = r1 / 100;
+    final double d2 = r2 / 100;
+    final double d3 = r3 / 100;
 
     final double A = 2 * (x2 - x1);
     final double B = 2 * (y2 - y1);
@@ -286,6 +286,7 @@ class LocationService {
   Future<List<List<int>>> findTargetPosition2(String jsonDistanceFile) async {
     // TODO changé par le cache
     const String jsonFilePath = 'assets/demo/plan28_11_24.json';
+    print("PLAN UPLOADED ${jsonFilePath}");
     final Grid grid = await loadGridFromJson(jsonFilePath);
 
     final List<List<int>> beaconPositions =
