@@ -1,0 +1,2711 @@
+{
+  "id": 2,
+  "name": "zef",
+  "ville": "zef",
+  "adresse": "zef",
+  "layout": [
+    [
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Légume",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Fruit",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Viande",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Produit laitier",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Produit laitier",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Produit laitier",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Produit laitier",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "Poisson",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Produit laitier",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Produit laitier",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Boulangerie",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Produit laitier",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Condiment",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Condiment",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Condiment",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Condiment",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Entretient",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Cosmétique",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ],
+    [
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "X",
+        "size": 0,
+        "type": "VIDE",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "Promo",
+        "type": "RAYON",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      },
+      {
+        "name": "PLEIN",
+        "size": 0,
+        "type": "PLEIN",
+        "isBeacon": false
+      }
+    ]
+  ]
+}

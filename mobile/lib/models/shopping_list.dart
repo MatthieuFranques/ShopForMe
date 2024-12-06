@@ -1,4 +1,5 @@
 import 'package:mobile/models/product.dart';
+
 class ShoppingList {
   final String id;
   final String name;
@@ -14,12 +15,12 @@ class ShoppingList {
 
   factory ShoppingList.fromJson(Map<String, dynamic> json) {
     return ShoppingList(
-      id: json['id'] ?? 0, 
-      name: json['name'] ?? 'Unnamed List',  
-      date: json['date'] ?? 'Unknown Date',  
-      products: (json['products'] as List<dynamic>).map((productJson) {
-        return Product.fromJson(productJson);
-      }).toList(),
+      id: json['id']?.toString() ?? 'unknown',
+      name: json['name'] ?? 'Unnamed List',
+      date: json['date'] ?? 'Unknown Date',
+      products: (json['products'] as List<dynamic>)
+          .map((productJson) => Product.fromJson(productJson))
+          .toList(),
     );
   }
 }

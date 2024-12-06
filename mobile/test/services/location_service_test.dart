@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/models/grid.dart';
-import 'package:mobile/models/node.dart';
 import 'package:mobile/services/location_service.dart';
 
 // Données JSON de test directement intégrées dans le code

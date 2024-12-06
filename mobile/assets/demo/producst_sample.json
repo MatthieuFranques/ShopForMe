@@ -1,0 +1,211 @@
+{
+    "id": "1",
+    "name": "Carrefour",
+    "date": "17/10/2024",
+    "products": [
+      {
+        "id": "101",
+        "name": "Pomme",
+        "category": "Fruit",
+        "rayon": "Fruit"
+      },
+      {
+        "id": "102",
+        "name": "Banane",
+        "category": "Fruit",
+        "rayon": "Fruit"
+      },
+      {
+        "id": "103",
+        "name": "Carotte",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "104",
+        "name": "Pain",
+        "category": "Boulangerie",
+        "rayon": "Boulangerie"
+      },
+      {
+        "id": "105",
+        "name": "Lait",
+        "category": "Produit laitier",
+        "rayon": "Produit laitier"
+      },
+      {
+        "id": "106",
+        "name": "Poulet",
+        "category": "Viande",
+        "rayon": "Viande"
+      },
+      {
+        "id": "107",
+        "name": "Poisson",
+        "category": "Poisson",
+        "rayon": "Poisson"
+      },
+      {
+        "id": "110",
+        "name": "Yaourt",
+        "category": "Produit laitier",
+        "rayon": "Produit laitier"
+      },
+      {
+        "id": "111",
+        "name": "Tomate",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "112",
+        "name": "Orange",
+        "category": "Fruit",
+        "rayon": "Fruit"
+      },
+      {
+        "id": "114",
+        "name": "Oeufs",
+        "category": "Produit laitier",
+        "rayon": "Produit laitier"
+      },
+      {
+        "id": "115",
+        "name": "Beurre",
+        "category": "Produit laitier",
+        "rayon": "Produit laitier"
+      },
+      {
+        "id": "116",
+        "name": "Jambon",
+        "category": "Viande",
+        "rayon": "Viande"
+      },
+      {
+        "id": "117",
+        "name": "Saumon",
+        "category": "Poisson",
+        "rayon": "Poisson"
+      },
+      {
+        "id": "123",
+        "name": "Biscottes",
+        "category": "Boulangerie",
+        "rayon": "Boulangerie"
+      },
+      {
+        "id": "141",
+        "name": "Salade",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "142",
+        "name": "Poivron",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "143",
+        "name": "Courgette",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "144",
+        "name": "Aubergine",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "145",
+        "name": "Brocoli",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "146",
+        "name": "Chou-fleur",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "147",
+        "name": "Épinards",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "148",
+        "name": "Haricots verts",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "500",
+        "name": "Eponge",
+        "category": "Entretien",
+        "rayon": "Entretien"
+      },
+      {
+        "id": "501",
+        "name": "Dentifrice",
+        "category": "Cosmétique",
+        "rayon": "Cosmétique"
+      },
+      {
+        "id": "149",
+        "name": "Petits pois",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "150",
+        "name": "Lentilles",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "151",
+        "name": "Pois chiches",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "152",
+        "name": "Ail",
+        "category": "Condiment",
+        "rayon": "Condiment"
+      },
+      {
+        "id": "153",
+        "name": "Oignon",
+        "category": "Condiment",
+        "rayon": "Condiment"
+      },
+      {
+        "id": "154",
+        "name": "Échalote",
+        "category": "Condiment",
+        "rayon": "Condiment"
+      },
+      {
+        "id": "167",
+        "name": "Céleri",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "168",
+        "name": "Radis",
+        "category": "Légume",
+        "rayon": "Légume"
+      },
+      {
+        "id": "504",
+        "name": "DLC courte",
+        "category": "Promo",
+        "rayon": "Promo"
+      }
+    ]
+  }

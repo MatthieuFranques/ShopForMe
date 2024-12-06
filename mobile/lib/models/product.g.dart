@@ -20,7 +20,7 @@ class ProductAdapter extends TypeAdapter<Product> {
       id: fields[0] as String,
       name: fields[1] as String,
       category: fields[2] as String,
-      layout: (fields[3] as List).cast<int>(),
+      rayon: fields[3] as String,
     );
   }
 
@@ -35,7 +35,7 @@ class ProductAdapter extends TypeAdapter<Product> {
       ..writeByte(2)
       ..write(obj.category)
       ..writeByte(3)
-      ..write(obj.layout);
+      ..write(obj.rayon);
   }
 
   @override

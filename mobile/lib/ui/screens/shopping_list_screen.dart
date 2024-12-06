@@ -1,178 +1,230 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/shopping_list_bloc.dart';
+import 'package:mobile/blocs/product_search_bloc.dart';
+import 'package:mobile/ui/widgets/app_header.dart';
+import 'package:mobile/ui/widgets/shopping_list_items.dart';
+import 'package:mobile/ui/screens/product_search_screen.dart';
+import 'package:mobile/utils/screen_utils.dart';
 
-class ShoppingListPage extends StatelessWidget {
-  const ShoppingListPage({super.key});
+class ShoppingListScreen extends StatefulWidget {
+  const ShoppingListScreen({super.key});
+
+  @override
+  _ShoppingListScreenState createState() => _ShoppingListScreenState();
+}
+
+class _ShoppingListScreenState extends State<ShoppingListScreen> {
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    print('📝 Loading shopping list');
+    context.read<ShoppingListBloc>().add(LoadShoppingList());
+  }
+
+  void _handleDeleteProduct(int productId) {
+    context.read<ShoppingListBloc>().add(RemoveProductFromList(productId.toString()));
+  }
+
+  void _handleIndexChanged(int index) {
+    print('📑 Switching to shopping list $index');
+    setState(() {
+      _currentIndex = index;
+    });
+    final state = context.read<ShoppingListBloc>().state;
+    if (state is ShoppingListLoaded && state.shoppingLists.length > index) {
+      context.read<ShoppingListBloc>().add(
+        SelectShoppingList(state.shoppingLists[index].id)
+      );
+    }
+  }
+
+  void _handleAddList() {
+    print('➕ Creating new shopping list');
+    context.read<ShoppingListBloc>().add(CreateNewShoppingList());
+  }
+
+  void _handleDeleteList() {
+    final state = context.read<ShoppingListBloc>().state;
+    if (state is! ShoppingListLoaded) return;
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Supprimer la liste'),
+          content: Text('Voulez-vous vraiment supprimer "${state.currentList.name}" ?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // TODO: Implémenter la suppression de la liste
+                // context.read<ShoppingListBloc>().add(DeleteShoppingList(state.currentList.id));
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('Supprimer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _navigateToProductSearch() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(
+              value: context.read<ShoppingListBloc>(),
+            ),
+            BlocProvider.value(
+              value: context.read<ProductSearchBloc>()..add(LoadProducts()),
+            ),
+          ],
+          child: const ProductSearchScreen(shopId: 1),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    context.read<ShoppingListBloc>().add(LoadShoppingList());
-
-    final screenHeight = MediaQuery.of(context).size.height;
+    ScreenUtils.init(context);
 
     return Scaffold(
-      appBar: AppBar(
-         title: const Text(
-          'ShoppingList',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 1, 28, 64),
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          BlocBuilder<ShoppingListBloc, ShoppingListState>(
-            builder: (context, state) {
-              if (state is ShoppingListLoading) {
-                return Container(
-                  height: screenHeight * 0.1, 
-                  width: double.infinity,
-                  color: Theme.of(context).colorScheme.primary,
-                  child: const Center(child: CircularProgressIndicator()),
-                );
-              } else if (state is ShoppingListLoaded) {
-                return Container(
-                  height: screenHeight * 0.1, 
-                  width: double.infinity,
-                  color: Theme.of(context).colorScheme.secondary,
-                  child: Row(
-                    children: [
-                      Icon(Icons.list, size: screenHeight * 0.06, color: Colors.white), 
-                      const SizedBox(width: 16), 
-                      Text(
-                        state.shoppingList.date, 
-                        style: TextStyle(
-                          fontSize: screenHeight * 0.04,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: BlocBuilder<ShoppingListBloc, ShoppingListState>(
+          builder: (context, state) {
+            if (state is ShoppingListLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is ShoppingListLoaded) {
+              return Column(
+                children: [
+                  Container(
+                    height: 80,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.getResponsiveSize(16),
+                    ),
+                    child: AppHeader(
+                      shoppingLists: state.shoppingLists,
+                      currentIndex: _currentIndex,
+                      onIndexChanged: _handleIndexChanged,
+                      onAddList: _handleAddList,
+                    ),
+                  ),
+                  Expanded(
+                    child: state.currentList.products.isEmpty
+                      ? _buildEmptyState()
+                      : ShoppingListItems(
+                          state: state,
+                          onDeleteProduct: _handleDeleteProduct,
                         ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildActionButton(
+                        icon: Icons.add,
+                        onPressed: _navigateToProductSearch,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      _buildActionButton(
+                        icon: Icons.delete,
+                        onPressed: _handleDeleteList,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ],
                   ),
-                );
-              } else {
-                return Container(
-                  height: screenHeight * 0.1, 
-                  width: double.infinity,
-                  color: Theme.of(context).colorScheme.primary,
-                  child: const Center(child: Text('Unknown state.', style: TextStyle(color: Colors.white))),
-                );
-              }
-            },
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: BlocBuilder<ShoppingListBloc, ShoppingListState>(
-              builder: (context, state) {
-                if (state is ShoppingListLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is ShoppingListLoaded) {
-                  final products = state.shoppingList.products;
-                  return ListView.separated(
-                    itemCount: products.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 10), 
-                    itemBuilder: (context, index) {
-                      final product = products[index];
+                ],
+              );
+            }
 
-                      return Container(
-                        height: screenHeight * 0.1, 
-                        width: double.infinity,
-                        color: Theme.of(context).colorScheme.tertiary, 
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Text(
-                                  product.name,
-                                  style: TextStyle(
-                                    fontSize: screenHeight * 0.04,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.close, size: screenHeight * 0.06, color: Colors.white),
-                              onPressed: () {
-                                // Supprimer produit de la liste
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                } else if (state is ShoppingListError) {
-                  return const Center(child: Text('Failed to load shopping list.'));
-                } else {
-                  return const Center(child: Text('Unknown state.'));
-                }
-              },
-            ),
+            if (state is ShoppingListError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: context.getResponsiveSize(48),
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: context.getResponsiveFontSize(16),
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return const Center(child: Text('État inconnu'));
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return Container(
+      width: context.getResponsiveSize(80),
+      height: context.getResponsiveSize(80),
+      margin: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
-          
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => ResearchScreen()),
-                    // );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    height: screenHeight * 0.1,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.add_rounded,
-                      size: screenHeight * 0.08,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Action à réaliser lors du clic sur le bouton de skip
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    height: screenHeight * 0.1,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.skip_next,
-                      size: screenHeight * 0.08,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+        ),
+        child: Icon(
+          icon,
+          size: context.getResponsiveSize(32),
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.shopping_basket_outlined,
+            size: context.getResponsiveSize(64),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+          ),
+          SizedBox(height: context.getResponsiveSize(16)),
+          Text(
+            'Aucun produit dans la liste',
+            style: TextStyle(
+              fontSize: context.getResponsiveFontSize(18),
+            ),
           ),
         ],
       ),

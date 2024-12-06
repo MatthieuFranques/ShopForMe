@@ -30,9 +30,9 @@
                 "isBeacon": false
             },
             {
-                "name": "X",
-                "size": 0,
-                "type": "VIDE",
+                "name": "Boulangerie",
+                "size": 2,
+                "type": "RAYON",
                 "isBeacon": false
             },
             {
@@ -58,6 +58,68 @@
                 "size": 0,
                 "type": "VIDE",
                 "isBeacon": false
+            },
+            {
+                "name": "PLEIN",
+                "size": 0,
+                "type": "PLEIN",
+                "isBeacon": false
+            }
+        ],
+        [
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "Surgele",
+                "size": 3,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": false
+            },
+            {
+                "name": "X",
+                "size": 0,
+                "type": "VIDE",
+                "isBeacon": true
             },
             {
                 "name": "X",
@@ -680,9 +742,71 @@
                 "isBeacon": false
             },
             {
-                "name": "X",
-                "size": 0,
-                "type": "VIDE",
+                "name": "Confiseries",
+                "size": 1,
+                "type": "RAYON",
+                "isBeacon": true
+            }
+        ],
+        [
+            {
+                "name": "Fruits",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Légumes",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Produits laitiers",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Viandes",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Poissons",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Céréales",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Fromages",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Boissons",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Condiments",
+                "size": 2,
+                "type": "RAYON",
+                "isBeacon": false
+            },
+            {
+                "name": "Herbes",
+                "size": 2,
+                "type": "RAYON",
                 "isBeacon": false
             }
         ]
