@@ -136,7 +136,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
               
             // As data is received, update the UI with the latest information
             emit(NavigationLoadedState(
-              objectName: "Banane",
+              objectName: "Déodorant",
               instruction: _generateInstruction(shortestPath),
               arrowDirection: _calculateDirection(shortestPath),
               isLastProduct: false,
