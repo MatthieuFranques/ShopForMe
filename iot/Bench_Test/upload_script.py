@@ -57,6 +57,7 @@ for port in ports:
             if not ino_files:
                 print(f"    [ERROR] No .ino file found in directory: {target_path}")
                 continue
+            target_path = os.path.join(target_path, ino_files[0])
             print(f"    [DEBUG] Found .ino file: {ino_files[0]}")
         else:
             print(f"    [INFO] Detected single file.")

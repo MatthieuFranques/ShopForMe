@@ -1,6 +1,6 @@
 {
-    "02CE820C": "app/main/",
-    "02CE81D3": "app/tag1/",
-    "02CE81D5": "app/tag2/",
-    "02CE6FBA": "app/tag3/"
+    "02CE820C": "app/anchor/main/",
+    "02CE81D3": "app/tag1/main/",
+    "02CE81D5": "app/tag2/main/",
+    "02CE6FBA": "app/tag3/main/"
 }
