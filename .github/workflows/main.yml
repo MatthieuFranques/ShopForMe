@@ -26,5 +26,5 @@ jobs:
           # Loop through each branch and push it
           for branch in $branches; do
             git checkout "$branch"
-            git push --repo="git@github.com:EpitechMscProPromo2025/T-ESP-901-60371-TLS-ShopForMe-2.git" --force
+            git push --repo="git@github.com:EpitechMscProPromo2025/T-ESP-902-71730-TLS-ShopForMe-3.git" --force
           done
