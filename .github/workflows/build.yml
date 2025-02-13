@@ -1,4 +1,3 @@
-# 📌 Test for Flutter Part
 name: Build
 
 on:
@@ -17,19 +16,44 @@ jobs:
         with:
           fetch-depth: 0
 
+      # 📌 Checking for Flutter (mobile repository)
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.1'
           channel: 'stable'
 
-      - name: Build & Test
+      - name: Build & Test (Flutter)
         run: |
           flutter pub get
           flutter build apk --debug
           flutter test --coverage || echo "Tests failed, but continuing..."
         working-directory: mobile
 
+      # 📌 Checking for NodeJS (backend repository)
+      - name: Setup Node.js (Backend)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Backend dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Run tests (Backend)
+        run: |
+          cd backend
+          npm run test -- --coverage
+        working-directory: backend
+
+      - name: Lint Backend code
+        run: |
+          cd backend
+          npx eslint 'src/**/*.ts' --fix
+
+
+      # 📌 SonarCloud analysis
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
@@ -38,8 +62,9 @@ jobs:
           args: >
             --define sonar.projectKey=shopforme
             --define sonar.organization=shopforme
-            --define sonar.projectBaseDir=./mobile
+            --define sonar.sources=mobile,backend
             --define sonar.javascript.lcov.reportPaths=coverage/lcov.info
+            --define sonar.typescript.tsconfigPath=backend/tsconfig.json
             --define sonar.c.file.suffixes=-
             --define sonar.cpp.file.suffixes=-
             --define sonar.objc.file.suffixes=-
