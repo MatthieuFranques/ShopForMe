@@ -36,5 +36,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
+            --define sonar.projectKey=shopforme
+            --define sonar.organization=shopforme
             --define sonar.projectBaseDir=./mobile
             --define sonar.coverageReportPaths=coverage/lcov.info
