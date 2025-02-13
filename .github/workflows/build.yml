@@ -39,4 +39,4 @@ jobs:
             --define sonar.projectKey=shopforme
             --define sonar.organization=shopforme
             --define sonar.projectBaseDir=./mobile
-            --define sonar.coverageReportPaths=coverage/lcov.info
+            --define sonar.javascript.lcov.reportPaths=coverage/lcov.info
