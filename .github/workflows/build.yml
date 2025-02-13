@@ -40,3 +40,7 @@ jobs:
             --define sonar.organization=shopforme
             --define sonar.projectBaseDir=./mobile
             --define sonar.javascript.lcov.reportPaths=coverage/lcov.info
+            --define sonar.c.file.suffixes=-
+            --define sonar.cpp.file.suffixes=-
+            --define sonar.objc.file.suffixes=-
+
