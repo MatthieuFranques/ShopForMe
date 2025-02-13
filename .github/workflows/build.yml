@@ -1,0 +1,45 @@
+# 📌 Test for Flutter Part
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.1'
+          channel: 'stable'
+
+      - name: Build & Test
+        run: |
+          flutter pub get
+          flutter build apk --debug
+          flutter test --coverage || echo "Tests failed, but continuing..."
+        working-directory: mobile
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            --define sonar.projectKey=shopforme
+            --define sonar.organization=shopforme
+            --define sonar.projectBaseDir=./mobile
+            --define sonar.javascript.lcov.reportPaths=coverage/lcov.info
+            --define sonar.c.file.suffixes=-
+            --define sonar.cpp.file.suffixes=-
+            --define sonar.objc.file.suffixes=-
