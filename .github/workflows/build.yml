@@ -29,6 +29,7 @@ jobs:
           flutter pub get
           flutter build apk --debug  # Compile the project in debug mode
           flutter test --coverage  # Runs the tests and generates the coverage file
+        working-directory: mobile
 
       # 📌 Scanning with SonarQube
       - name: SonarQube Scan
