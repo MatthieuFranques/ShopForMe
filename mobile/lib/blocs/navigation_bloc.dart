@@ -122,12 +122,43 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       }
 
       print("Starting Bluetooth scan...");
-      // TODO: Implémenter le scan Bluetooth pour ESP
 
+      // TODO Remerttre le connexion
+      //await _bluetoothService.connectToDevice(
+      //         device,
+      //         onDataReceived: (String decodedData) async {
+      //           if (decodedData != ""){
+      //             final values = decodedData.split('/');
+      //             final parsedData = <String, dynamic>{};
+      //             // Construction du map de données
+      //             for (int i = 0; i < values.length; i++) {
+      //               parsedData['Tag $i'] = double.tryParse(values[i]);
+      //             }
+
+      //             final List<List<int>> shortestPath = await _locationService.findTargetPosition2(jsonEncode(parsedData));
+      //             if (shortestPath != [-1000, -1000]){
+
+      //             // As data is received, update the UI with the latest information
+      //             emit(NavigationLoadedState(
+      //               objectName: "Déodorant",
+      //               instruction: _generateInstruction(shortestPath),
+      //               arrowDirection: _calculateDirection(shortestPath),
+      //               isLastProduct: false,
+      //               isDone: false, // Connection and data reception are still ongoing
+      //             ));
+      //             }
+      //           }
+      //         },
+      // };
+      // Au lieu d'appeler emit ici, on ajoute un nouvel événement
+      // add(UpdateNavigationEventDataRow(decodedData));
+      // TODO fin
+
+      //TODO Test
       // Démarrage du Timer périodique pour générer des variations
       _navigationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         // Valeurs de base
-        final List<double> baseValues = [200, 200, 200];
+        final List<double> baseValues = [100, 100, 100];
         final random = Random();
 
         // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
