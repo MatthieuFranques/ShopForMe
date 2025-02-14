@@ -34,7 +34,7 @@ export async function create(shop: CreateProductDto) {
             data: {...shop}
         })
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         throw e;
     }
 }
@@ -43,7 +43,7 @@ export async function get(): Promise<ProductModel[] | null> {
     try {
         return await prisma.product.findMany();
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         throw error;
     }
 }
@@ -129,7 +129,7 @@ export async function getProductsBySectionName(sectionName: string) {
         // Retourner les produits associés
         return section;
     } catch (error) {
-        console.error('Error fetching products by section name:', error);
+        // console.error('Error fetching products by section name:', error);
         throw error;
     }
 }

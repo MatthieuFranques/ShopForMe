@@ -6,7 +6,8 @@ import {
     getAllProducts,
     getFreeProduct,
     getAllProductByShopP,
-    addNewProductToRayonP
+    addNewProductToRayonP,
+    getProductsBySectionNameP
 } from "../../controllers/product.controller";
 import {
     create,
@@ -203,4 +204,29 @@ describe("Product Controller", () => {
             expect(res.json).toHaveBeenCalledWith({ message: "Internal Server Error", error: new Error("Internal Server Error") });
         });
     });
+
+    // describe("getProductsBySectionNameP", () => {
+    //     it("should return all products by section name", async () => {
+    //         const products = [{ id: 1, name: "Product 1" }];
+    //         (get as jest.Mock).mockResolvedValue(products);
+    //         req.params = { name: "Section 1" };
+
+    //         await getProductsBySectionNameP(req as Request, res as Response);
+
+    //         expect(get).toHaveBeenCalledWith("Section 1");
+    //         expect(res.status).toHaveBeenCalledWith(200);
+    //         expect(res.json).toHaveBeenCalledWith(products);
+    //     });
+
+    //     it("should return 500 if there is an error", async () => {
+    //         (get as jest.Mock).mockRejectedValue(new Error("Internal Server Error"));
+    //         req.params = { name: "Section 1" };
+
+    //         await getProductsBySectionNameP(req as Request, res as Response);
+
+    //         expect(res.status).toHaveBeenCalledWith(500);
+    //         expect(res.json).toHaveBeenCalledWith({ message: "Internal Server Error", error: new Error("Internal Server Error") });
+    //     });
+
+    // });
 });

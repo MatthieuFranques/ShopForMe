@@ -37,6 +37,11 @@ describe("Shop Service", () => {
             const result = await getShopById(99);
             expect(result).toBeNull();
         });
+
+        it("should throw an error if an exception occurs", async () => {
+            (prisma.store.findUnique as jest.Mock).mockRejectedValue(new Error("Test Error"));
+            await expect(getShopById(1)).rejects.toThrow("Test Error");
+        });
     });
 
     describe("updateShop", () => {
@@ -46,6 +51,11 @@ describe("Shop Service", () => {
 
             const result = await updateShop(1, { name: "Updated Shop" });
             expect(result).toEqual(mockShop);
+        });
+
+        it("should throw an error if an exception occurs", async () => {
+            (prisma.store.update as jest.Mock).mockRejectedValue(new Error("Test Error"));
+            await expect(updateShop(1, { name: "Updated Shop" })).rejects.toThrow("Test Error");
         });
     });
 
@@ -58,6 +68,11 @@ describe("Shop Service", () => {
             const result = await deleteShop(1);
             expect(result).toEqual(mockShop);
         });
+
+        it("should throw an error if an exception occurs", async () => {
+            (prisma.section.deleteMany as jest.Mock).mockRejectedValue(new Error("Test Error"));
+            await expect(deleteShop(1)).rejects.toThrow("Test Error");
+        });
     });
 
     describe("createShop", () => {
@@ -67,6 +82,11 @@ describe("Shop Service", () => {
 
             const result = await createShop({ name: "New Shop" } as CreateShopDto);
             expect(result).toEqual(mockShop);
+        });
+
+        it("should throw an error if an exception occurs", async () => {
+            (prisma.store.create as jest.Mock).mockRejectedValue(new Error("Test Error"));
+            await expect(createShop({ name: "New Shop" } as CreateShopDto)).rejects.toThrow("Test Error");
         });
     });
 
@@ -80,6 +100,11 @@ describe("Shop Service", () => {
 
             const result = await getAllShops();
             expect(result).toEqual(mockShops);
+        });
+
+        it("should throw an error if an exception occurs", async () => {
+            (prisma.store.findMany as jest.Mock).mockRejectedValue(new Error("Test Error"));
+            await expect(getAllShops()).rejects.toThrow("Test Error");
         });
     });
 });

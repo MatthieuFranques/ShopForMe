@@ -22,7 +22,7 @@ export async function updateShop(id: number, shop: Partial<CreateShopDto>): Prom
             data: shop
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw error;
     }
 }
@@ -42,7 +42,7 @@ export async function deleteShop(id: number): Promise<ShopModel | null> {
             },
         });
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         throw error;
     }
 }
@@ -54,7 +54,7 @@ export async function createShop(shop: CreateShopDto) {
             data: {...shop, layout: []}
         })
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         throw e;
     }
 }
@@ -64,7 +64,7 @@ export async function getAllShops(): Promise<ShopModel[] | null> {
     try {
         return await prisma.store.findMany();
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         throw error;
     }
 }
