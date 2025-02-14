@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/services/bluetooth_service.dart';
@@ -10,46 +11,54 @@ import '../models/product.dart';
 import '../services/store_service.dart';
 import '../services/location_service.dart';
 import '../services/location_product_service.dart';
- 
+
 enum ArrowDirection { nord, sud, est, ouest }
- 
+
+Timer? _navigationTimer;
+
 // Events
 abstract class NavigationEvent {}
- 
+
 class LoadNavigationEvent extends NavigationEvent {
   final List<Product> products;
   LoadNavigationEvent({required this.products});
 }
- 
+
 class UpdateNavigationEvent extends NavigationEvent {
   final Product product;
   UpdateNavigationEvent({required this.product});
 }
- 
+
 class ProductFoundEvent extends NavigationEvent {
   final Product product;
   ProductFoundEvent({required this.product});
 }
- 
+
 class UpdatePositionEvent extends NavigationEvent {
   final Product currentProduct;
   UpdatePositionEvent(this.currentProduct);
 }
- 
+
+// Ajoutez cet événement dans vos événements existants
+class UpdateNavigationEventDataRow extends NavigationEvent {
+  final String decodedData;
+  UpdateNavigationEventDataRow(this.decodedData);
+}
+
 // States
 abstract class NavigationState {}
- 
+
 class NavigationInitial extends NavigationState {}
- 
+
 class NavigationLoading extends NavigationState {}
- 
+
 class NavigationLoadedState extends NavigationState {
   final String objectName;
   final String instruction;
   final ArrowDirection arrowDirection;
   final bool isLastProduct;
   final bool isDone;
- 
+
   NavigationLoadedState({
     required this.objectName,
     required this.instruction,
@@ -58,39 +67,41 @@ class NavigationLoadedState extends NavigationState {
     this.isDone = false,
   });
 }
- 
+
 class NavigationError extends NavigationState {
   final String message;
   NavigationError(this.message);
 }
- 
+
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   final StoreService _storeService;
   late final LocationService _locationService;
   late final LocationProductService _locationProductService;
   late final BluetoothScanService _bluetoothService = BluetoothScanService();
   late StreamController<String> _dataController;
- 
+
   Timer? _navigationUpdateTimer;
   List<Product> _products = [];
   int _currentProductIndex = 0;
- 
+
   NavigationBloc(this._storeService) : super(NavigationInitial()) {
     _locationService = LocationService();
     _locationProductService = LocationProductService(_storeService);
- 
+
     on<LoadNavigationEvent>(_onLoadNavigation);
-    on<UpdateNavigationEvent>(_onUpdateNavigation);
+    // on<UpdateNavigationEvent>(_onUpdateNavigation);
+    on<UpdateNavigationEventDataRow>(_onUpdateNavigation);
+
     on<ProductFoundEvent>(_onProductFound);
     on<UpdatePositionEvent>(_onUpdatePosition);
   }
- 
+
   @override
   Future<void> close() {
     _navigationUpdateTimer?.cancel();
     return super.close();
   }
- 
+
   void _startNavigationUpdates(Product product) {
     _navigationUpdateTimer?.cancel();
     _navigationUpdateTimer = Timer.periodic(
@@ -98,76 +109,75 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       (_) => add(UpdatePositionEvent(product)),
     );
   }
- 
+
   Future<void> _onLoadNavigation(
-  LoadNavigationEvent event,
-  Emitter<NavigationState> emit,
-) async {
-  try {
-    // Check permissions
-    final bool permission = await checkPermissions();
-    if (!permission) {
-      throw Exception("Permissions not granted.");
-    }
-
-    // Start Bluetooth scanning
-    print("Starting Bluetooth scan...");
-    final device = await _bluetoothService.startScan2();
-    if (device == null) {
-      throw Exception("No device found!");
-    }
-
-    final bool jesuisfalse = false;
-    
-      await _bluetoothService.connectToDevice(
-        device,
-        onDataReceived: (String decodedData) async {
-          if (decodedData != ""){
-            final values = decodedData.split('/');
-            final parsedData = <String, dynamic>{};
-            // Construction du map de données
-            for (int i = 0; i < values.length; i++) {
-              parsedData['Tag $i'] = double.tryParse(values[i]);
-            }
-            
-
-            final List<List<int>> shortestPath = await _locationService.findTargetPosition2(jsonEncode(parsedData));
-            if (shortestPath != [-1000, -1000]){
-              
-            // As data is received, update the UI with the latest information
-            emit(NavigationLoadedState(
-              objectName: "Déodorant",
-              instruction: _generateInstruction(shortestPath),
-              arrowDirection: _calculateDirection(shortestPath),
-              isLastProduct: false,
-              isDone: false, // Connection and data reception are still ongoing
-            ));
-            }
-          } 
-        },
-      );
-      await Future.delayed(Duration(seconds: 200000));
-  } catch (e) {
-    print("Error: $e");
-    if (!emit.isDone) {
-      emit(NavigationError(e.toString()));
-    }
-  }
-}
- 
-  Future<void> _onUpdateNavigation(
-    UpdateNavigationEvent event,
+    LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
-    emit(NavigationLoading());
     try {
-      await _updateNavigation(event.product, emit);
-      _startNavigationUpdates(event.product);
+      // Vérifier les permissions
+      final bool permission = await checkPermissions();
+      if (!permission) {
+        throw Exception("Permissions not granted.");
+      }
+
+      print("Starting Bluetooth scan...");
+      // TODO: Implémenter le scan Bluetooth pour ESP
+
+      // Démarrage du Timer périodique pour générer des variations
+      _navigationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        // Valeurs de base
+        final List<double> baseValues = [200, 200, 200];
+        final random = Random();
+
+        // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
+        final List<String> newValues = baseValues.map((base) {
+          double variation =
+              random.nextDouble() * 10 - 5; // variation entre -5 et +5
+          double newValue = base + variation;
+          return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
+        }).toList();
+
+        // Reconstruire decodedData avec les nouvelles valeurs
+        String decodedData = newValues.join("/");
+
+        // Au lieu d'appeler emit ici, on ajoute un nouvel événement
+        add(UpdateNavigationEventDataRow(decodedData));
+      });
     } catch (e) {
-      emit(NavigationError(e.toString()));
+      print("Error: $e");
+      if (!emit.isDone) {
+        emit(NavigationError(e.toString()));
+      }
     }
   }
- 
+
+  void _onUpdateNavigation(
+    UpdateNavigationEventDataRow event,
+    Emitter<NavigationState> emit,
+  ) async {
+    // Construction du Map de données à partir de decodedData
+    final values = event.decodedData.split('/');
+    final parsedData = <String, dynamic>{};
+    for (int i = 0; i < values.length; i++) {
+      parsedData['Tag $i'] = double.tryParse(values[i]);
+    }
+
+    // Appel à la fonction pour trouver le chemin le plus court
+    final List<List<int>> shortestPath =
+        await _locationService.findTargetPosition2(jsonEncode(parsedData));
+
+    if (shortestPath != [-1000, -1000]) {
+      emit(NavigationLoadedState(
+        objectName: "Déodorant",
+        instruction: _generateInstruction(shortestPath),
+        arrowDirection: _calculateDirection(shortestPath),
+        isLastProduct: false,
+        isDone: false,
+      ));
+    }
+  }
+
   Future<void> _onProductFound(
     ProductFoundEvent event,
     Emitter<NavigationState> emit,
@@ -175,7 +185,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     _navigationUpdateTimer?.cancel();
     try {
       _currentProductIndex++;
- 
+
       if (_currentProductIndex >= _products.length) {
         emit(NavigationLoadedState(
           objectName: "Terminé !",
@@ -185,14 +195,14 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         ));
         return;
       }
- 
+
       await _updateNavigation(_products[_currentProductIndex], emit);
       _startNavigationUpdates(_products[_currentProductIndex]);
     } catch (e) {
       emit(NavigationError(e.toString()));
     }
   }
- 
+
   Future<void> _onUpdatePosition(
     UpdatePositionEvent event,
     Emitter<NavigationState> emit,
@@ -203,18 +213,18 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       emit(NavigationError(e.toString()));
     }
   }
- 
+
   Future<void> _updateNavigation(
       Product product, Emitter<NavigationState> emit) async {
     final productPosition =
         await _locationProductService.getProductPosition(product);
     final currentPath =
         await _locationService.findTargetPosition(productPosition);
- 
+
     if (currentPath != null && currentPath.isNotEmpty) {
       final direction = _calculateDirection(currentPath);
       final instruction = _generateInstruction(currentPath);
- 
+
       emit(NavigationLoadedState(
         objectName: product.name,
         arrowDirection: direction,
@@ -225,23 +235,23 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       emit(NavigationError("Impossible de trouver un chemin vers le produit"));
     }
   }
- 
+
   ArrowDirection _calculateDirection(List<List<int>> path) {
     if (path.length < 2) return ArrowDirection.nord;
- 
+
     final current = path[0];
     final next = path[1];
- 
+
     if (next[0] < current[0]) return ArrowDirection.nord;
     if (next[0] > current[0]) return ArrowDirection.sud;
     if (next[1] < current[1]) return ArrowDirection.ouest;
     return ArrowDirection.est;
   }
- 
+
   String _generateInstruction(List<List<int>> path) {
     final distance = path.length - 1;
     final direction = _calculateDirection(path);
- 
+
     switch (direction) {
       case ArrowDirection.nord:
         return "Orientation à 12H00 , Avancez de $distance pas";
@@ -253,7 +263,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         return "Orientation à 9H00 , Avancez de $distance pas";
     }
   }
- 
+
   Future<bool> checkPermissions() async {
     if (await Permission.bluetoothScan.request().isGranted &&
         await Permission.bluetoothConnect.request().isGranted &&
