@@ -16,6 +16,16 @@ def colorize(text, color):
     }
     return f"{colors.get(color, colors['reset'])}{text}{colors['reset']}"
 
+# Détection des ports COM
+def detect_com_ports():
+    import serial.tools.list_ports
+    ports = serial.tools.list_ports.comports()
+    return [port.device for port in ports]
+
+# Détecter les ports COM disponibles
+com_ports = detect_com_ports()
+print(colorize(f"[INFO] Detected COM ports: {', '.join(com_ports)}", "magenta"))
+
 # Charger la configuration
 CONFIG_FILE = "config.json"
 if not os.path.exists(CONFIG_FILE):
@@ -93,81 +103,32 @@ for port in ports:
         card_build_dir = os.path.join(BUILD_BASE_DIR, serial_number)
         os.makedirs(card_build_dir, exist_ok=True)
 
-        # Commande de compilation
-        compile_command = [
-            "arduino-cli", "compile",
-            "--fqbn", "esp32:esp32:esp32",
-            "--output-dir", card_build_dir,
-            target_path
+        # Commande de compilation et téléversement
+        build_and_upload_script = os.path.join(BASE_DIR, "scripts", "build_and_upload.sh")
+        os.chmod(build_and_upload_script, 0o755)  # Rendre exécutable si ce n'est pas déjà le cas
+
+        command = [
+            "bash", build_and_upload_script,
+            target_path, port.device, card_build_dir
         ]
 
-        # Fichier binaire compilé
-        firmware_path = os.path.join(card_build_dir, "main.ino.bin")
+        print(colorize(f"[INFO] Executing: {' '.join(command)}", "blue"))
 
-        # Commande d'upload avec esptool
-        upload_command = [
-            "python", "-m", "esptool",
-            "--chip", "esp32",
-            "--port", port.device,
-            "--baud", "921600",
-            "write_flash", "-z", "0x1000", firmware_path
-        ]
-
-        # Debugging pour afficher les commandes
-        print(colorize(f"[DEBUG] Compile command: {' '.join(compile_command)}", "blue"))
-        print(colorize(f"[DEBUG] Upload command: {' '.join(upload_command)}", "blue"))
-
-        # Exécuter la compilation
-        print(colorize(f"[INFO] Starting compilation for {target_path}...", "magenta"))
         try:
             start_time = time.time()
-            result = subprocess.run(compile_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print(result.stdout.decode())  # Afficher les logs de compilation
-            print(colorize(f"[SUCCESS] Compilation completed in {time.time() - start_time:.2f} seconds.", "green"))
+            result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print(result.stdout.decode())
+            print(colorize(f"[SUCCESS] Build and upload completed in {time.time() - start_time:.2f} seconds.", "green"))
         except subprocess.CalledProcessError as e:
-            print(colorize(f"[ERROR] Compilation failed for {target_path}.", "red"))
-            print(e.stderr.decode())  # Afficher les erreurs
+            print(colorize(f"[ERROR] Build and upload failed.", "red"))
+            print(e.stderr.decode())
             report.append({
                 "serial_number": serial_number,
                 "script": config[serial_number],
                 "status": "ERROR",
-                "message": "Compilation failed"
+                "message": "Build and upload failed"
             })
             continue
-
-        # Vérifier si le fichier binaire a été généré
-        if not os.path.exists(firmware_path):
-            print(colorize(f"[ERROR] Compiled firmware not found: {firmware_path}", "red"))
-            report.append({
-                "serial_number": serial_number,
-                "script": config[serial_number],
-                "status": "ERROR",
-                "message": "Compiled firmware not found"
-            })
-            continue
-
-        # Exécuter le téléversement
-        print(colorize(f"[INFO] Starting upload to {port.device}...", "magenta"))
-        try:
-            start_time = time.time()
-            result = subprocess.run(upload_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print(result.stdout.decode())  # Afficher les logs de téléversement
-            print(colorize(f"    [SUCCESS] Upload completed in {time.time() - start_time:.2f} seconds.", "green"))
-            report.append({
-                "serial_number": serial_number,
-                "script": config[serial_number],
-                "status": "SUCCESS",
-                "message": "Upload completed"
-            })
-        except subprocess.CalledProcessError as e:
-            print(colorize(f"[ERROR] Upload failed for {firmware_path}.", "red"))
-            print(e.stderr.decode())  # Afficher les erreurs
-            report.append({
-                "serial_number": serial_number,
-                "script": config[serial_number],
-                "status": "ERROR",
-                "message": "Upload failed"
-            })
     else:
         print(colorize(f"[WARNING] No script mapped for Serial Number: {serial_number} on {port.device}", "yellow"))
         report.append({
