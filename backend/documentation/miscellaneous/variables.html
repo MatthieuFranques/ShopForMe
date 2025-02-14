@@ -112,16 +112,55 @@
                 <td class="col-md-4">
                     <ul class="index-list">
                         <li>
+                            <a href="#addNewProductToRayonP" title="src/controllers/product.controller.ts" ><b>addNewProductToRayonP</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#allowedOrigins" title="src/app.ts" ><b>allowedOrigins</b>&nbsp;&nbsp;&nbsp;(src/.../app.ts)</a>
+                        </li>
+                        <li>
                             <a href="#app" title="src/app.ts" ><b>app</b>&nbsp;&nbsp;&nbsp;(src/.../app.ts)</a>
                         </li>
                         <li>
+                            <a href="#createProduct" title="src/controllers/product.controller.ts" ><b>createProduct</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#createShopC" title="src/controllers/shop.controller.ts" ><b>createShopC</b>&nbsp;&nbsp;&nbsp;(src/.../shop.controller.ts)</a>
+                        </li>
+                        <li>
                             <a href="#emailRegex" title="src/utils/email.ts" ><b>emailRegex</b>&nbsp;&nbsp;&nbsp;(src/.../email.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getAllProductByShopP" title="src/controllers/product.controller.ts" ><b>getAllProductByShopP</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getAllProducts" title="src/controllers/product.controller.ts" ><b>getAllProducts</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getAllShopsC" title="src/controllers/shop.controller.ts" ><b>getAllShopsC</b>&nbsp;&nbsp;&nbsp;(src/.../shop.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getFreeProduct" title="src/controllers/product.controller.ts" ><b>getFreeProduct</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getProductById" title="src/controllers/product.controller.ts" ><b>getProductById</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getProductsBySectionNameP" title="src/controllers/product.controller.ts" ><b>getProductsBySectionNameP</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getShopByIdC" title="src/controllers/shop.controller.ts" ><b>getShopByIdC</b>&nbsp;&nbsp;&nbsp;(src/.../shop.controller.ts)</a>
                         </li>
                         <li>
                             <a href="#getUser" title="src/controllers/user.controller.ts" ><b>getUser</b>&nbsp;&nbsp;&nbsp;(src/.../user.controller.ts)</a>
                         </li>
                         <li>
                             <a href="#login" title="src/controllers/auth.controller.ts" ><b>login</b>&nbsp;&nbsp;&nbsp;(src/.../auth.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#options" title="src/app.ts" ><b>options</b>&nbsp;&nbsp;&nbsp;(src/.../app.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#options" title="src/swagger.ts" ><b>options</b>&nbsp;&nbsp;&nbsp;(src/.../swagger.ts)</a>
                         </li>
                         <li>
                             <a href="#port" title="src/app.ts" ><b>port</b>&nbsp;&nbsp;&nbsp;(src/.../app.ts)</a>
@@ -133,6 +172,27 @@
                             <a href="#register" title="src/controllers/auth.controller.ts" ><b>register</b>&nbsp;&nbsp;&nbsp;(src/.../auth.controller.ts)</a>
                         </li>
                         <li>
+                            <a href="#removeShopC" title="src/controllers/shop.controller.ts" ><b>removeShopC</b>&nbsp;&nbsp;&nbsp;(src/.../shop.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#shopRouter" title="src/routes/product.route.ts" ><b>shopRouter</b>&nbsp;&nbsp;&nbsp;(src/.../product.route.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#shopRouter" title="src/routes/shop.route.ts" ><b>shopRouter</b>&nbsp;&nbsp;&nbsp;(src/.../shop.route.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#swaggerDefinition" title="src/swagger.ts" ><b>swaggerDefinition</b>&nbsp;&nbsp;&nbsp;(src/.../swagger.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#swaggerSpec" title="src/swagger.ts" ><b>swaggerSpec</b>&nbsp;&nbsp;&nbsp;(src/.../swagger.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#updateProduct" title="src/controllers/product.controller.ts" ><b>updateProduct</b>&nbsp;&nbsp;&nbsp;(src/.../product.controller.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#updateShopC" title="src/controllers/shop.controller.ts" ><b>updateShopC</b>&nbsp;&nbsp;&nbsp;(src/.../shop.controller.ts)</a>
+                        </li>
+                        <li>
                             <a href="#userRouter" title="src/routes/user.route.ts" ><b>userRouter</b>&nbsp;&nbsp;&nbsp;(src/.../user.route.ts)</a>
                         </li>
                     </ul>
@@ -142,9 +202,256 @@
     </table>
 </section>
 
+    <h3>src/controllers/product.controller.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addNewProductToRayonP"></a>
+                    <span class="name">
+                        <span ><b>addNewProductToRayonP</b></span>
+                        <a href="#addNewProductToRayonP"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const {storeId, productId, name} &#x3D; req.body;
+        const shops &#x3D; await addNewProductToRayon(storeId, productId, name);
+        return res.status(200).json(shops);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createProduct"></a>
+                    <span class="name">
+                        <span ><b>createProduct</b></span>
+                        <a href="#createProduct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shop &#x3D; await create(req.body)
+        return res.status(201).json(shop)
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllProductByShopP"></a>
+                    <span class="name">
+                        <span ><b>getAllProductByShopP</b></span>
+                        <a href="#getAllProductByShopP"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shops &#x3D; await getAllProductByShop(parseInt(req.params.id));
+        return res.status(200).json(shops);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllProducts"></a>
+                    <span class="name">
+                        <span ><b>getAllProducts</b></span>
+                        <a href="#getAllProducts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shops &#x3D; await get();
+        return res.status(200).json(shops);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFreeProduct"></a>
+                    <span class="name">
+                        <span ><b>getFreeProduct</b></span>
+                        <a href="#getFreeProduct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shops &#x3D; await getFree(parseInt(req.params.id));
+        return res.status(200).json(shops);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductById"></a>
+                    <span class="name">
+                        <span ><b>getProductById</b></span>
+                        <a href="#getProductById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shop &#x3D; await getOne(parseInt(req.params.id));
+        return res.status(200).json(shop);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProductsBySectionNameP"></a>
+                    <span class="name">
+                        <span ><b>getProductsBySectionNameP</b></span>
+                        <a href="#getProductsBySectionNameP"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const name &#x3D; req.params.id;
+        const shops &#x3D; await getProductsBySectionName(name);
+        return res.status(200).json(shops);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateProduct"></a>
+                    <span class="name">
+                        <span ><b>updateProduct</b></span>
+                        <a href="#updateProduct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const updatedShop &#x3D; await update(parseInt(req.params.id), req.body);
+        return res.status(200).json(updatedShop);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
     <h3>src/app.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="allowedOrigins"></a>
+                    <span class="name">
+                        <span ><b>allowedOrigins</b></span>
+                        <a href="#allowedOrigins"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&#x27;http://localhost:3000&#x27;, &#x27;http://91.121.191.34&#x27;]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
@@ -174,6 +481,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="options"></a>
+                    <span class="name">
+                        <span ><b>options</b></span>
+                        <a href="#options"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>cors.CorsOptions</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    origin: allowedOrigins
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="port"></a>
                     <span class="name">
                         <span ><b>port</b></span>
@@ -184,6 +519,144 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>process.env.BACKEND_PORT || 3000</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/controllers/shop.controller.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createShopC"></a>
+                    <span class="name">
+                        <span ><b>createShopC</b></span>
+                        <a href="#createShopC"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shop &#x3D; await createShop(req.body)
+        return res.status(201).json(shop)
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllShopsC"></a>
+                    <span class="name">
+                        <span ><b>getAllShopsC</b></span>
+                        <a href="#getAllShopsC"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shops &#x3D; await getAllShops();
+        return res.status(200).json(shops);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getShopByIdC"></a>
+                    <span class="name">
+                        <span ><b>getShopByIdC</b></span>
+                        <a href="#getShopByIdC"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const shop &#x3D; await getShopById(parseInt(req.params.id));
+        return res.status(200).json(shop);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeShopC"></a>
+                    <span class="name">
+                        <span ><b>removeShopC</b></span>
+                        <a href="#removeShopC"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const updatedShop &#x3D; await deleteShop(parseInt(req.params.id));
+        return res.status(200).json(updatedShop);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateShopC"></a>
+                    <span class="name">
+                        <span ><b>updateShopC</b></span>
+                        <a href="#updateShopC"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req: Request, res: Response) &#x3D;&gt; {
+    try {
+        const updatedShop &#x3D; await updateShop(parseInt(req.params.id), req.body);
+        return res.status(200).json(updatedShop);
+    } catch (error) {
+        return res.status(500).json({message: &quot;Internal Server Error&quot;, error});
+    }
+}</code>
                     </td>
                 </tr>
 
@@ -354,6 +827,96 @@
         </tbody>
     </table>
 </section>
+    <h3>src/swagger.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="options"></a>
+                    <span class="name">
+                        <span ><b>options</b></span>
+                        <a href="#options"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    swaggerDefinition,
+    apis: [&#x27;./src/routes/*.ts&#x27;],
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="swaggerDefinition"></a>
+                    <span class="name">
+                        <span ><b>swaggerDefinition</b></span>
+                        <a href="#swaggerDefinition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>SwaggerDefinition</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    openapi: &#x27;3.0.0&#x27;,
+    info: {
+        title: &#x27;API Documentation Shop For Me&#x27;,
+        version: &#x27;1.0.0&#x27;,
+        description: &#x27;Documentation de l\&#x27;API pour l\&#x27;application Express&#x27;,
+    },
+    servers: [
+        {
+            url: &#x27;http://localhost:8080&#x27;,
+        },
+    ],
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="swaggerSpec"></a>
+                    <span class="name">
+                        <span ><b>swaggerSpec</b></span>
+                        <a href="#swaggerSpec"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>swaggerJSDoc(options)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
     <h3>src/utils/prisma.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -370,6 +933,52 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/routes/product.route.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="shopRouter"></a>
+                    <span class="name">
+                        <span ><b>shopRouter</b></span>
+                        <a href="#shopRouter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Router()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/routes/shop.route.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="shopRouter"></a>
+                    <span class="name">
+                        <span ><b>shopRouter</b></span>
+                        <a href="#shopRouter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Router()</code>
                     </td>
                 </tr>
 

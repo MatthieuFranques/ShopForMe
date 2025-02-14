@@ -22,7 +22,7 @@ export async function update(id: number, shop: Partial<CreateProductDto>): Promi
             data: shop
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw error;
     }
 }
