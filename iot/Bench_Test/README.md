@@ -41,10 +41,10 @@ Ce script Python automatise la compilation et le téléversement de fichiers Ard
 1. Fichier `config.json` : Ce fichier doit contenir les associations entre les numéros de série des cartes ESP32 et les chemins des scripts Arduino :
    ```json
    {
-        "02CE820C": "app/anchor/main/",
-        "02CE81D3": "app/tag1/main/",
-        "02CE81D5": "app/tag2/main/",
-        "02CE6FBA": "app/tag3/main/"
+        "02CE820C": "app/tag/main/",
+        "02CE81D3": "app/anchor1/main/",
+        "02CE81D5": "app/anchor2/main/",
+        "02CE6FBA": "app/anchor3/main/"
    }
    ```
 

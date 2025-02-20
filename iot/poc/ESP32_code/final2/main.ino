@@ -1,8 +1,8 @@
 ﻿/**
  * @file main.ino
- * @brief This file must be uploaded to the ESP32, which will serve as the anchor.
+ * @brief This file must be uploaded to the ESP32, which will serve as the tag.
  * @details Its role will be to make the Bluetooth link between the tags and the phone.
- * The anchor must receive the positions and send them.
+ * The tag must receive the positions and send them.
  */
 
 // ANCHOR
@@ -121,10 +121,10 @@ void loop()
 }
 
 /**
- * @brief Initializes the ESP32 as an anchor in the UWB positioning system.
+ * @brief Initializes the ESP32 as an tag in the UWB positioning system.
  * @details Configures SPI communications, initializes DW1000Ranging library,
  *          and attach callbacks to manage distances and new devices,
- *          and inactive devices. The ESP32 starts in anchor mode with a defined address.
+ *          and inactive devices. The ESP32 starts in tag mode with a defined address.
  */
 void initAnchor()
 {
@@ -372,11 +372,11 @@ String constructString(std::map<String, float> dataToSend)
 }
 
 /**
- * @brief Displays the distance calculated between an anchor and a UWB tag.
+ * @brief Displays the distance calculated between an tag and a UWB tag.
  * @details This method displays the beacon address and the corresponding distance on the serial monitor.
  *
  * @param[in] address Pointer to the address of the UWB tag (byte array).
- * @param[in] range Calculated distance between the anchor and the beacon, in metres.
+ * @param[in] range Calculated distance between the tag and the beacon, in metres.
  */
 void logDistances(const uint8_t *address, float range)
 {
