@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:mobile/models/grid.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../models/product.dart';
@@ -80,6 +81,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   late final BluetoothScanService _bluetoothService = BluetoothScanService();
   late StreamController<String> _dataController;
 
+  // TODO change to true value
+  Grid? _cachedGrid;
+  List<List<int>>? _cacheBeaconPositions;
+  List<int>? _cacheProductPosition;
+  // const String jsonFilePath = 'assets/demo/plan_test.json';
+  String jsonFilePath = 'assets/demo/plan28_11_24.json';
+
   Timer? _navigationUpdateTimer;
   List<Product> _products = [];
   int _currentProductIndex = 0;
@@ -120,7 +128,17 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       if (!permission) {
         throw Exception("Permissions not granted.");
       }
+      // TODO
+      // Cache init
+      if (_cachedGrid == null) {
+        print("Chargement du PLAN depuis $jsonFilePath");
+        _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath);
+      }
+      _cacheBeaconPositions ??=
+          await _locationService.getBeaconPositions(jsonFilePath);
 
+      _cacheProductPosition ??=
+          await _locationService.getProductPosition(jsonFilePath);
       print("Starting Bluetooth scan...");
 
       // TODO Remerttre le connexion
@@ -169,10 +187,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
         }).toList();
 
-        // Reconstruire decodedData avec les nouvelles valeurs
+        // Decode data row
         String decodedData = newValues.join("/");
-
-        // Au lieu d'appeler emit ici, on ajoute un nouvel événement
+        // Call the emit to update with _onUpdateNavigation
         add(UpdateNavigationEventDataRow(decodedData));
       });
     } catch (e) {
@@ -183,22 +200,25 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
+  /// Update of navigation change state of arow and position user
   void _onUpdateNavigation(
     UpdateNavigationEventDataRow event,
     Emitter<NavigationState> emit,
   ) async {
-    // Construction du Map de données à partir de decodedData
     final values = event.decodedData.split('/');
     final parsedData = <String, dynamic>{};
     for (int i = 0; i < values.length; i++) {
       parsedData['Tag $i'] = double.tryParse(values[i]);
     }
 
-    // Appel à la fonction pour trouver le chemin le plus court
     final List<List<int>> shortestPath =
-        await _locationService.findTargetPosition2(jsonEncode(parsedData));
-
-    if (shortestPath != [-1000, -1000]) {
+        await _locationService.FindPositionFinal(jsonEncode(parsedData),
+            _cacheProductPosition!, _cacheBeaconPositions!, _cachedGrid!);
+    //If is false return [-1000, -1000]
+    if (shortestPath !=
+        [
+          [-1000, -1000]
+        ]) {
       emit(NavigationLoadedState(
         objectName: "Déodorant",
         instruction: _generateInstruction(shortestPath),
@@ -206,9 +226,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         isLastProduct: false,
         isDone: false,
       ));
+    } else {
+      print("Error :  [[-1000, -1000]] on the navigation");
     }
   }
 
+  /// ENd of Navigation
   Future<void> _onProductFound(
     ProductFoundEvent event,
     Emitter<NavigationState> emit,
@@ -245,12 +268,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
+  //  Change status of arrow
   Future<void> _updateNavigation(
       Product product, Emitter<NavigationState> emit) async {
     final productPosition =
         await _locationProductService.getProductPosition(product);
-    final currentPath =
-        await _locationService.findTargetPosition(productPosition);
+    final currentPath = null;
+    //await _locationService.findTargetPosition(productPosition);
 
     if (currentPath != null && currentPath.isNotEmpty) {
       final direction = _calculateDirection(currentPath);
@@ -285,13 +309,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
     switch (direction) {
       case ArrowDirection.nord:
-        return "Orientation à 12H00 , Avancez de $distance pas";
+        return " 12H00 , Avancez de $distance pas";
       case ArrowDirection.sud:
-        return "Orientation à 6H00 , Avancez de $distance pas";
+        return "6H00 , Avancez de $distance pas";
       case ArrowDirection.est:
-        return "Orientation à 3H00 , Avancez de $distance pas";
+        return " 3H00 , Avancez de $distance pas";
       case ArrowDirection.ouest:
-        return "Orientation à 9H00 , Avancez de $distance pas";
+        return " 9H00 , Avancez de $distance pas";
     }
   }
 

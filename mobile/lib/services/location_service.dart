@@ -9,6 +9,11 @@ class LocationService {
   double distance2 = 0.0;
   double distance3 = 0.0;
 
+  // TODO change to true cache
+  Grid? _cachedGrid;
+  List<List<int>>? _cacheBeaconPositions;
+  List<int>? _cacheProductPosition;
+
   ///Converts the json plan to grid type. To know if the path is passable or not
   ///@param : String jsonFilePath : market plan
   ///Return Return the market plan in Grid
@@ -26,9 +31,9 @@ class LocationService {
       for (int colIndex = 0; colIndex < row.length; colIndex++) {
         final Map<String, dynamic> cell = row[colIndex];
         if (cell['type'] == "VIDE") {
-          grid[rowIndex][colIndex] = 0; // Accessible
+          grid[rowIndex][colIndex] = 0;
         } else {
-          grid[rowIndex][colIndex] = 1; // Inaccessible
+          grid[rowIndex][colIndex] = 1;
         }
         if (cell['isBeacon'] == true) {
           beaconPositions.add([rowIndex, colIndex]);
@@ -40,46 +45,27 @@ class LocationService {
 
   ///Function which allows you to retrieve the distance of the beacons from the user
   ///@param : String jsonFilePath = json text of recive data bluetow
-  Future<void> loadDistances(String jsonFilePath) async {
-    final String jsonString = await rootBundle.loadString(jsonFilePath);
-    final List<dynamic> jsonData = jsonDecode(jsonString);
-
-    if (jsonData.length >= 3) {
-      distance1 = jsonData[0]['distance'];
-      distance2 = jsonData[1]['distance'];
-      distance3 = jsonData[2]['distance'];
-    } else {
-      throw Exception('Pas assez de beacons dans le fichier JSON.');
-    }
-  }
-
-  ///Function which allows you to retrieve the distance of the beacons from the user
-  ///@param : String jsonFilePath = json text of recive data bluetow
-  Future<List<String>> loadDistances2(String jsonInput) async {
+  Future<List<String>> loadDistances(String jsonInput) async {
     String jsonString;
 
-    // Vérifier si l'entrée est une chaîne JSON brute ou un chemin
+    // Verif the enter of JSON {  or [
     if (jsonInput.startsWith('{') || jsonInput.startsWith('[')) {
-      // Traiter comme une chaîne JSON brute
       jsonString = jsonInput;
     } else {
-      // Traiter comme un chemin vers un fichier d'assets
       jsonString = await rootBundle.loadString(jsonInput);
     }
 
-    // Décoder le JSON en Map
+    //Decode JSON to Map
     final Map<String, dynamic> jsonData = jsonDecode(jsonString);
 
-    // Vérifier que les clés nécessaires existent
+    //Verif if key exist
     if (jsonData.containsKey('Tag 0') &&
         jsonData.containsKey('Tag 1') &&
         jsonData.containsKey('Tag 2')) {
-      // Lire les valeurs
       distance1 = jsonData['Tag 0'];
       distance2 = jsonData['Tag 1'];
       distance3 = jsonData['Tag 2'];
 
-      // Créer une liste des résultats
       return [
         distance1.toString(),
         distance2.toString(),
@@ -218,50 +204,6 @@ class LocationService {
     return [x, y];
   }
 
-  /// Function that executes all the functions of the service
-  ///@param : Matrice of product
-  ///Return Return the path to the product
-  Future<List<List<int>>?> findTargetPosition(List<int> end) async {
-    // TODO changé par le cache
-    const String jsonFilePath = '../../assets/plan.json';
-    const String jsonDistanceFile = '../../assets/beacon.json';
-    final Grid grid = await loadGridFromJson(jsonFilePath);
-
-    final List<List<int>> beaconPositions =
-        await getBeaconPositions(jsonFilePath);
-
-    await loadDistances(jsonDistanceFile);
-
-    if (beaconPositions.length >= 3) {
-      final List<double> targetPosition = await triangulateData(
-        beaconPositions[0],
-        distance1,
-        beaconPositions[1],
-        distance2,
-        beaconPositions[2],
-        distance3,
-      );
-      //Position actuelle
-      final List<int> currentPosition = [
-        targetPosition[0].round(),
-        targetPosition[1].round()
-      ];
-
-      print(
-          "distance1 : $distance1 , distance2 : $distance2 , distance3: $distance3");
-      print("beaconPositions : $beaconPositions");
-      print("currentPosition : $currentPosition");
-      print("End : $end");
-
-      final List<List<int>> path = findShortestPath(grid, currentPosition, end);
-      print("Chemin le plus court : $path");
-      return path;
-    } else {
-      print("Pas assez de beacons pour la triangulation.");
-      return null;
-    }
-  }
-
   Future<List<int>> getProductPosition(String jsonFilePath) async {
     // TODO uncomment
     // final String response = await rootBundle.loadString(jsonFilePath);
@@ -283,20 +225,14 @@ class LocationService {
     return productPositions;
   }
 
-  Future<List<List<int>>> findTargetPosition2(String jsonDistanceFile) async {
-    // TODO changé par le cache
-    const String jsonFilePath = 'assets/demo/plan28_11_24.json';
-    print("PLAN UPLOADED ${jsonFilePath}");
-    final Grid grid = await loadGridFromJson(jsonFilePath);
+  Future<List<List<int>>> FindPositionFinal(
+      String jsonDistanceFile,
+      List<int> productPosition,
+      List<List<int>> beaconPositions,
+      Grid grid) async {
+    List<int> sizeGrid = await getMatrixSize('assets/demo/plan28_11_24.json');
 
-    final List<List<int>> beaconPositions =
-        await getBeaconPositions(jsonFilePath);
-
-    // Mettre un fonction qui permet de savoir ou est
-    final List<int> productPosition = await getProductPosition(jsonFilePath);
-
-    await loadDistances2(jsonDistanceFile);
-
+    await loadDistances(jsonDistanceFile);
     if (beaconPositions.length >= 3) {
       final List<double> targetPosition = await triangulateData(
         beaconPositions[0],
@@ -306,27 +242,65 @@ class LocationService {
         beaconPositions[2],
         distance3,
       );
-      //Position actuelle
+
       final List<int> currentPosition = [
         targetPosition[0].round(),
         targetPosition[1].round()
       ];
-
       print(
           "distance1 : $distance1 , distance2 : $distance2 , distance3: $distance3");
       print("beaconPositions : $beaconPositions");
       print("currentPosition : $currentPosition");
       print("End : $productPosition");
 
-      final List<List<int>> path =
-          findShortestPath(grid, currentPosition, productPosition);
-      print("Chemin le plus court : $path");
-      return path;
+      //Verif the height of currentPosition if is outh of the grid [[-1000, -1000]]
+      if (isPositionValid(sizeGrid, currentPosition) == true) {
+        final List<List<int>> path =
+            findShortestPath(grid, currentPosition, productPosition);
+        print("Chemin le plus court : $path");
+        return path;
+      } else {
+        print("currentPosition : $currentPosition + sizeGrid : $sizeGrid");
+        return [
+          [-1000, -1000]
+        ];
+      }
     } else {
       print("Pas assez de beacons pour la triangulation.");
       return [
         [-1000, -1000]
       ];
     }
+  }
+
+  Future<List<int>> getMatrixSize(String jsonFilePath) async {
+    try {
+      final String response = await rootBundle.loadString(jsonFilePath);
+      List<dynamic> jsonData = jsonDecode(response);
+
+      if (jsonData is List && jsonData.isNotEmpty && jsonData[0] is List) {
+        int rowCount = jsonData.length;
+        int columnCount = (jsonData[0] as List).length;
+        return [rowCount, columnCount];
+      } else {
+        print("Erreur : Le JSON ne contient pas une matrice valide.");
+        return [0, 0];
+      }
+    } catch (e) {
+      print("Erreur lors du parsing du JSON : $e");
+      return [0, 0];
+    }
+  }
+
+  bool isPositionValid(List<int> sizeGrid, List<int> currentPosition) {
+    if (sizeGrid.length != currentPosition.length) {
+      return false;
+    }
+    for (int i = 0; i < sizeGrid.length; i++) {
+      if (currentPosition[i] < 0 || currentPosition[i] > sizeGrid[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }

@@ -22,8 +22,8 @@ class _NavigationPageState extends State<NavigationPage> {
     super.initState();
     // Charger la liste initiale
     context.read<NavigationBloc>().add(LoadNavigationEvent(
-      products: widget.shoppingList,
-    ));
+          products: widget.shoppingList,
+        ));
   }
 
   void _handleProductFound(BuildContext context, NavigationLoadedState state) {
@@ -34,15 +34,15 @@ class _NavigationPageState extends State<NavigationPage> {
       );
     } else {
       context.read<NavigationBloc>().add(ProductFoundEvent(
-        product: widget.shoppingList[0], // Le produit actuel
-      ));
+            product: widget.shoppingList[0], // Le produit actuel
+          ));
     }
   }
 
   void _handleSkipProduct(BuildContext context) {
     context.read<NavigationBloc>().add(ProductFoundEvent(
-      product: widget.shoppingList[0], // Le produit actuel
-    ));
+          product: widget.shoppingList[0], // Le produit actuel
+        ));
   }
 
   @override
@@ -133,64 +133,68 @@ class _NavigationPageState extends State<NavigationPage> {
                 ),
                 const Spacer(),
                 // Boutons de contrôle
-                if (!state.isLastProduct) Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => _handleProductFound(context, state),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+                if (!state.isLastProduct)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () =>
+                                _handleProductFound(context, state),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                             ),
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            height: screenHeight * 0.1,
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.check,
-                              size: screenHeight * 0.08,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => _handleSkipProduct(context),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                            backgroundColor: Theme.of(context).colorScheme.secondary,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            height: screenHeight * 0.1,
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.skip_next,
-                              size: screenHeight * 0.08,
-                              color: Colors.white,
+                            child: Container(
+                              width: double.infinity,
+                              height: screenHeight * 0.1,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.check,
+                                size: screenHeight * 0.08,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => _handleSkipProduct(context),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                            child: Container(
+                              width: double.infinity,
+                              height: screenHeight * 0.1,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.skip_next,
+                                size: screenHeight * 0.08,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             );
           }
 
           return const Center(
-            child: Text('Une erreur est survenue'),
-          );
+              child:
+                  CircularProgressIndicator()); // Garde l'utilisateur dans un état de chargement.
         },
       ),
     );
