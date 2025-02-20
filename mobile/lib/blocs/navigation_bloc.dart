@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/models/grid.dart';
@@ -107,6 +108,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   @override
   Future<void> close() {
     _navigationUpdateTimer?.cancel();
+    _navigationTimer?.cancel();
     return super.close();
   }
 
@@ -174,7 +176,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
       //TODO Test
       // Démarrage du Timer périodique pour générer des variations
-      _navigationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _navigationTimer =
+          Timer.periodic(const Duration(milliseconds: 2000), (timer) {
         // Valeurs de base
         final List<double> baseValues = [100, 100, 100];
         final random = Random();
@@ -215,12 +218,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         await _locationService.FindPositionFinal(jsonEncode(parsedData),
             _cacheProductPosition!, _cacheBeaconPositions!, _cachedGrid!);
     //If is false return [-1000, -1000]
-    if (shortestPath !=
-        [
-          [-1000, -1000]
-        ]) {
+    print("shortestPath : $shortestPath");
+    if (!const DeepCollectionEquality().equals(shortestPath, [
+      [-1000, -1000]
+    ])) {
+      print("if ok");
       emit(NavigationLoadedState(
-        objectName: "Déodorant",
+        objectName: "Riz",
         instruction: _generateInstruction(shortestPath),
         arrowDirection: _calculateDirection(shortestPath),
         isLastProduct: false,
