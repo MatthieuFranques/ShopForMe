@@ -9,8 +9,8 @@ export const api = (
     url: string,
     body: any = null
 ) => {
-
-    const apiUrl = window.location.protocol + "//" + window.location.hostname + ":9000/";
+    const port = process.env.REACT_APP_API_PORT
+    const apiUrl = window.location.protocol + "//" + window.location.hostname + ":" + port + "/";
 
     return fetch(apiUrl + url, {
         method: method,

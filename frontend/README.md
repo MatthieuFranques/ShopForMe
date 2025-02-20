@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Launch the application using docker
+
+In the project directory copy the .env.template as a .env file.
+
+RUN docker-compose up
+
 ## Available Scripts
 
 In the project directory, you can run:

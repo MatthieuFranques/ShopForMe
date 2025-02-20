@@ -1,6 +1,8 @@
 # Step 1: Build React app
 FROM node:18-alpine AS builder
 WORKDIR /app
+ARG REACT_APP_API_PORT
+ENV REACT_APP_API_PORT=${REACT_APP_API_PORT}
 COPY package.json package-lock.json ./
 RUN npm install --frozen-lockfile
 COPY . .
