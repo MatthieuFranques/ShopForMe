@@ -135,6 +135,7 @@ const Plan = (props: CustomProps) => {
 
         classes.push(plan[rowIndex][colIndex].isBeacon ? "BEACON" : "");
         classes.push(plan[rowIndex][colIndex].name === value ? "selectedRayon" : "");
+        classes.push(plan[rowIndex][colIndex].type === PlanType.PLEIN ? "pleinItem" : "");
 
         return classes.join(" ");
     }
@@ -251,7 +252,7 @@ const Plan = (props: CustomProps) => {
             return
         }
 
-        ProductService.addNewProductToRayonP({storeId: props.storeId, productId: product.id, name: value}).then(response => {
+        ProductService.addNewProductToRayonP({storeId: props.storeId, productId: product.id, name: value}).then(_ => {
             setInfo({open: true, message: "L'affection a été enregistrée !", type: "success"});
         })
     }
@@ -529,7 +530,7 @@ const SingleShop: React.FC = () => {
 
     const [shop, setShop] = useState<ShopModel | null>(null);
 
-    const [isEdit, setEdit] = useState(true);
+    const [isEdit, _] = useState(true);
 
     useEffect(() => {
         ShopService.getPlanById(id).then((data: ShopModel) => setShop(data))
