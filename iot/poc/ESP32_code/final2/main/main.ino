@@ -1,4 +1,4 @@
-#include "uwb_tag.h"
+#include "uwb_anchor.h"
 #include "bluetooth_service.h"
 #include "data_handler.h"
 
@@ -6,12 +6,12 @@ void setup()
 {
     Serial.begin(115200);
 
-    initTag();
+    initAnchor();
     initBluetooth();
 }
 
 void loop()
 {
-    handleTagLoop();
+    handleAnchorLoop();
     handleBluetoothLoop();
 }

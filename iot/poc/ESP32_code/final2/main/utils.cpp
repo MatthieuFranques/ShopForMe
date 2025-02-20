@@ -2,7 +2,7 @@
 
 void logDistances(const uint8_t *address, float range)
 {
-    Serial.print("Range to ANCHOR ");
+    Serial.print("Range to TAG ");
     for (int i = 0; i < 8; i++)
     {
         if (address[i] < 0x10)
