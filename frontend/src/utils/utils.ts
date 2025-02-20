@@ -10,7 +10,7 @@ export const api = (
     body: any = null
 ) => {
 
-    const apiUrl = window.location.protocol + "//" + window.location.hostname + ":8080/";
+    const apiUrl = window.location.protocol + "//" + window.location.hostname + ":9000/";
 
     return fetch(apiUrl + url, {
         method: method,
