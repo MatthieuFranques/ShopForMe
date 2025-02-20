@@ -107,6 +107,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   @override
   Future<void> close() {
+    print("Enter in 'Close' : navigation_bloc");
     _navigationUpdateTimer?.cancel();
     _navigationTimer?.cancel();
     return super.close();

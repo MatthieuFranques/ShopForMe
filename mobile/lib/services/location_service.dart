@@ -9,11 +9,6 @@ class LocationService {
   double distance2 = 0.0;
   double distance3 = 0.0;
 
-  // TODO change to true cache
-  Grid? _cachedGrid;
-  List<List<int>>? _cacheBeaconPositions;
-  List<int>? _cacheProductPosition;
-
   ///Converts the json plan to grid type. To know if the path is passable or not
   ///@param : String jsonFilePath : market plan
   ///Return Return the market plan in Grid

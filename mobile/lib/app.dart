@@ -28,11 +28,11 @@ class Shop4MeApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => NavigationBloc(storeService)
-              ..add(LoadNavigationEvent(
-                  products: [])), // Initialisation avec une liste vide
-          ),
+          // BlocProvider(
+          //   create: (context) => NavigationBloc(storeService)
+          //     ..add(LoadNavigationEvent(
+          //         products: [])), // Initialisation avec une liste vide
+          // ),
           BlocProvider(
             create: (context) => ProductSearchBloc(storeService),
           ),
