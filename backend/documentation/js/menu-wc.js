@@ -57,22 +57,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/CompleteUser.html" data-type="entity-link" >CompleteUser</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/CreateProductDto.html" data-type="entity-link" >CreateProductDto</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/CreateShopDto.html" data-type="entity-link" >CreateShopDto</a>
-                            </li>
-                            <li class="link">
                                 <a href="interfaces/EmailUser.html" data-type="entity-link" >EmailUser</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ProductModel.html" data-type="entity-link" >ProductModel</a>
-                            </li>
-                            <li class="link">
                                 <a href="interfaces/ReturnUser.html" data-type="entity-link" >ReturnUser</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/ShopModel.html" data-type="entity-link" >ShopModel</a>
                             </li>
                         </ul>
                     </li>
