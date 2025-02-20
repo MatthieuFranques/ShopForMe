@@ -14,7 +14,7 @@ class Shop4MeApp extends StatelessWidget {
   final CacheService cacheService;
 
   const Shop4MeApp({
-    super.key, 
+    super.key,
     required this.storeService,
     required this.cacheService,
   });
@@ -30,7 +30,8 @@ class Shop4MeApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => NavigationBloc(storeService)
-              ..add(LoadNavigationEvent(products: [])), // Initialisation avec une liste vide
+              ..add(LoadNavigationEvent(
+                  products: [])), // Initialisation avec une liste vide
           ),
           BlocProvider(
             create: (context) => ProductSearchBloc(storeService),
@@ -38,14 +39,14 @@ class Shop4MeApp extends StatelessWidget {
           BlocProvider(
             create: (context) => ShoppingListBloc(
               currentShop: storeService.currentShop,
-            )..add(LoadShoppingList()
-            ), // Dispatch de l'événement ici
+            )..add(LoadShoppingList()), // Dispatch de l'événement ici
           ),
         ],
         child: Builder(
           builder: (context) {
             ScreenUtils.init(context);
             return MaterialApp(
+              debugShowCheckedModeBanner: false,
               title: 'Shop4Me',
               theme: Shop4MeTheme.getLightTheme(context),
               home: const HomeScreen(),
