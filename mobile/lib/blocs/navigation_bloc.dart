@@ -121,6 +121,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     );
   }
 
+  // TODO _onLoadNavigation with no blu (test)
   Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
@@ -144,39 +145,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           await _locationService.getProductPosition(jsonFilePath);
       print("Starting Bluetooth scan...");
 
-      // TODO Remerttre le connexion
-      //await _bluetoothService.connectToDevice(
-      //         device,
-      //         onDataReceived: (String decodedData) async {
-      //           if (decodedData != ""){
-      //             final values = decodedData.split('/');
-      //             final parsedData = <String, dynamic>{};
-      //             // Construction du map de données
-      //             for (int i = 0; i < values.length; i++) {
-      //               parsedData['Tag $i'] = double.tryParse(values[i]);
-      //             }
-
-      //             final List<List<int>> shortestPath = await _locationService.findTargetPosition2(jsonEncode(parsedData));
-      //             if (shortestPath != [-1000, -1000]){
-
-      //             // As data is received, update the UI with the latest information
-      //             emit(NavigationLoadedState(
-      //               objectName: "Déodorant",
-      //               instruction: _generateInstruction(shortestPath),
-      //               arrowDirection: _calculateDirection(shortestPath),
-      //               isLastProduct: false,
-      //               isDone: false, // Connection and data reception are still ongoing
-      //             ));
-      //             }
-      //           }
-      //         },
-      // };
-      // Au lieu d'appeler emit ici, on ajoute un nouvel événement
-      // add(UpdateNavigationEventDataRow(decodedData));
-      // TODO fin
-
-      //TODO Test
-      // Démarrage du Timer périodique pour générer des variations
       _navigationTimer =
           Timer.periodic(const Duration(milliseconds: 2000), (timer) {
         // Valeurs de base
@@ -203,6 +171,48 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       }
     }
   }
+
+  // TODO _onLoadNavigation with blu
+  //   Future<void> _onLoadNavigation(
+  //   LoadNavigationEvent event,
+  //   Emitter<NavigationState> emit,
+  // ) async {
+  //   try {
+  //     // Vérifier les permissions
+  //     final bool permission = await checkPermissions();
+  //     if (!permission) {
+  //       throw Exception("Permissions not granted.");
+  //     }
+  //     // TODO
+  //     // Cache init
+  //     if (_cachedGrid == null) {
+  //       print("Chargement du PLAN depuis $jsonFilePath");
+  //       _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath);
+  //     }
+  //     _cacheBeaconPositions ??=
+  //         await _locationService.getBeaconPositions(jsonFilePath);
+
+  //     _cacheProductPosition ??=
+  //         await _locationService.getProductPosition(jsonFilePath);
+  //     print("Starting Bluetooth scan...");
+  //     final device = await _bluetoothService.startScan2();
+  //     if (device == null) {
+  //       throw Exception("No device found!");
+  //     }
+
+  //     await _bluetoothService.connectToDevice(device,
+  //         onDataReceived: (String decodedData) async {
+  //       if (decodedData != "") {
+  //         add(UpdateNavigationEventDataRow(decodedData));
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print("Error: $e");
+  //     if (!emit.isDone) {
+  //       emit(NavigationError(e.toString()));
+  //     }
+  //   }
+  // }
 
   /// Update of navigation change state of arow and position user
   void _onUpdateNavigation(
