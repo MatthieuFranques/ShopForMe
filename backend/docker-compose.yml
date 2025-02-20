@@ -7,22 +7,29 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}"
     ports:
       - ${DB_PORT}:${DB_PORT}
     volumes:
       - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER}"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+
   adminer:
     image: adminer
     ports:
       - 8080:8080
   node-application:
     build: .
-    container_name: node-application
+    container_name: shop-for-me-backend
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     restart: always
     depends_on:
-      - db
-    
+      db:
+        condition: service_healthy
 volumes:
   postgres:
