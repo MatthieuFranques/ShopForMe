@@ -69,6 +69,14 @@ Ce script Python automatise la compilation et le téléversement de fichiers Ard
 
 ---
 
+### Serial Monitor
+
+1. Ouvrir un moniteur série pour voir les logs :
+   arduino-cli monitor -p COM9 -b esp32:esp32:esp32
+
+2. Trouver le bon port avec :
+   arduino-cli board list
+
 ## Structure des dossiers
 
 iot/
