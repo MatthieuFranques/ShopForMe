@@ -1,0 +1,25 @@
+@font-face {
+    font-family: 'Marcelus';
+    src: url("./fonts/Park.ttf");
+}
+
+* {
+    font-family: 'Marcelus', serif;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #f2f8ff;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: row;
+
+    >div {
+        width: calc(100% - 200px);
+        transform :translateX(200px);
+        height: 100%;
+    }
+}

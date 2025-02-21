@@ -31,7 +31,6 @@ model Store {
   adresse   String
   layout    Json
   sections  Section[]
-  products  Product[]
   manages   Manage[]
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(dbgenerated()) @updatedAt
@@ -47,8 +46,6 @@ model Product {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime?    @default(dbgenerated()) @updatedAt
   deletedAt   DateTime?    @default(dbgenerated())
-  Store       Store?       @relation(fields: [storeId], references: [id])
-  storeId     Int?
 }
 
 model Preference {

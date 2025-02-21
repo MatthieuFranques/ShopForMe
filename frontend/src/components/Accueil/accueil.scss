@@ -1,0 +1,41 @@
+.accueil_container {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    color: #171d21;
+
+    h1 {
+        font-size: 70px;
+    }
+    p {
+        width: 70%;
+        text-align: center;
+        font-style: italic;
+        margin-top: 20px;
+    }
+
+    .images_app {
+        margin-top: 100px;
+        margin-bottom: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 300px;
+            margin: 0 20px;
+            border-radius: 10px;
+            border: 3px solid #1e1d29;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.56);
+        }
+    }
+
+    .download_app {
+        img {
+            width: 200px;
+        }
+    }
+}
