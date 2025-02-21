@@ -169,6 +169,9 @@ class LocationService {
   ///Return the postion of user on matrix
   Future<List<double>> triangulateData(List<int> pos1, double r1,
       List<int> pos2, double r2, List<int> pos3, double r3) async {
+    const double echelle = 50.0; // 1 carreau = 50 cm
+
+    // Convertir les positions en double
     final double x1 = pos1[0].toDouble();
     final double y1 = pos1[1].toDouble();
     final double x2 = pos2[0].toDouble();
@@ -176,10 +179,12 @@ class LocationService {
     final double x3 = pos3[0].toDouble();
     final double y3 = pos3[1].toDouble();
 
-    final double d1 = r1;
-    final double d2 = r2;
-    final double d3 = r3;
+    // Convertir les distances en carreaux
+    final double d1 = r1 / echelle;
+    final double d2 = r2 / echelle;
+    final double d3 = r3 / echelle;
 
+    // Calcul des coefficients
     final double A = 2 * (x2 - x1);
     final double B = 2 * (y2 - y1);
     final double C = d1 * d1 - d2 * d2 - x1 * x1 + x2 * x2 - y1 * y1 + y2 * y2;
@@ -193,10 +198,11 @@ class LocationService {
       throw Exception('Division par zéro détectée dans la triangulation.');
     }
 
+    // Calcul des coordonnées
     final double x = (C * E - F * B) / denominator;
     final double y = (C * D - A * F) / (B * D - A * E);
 
-    return [x, y];
+    return [x, y]; // Coordonnées en unités de carreaux
   }
 
   Future<List<int>> getProductPosition(String jsonFilePath) async {

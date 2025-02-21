@@ -122,6 +122,57 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   }
 
   // TODO _onLoadNavigation with no blu (test)
+  // Future<void> _onLoadNavigation(
+  //   LoadNavigationEvent event,
+  //   Emitter<NavigationState> emit,
+  // ) async {
+  //   try {
+  //     // Vérifier les permissions
+  //     final bool permission = await checkPermissions();
+  //     if (!permission) {
+  //       throw Exception("Permissions not granted.");
+  //     }
+  //     // TODO
+  //     // Cache init
+  //     if (_cachedGrid == null) {
+  //       print("Chargement du PLAN depuis $jsonFilePath");
+  //       _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath);
+  //     }
+  //     _cacheBeaconPositions ??=
+  //         await _locationService.getBeaconPositions(jsonFilePath);
+
+  //     _cacheProductPosition ??=
+  //         await _locationService.getProductPosition(jsonFilePath);
+  //     print("Starting Bluetooth scan...");
+
+  //     _navigationTimer =
+  //         Timer.periodic(const Duration(milliseconds: 2000), (timer) {
+  //       // Valeurs de base
+  //       final List<double> baseValues = [100, 100, 100];
+  //       final random = Random();
+
+  //       // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
+  //       final List<String> newValues = baseValues.map((base) {
+  //         double variation =
+  //             random.nextDouble() * 10 - 5; // variation entre -5 et +5
+  //         double newValue = base + variation;
+  //         return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
+  //       }).toList();
+
+  //       // Decode data row
+  //       String decodedData = newValues.join("/");
+  //       // Call the emit to update with _onUpdateNavigation
+  //       add(UpdateNavigationEventDataRow(decodedData));
+  //     });
+  //   } catch (e) {
+  //     print("Error: $e");
+  //     if (!emit.isDone) {
+  //       emit(NavigationError(e.toString()));
+  //     }
+  //   }
+  // }
+
+  // TODO _onLoadNavigation with blu
   Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
@@ -144,25 +195,17 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       _cacheProductPosition ??=
           await _locationService.getProductPosition(jsonFilePath);
       print("Starting Bluetooth scan...");
-
-      _navigationTimer =
-          Timer.periodic(const Duration(milliseconds: 2000), (timer) {
-        // Valeurs de base
-        final List<double> baseValues = [100, 100, 100];
-        final random = Random();
-
-        // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
-        final List<String> newValues = baseValues.map((base) {
-          double variation =
-              random.nextDouble() * 10 - 5; // variation entre -5 et +5
-          double newValue = base + variation;
-          return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
-        }).toList();
-
-        // Decode data row
-        String decodedData = newValues.join("/");
-        // Call the emit to update with _onUpdateNavigation
-        add(UpdateNavigationEventDataRow(decodedData));
+      final device = await _bluetoothService.startScan();
+      if (device == null) {
+        throw Exception("No device found!");
+      }
+      await _bluetoothService.connectToDevice(device,
+          onDataReceived: (String decodedData) async {
+        print("decodedData : $decodedData");
+        if (decodedData != "") {
+          print(" if (decodedData != " ") {");
+          add(UpdateNavigationEventDataRow(decodedData));
+        }
       });
     } catch (e) {
       print("Error: $e");
@@ -171,48 +214,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       }
     }
   }
-
-  // TODO _onLoadNavigation with blu
-  //   Future<void> _onLoadNavigation(
-  //   LoadNavigationEvent event,
-  //   Emitter<NavigationState> emit,
-  // ) async {
-  //   try {
-  //     // Vérifier les permissions
-  //     final bool permission = await checkPermissions();
-  //     if (!permission) {
-  //       throw Exception("Permissions not granted.");
-  //     }
-  //     // TODO
-  //     // Cache init
-  //     if (_cachedGrid == null) {
-  //       print("Chargement du PLAN depuis $jsonFilePath");
-  //       _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath);
-  //     }
-  //     _cacheBeaconPositions ??=
-  //         await _locationService.getBeaconPositions(jsonFilePath);
-
-  //     _cacheProductPosition ??=
-  //         await _locationService.getProductPosition(jsonFilePath);
-  //     print("Starting Bluetooth scan...");
-  //     final device = await _bluetoothService.startScan2();
-  //     if (device == null) {
-  //       throw Exception("No device found!");
-  //     }
-
-  //     await _bluetoothService.connectToDevice(device,
-  //         onDataReceived: (String decodedData) async {
-  //       if (decodedData != "") {
-  //         add(UpdateNavigationEventDataRow(decodedData));
-  //       }
-  //     });
-  //   } catch (e) {
-  //     print("Error: $e");
-  //     if (!emit.isDone) {
-  //       emit(NavigationError(e.toString()));
-  //     }
-  //   }
-  // }
 
   /// Update of navigation change state of arow and position user
   void _onUpdateNavigation(
