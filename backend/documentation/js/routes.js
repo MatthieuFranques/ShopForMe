@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .attr('dy', '.35em')
         .attr('class', 'text')
-        .attr('text-anchor', function (d) {
+        .attr('text-tag', function (d) {
             return 'start';
         })
         .html(function (d) {
