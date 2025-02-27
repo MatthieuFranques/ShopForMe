@@ -1,7 +1,16 @@
 #include <SPI.h>
 #include "DW1000Ranging.h"
+#include "DW1000.h"
 
-#define ANCHOR_ADDRESS "5A:44:45:64:5D:C2:3A:9B"
+// anchor adress
+char ANCHOR_ADDRESS[] = "5A:44:45:64:5D:C2:3A:9B";
+
+// calibrated Antenna Delay setting for this anchor
+uint16_t Adelay = 16580;
+
+// calibration distance
+float dist_m = (285 - 1.75) * 0.0254; //meters
+
 #define SPI_SCK 18
 #define SPI_MISO 19
 #define SPI_MOSI 23
@@ -18,10 +27,29 @@ void setup() {
 
     SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
     DW1000Ranging.initCommunication(PIN_RST, PIN_SS, PIN_IRQ); // Reset, CS, IRQ pin
-    DW1000Ranging.startAsAnchor(ANCHOR_ADDRESS, DW1000.MODE_LONGDATA_RANGE_LOWPOWER);
+
+    DW1000.setAntennaDelay(Adelay);
+
+    DW1000Ranging.attachNewRange(newRange);
+
+    DW1000Ranging.startAsAnchor(ANCHOR_ADDRESS, DW1000.MODE_LONGDATA_RANGE_LOWPOWER, false);
     Serial.println("ANCHOR initialized and running...");
 }
 
 void loop() {
     DW1000Ranging.loop();
+}
+
+void newRange()
+{
+    Serial.print(DW1000Ranging.getDistantDevice()->getShortAddress(), HEX);
+    Serial.print(", ");
+
+    #define NUMBER_OF_DISTANCES 1
+    float dist = 0.0;
+    for (int i = 0; i < NUMBER_OF_DISTANCES; i++) {
+        dist += DW1000Ranging.getDistantDevice()->getRange();
+    }
+    dist = dist/NUMBER_OF_DISTANCES;
+    Serial.println(dist);
 }

@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-void logDistances(const uint8_t *address, float range);
-String getAddress(const uint8_t *address);
-void printAddress(const uint8_t *address); // Ajoutez cette déclaration
+void logDistances(const uint16_t address, float range);
+String getAddress(const uint16_t address);
+void printAddress(const uint16_t address);
 
 #endif // UTILS_H

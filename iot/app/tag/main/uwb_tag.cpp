@@ -6,6 +6,7 @@
 Anchor anchors[3];
 int numAnchors = 0;
 unsigned long previousMillis = 0;
+char TAG_ADDRESS[] = "7D:00:22:EA:82:60:3B:9C";
 
 // Tag initialization
 void initTag()
@@ -15,7 +16,7 @@ void initTag()
     DW1000Ranging.attachNewRange(newRange);
     DW1000Ranging.attachNewDevice(newDevice);
     DW1000Ranging.attachInactiveDevice(inactiveDevice);
-    DW1000Ranging.startAsTag(TAG_ADDRESS, DW1000.MODE_LONGDATA_RANGE_LOWPOWER);
+    DW1000Ranging.startAsTag(TAG_ADDRESS, DW1000.MODE_LONGDATA_RANGE_LOWPOWER, false);
     Serial.println("Tag initialized and running...");
 }
 
@@ -30,67 +31,44 @@ void handleTagLoop()
         previousMillis = currentMillis;
         for (int i = 0; i < numAnchors; i++)
         {
-            if (anchors[i].active)
-            {
-                logDistances(anchors[i].address, anchors[i].distance);
-                constructPackage(getAddress(anchors[i].address), anchors[i].distance);
-            }
+            logDistances(anchors[i].address, anchors[i].distance);
+            constructPackage(getAddress(anchors[i].address), anchors[i].distance);
         }
     }
 }
-
-// New range detection
 void newRange()
 {
     DW1000Device *distantDevice = DW1000Ranging.getDistantDevice();
-    uint8_t *address = distantDevice->getByteAddress();
-    float range = distantDevice->getRange() - DISTANCE_OFFSET;
+    uint16_t address = DW1000Ranging.getDistantDevice()->getShortAddress();
+    float range = DW1000Ranging.getDistantDevice()->getRange();
 
     bool found = false;
     for (int i = 0; i < numAnchors; i++)
     {
-        if (memcmp(anchors[i].address, address, 8) == 0)
-        {
-            anchors[i].distance = range;
-            anchors[i].active = true;
-            found = true;
-            break;
-        }
+        anchors[i].distance = range;
+        anchors[i].address = address;
+        anchors[i].active = true;
+        found = true;
+        break;
     }
 
     if (!found && numAnchors < 3)
     {
-        memcpy(anchors[numAnchors].address, address, 8);
         anchors[numAnchors].distance = range;
+        anchors[numAnchors].address = address;
         anchors[numAnchors].active = true;
         numAnchors++;
     }
 }
 
-// New device detected
 void newDevice(DW1000Device *device)
 {
-    uint8_t *address = device->getByteAddress();
-    Serial.print("New device detected: ");
-    printAddress(address);
-    Serial.println();
+    Serial.print("Device added: ");
+    Serial.println(device->getShortAddress(), HEX);
 }
 
-// Inactive device removed
 void inactiveDevice(DW1000Device *device)
 {
-    uint8_t *address = device->getByteAddress();
-    for (int i = 0; i < numAnchors; i++)
-    {
-        if (memcmp(anchors[i].address, address, 8) == 0)
-        {
-            for (int j = i; j < numAnchors - 1; j++)
-            {
-                anchors[j] = anchors[j + 1];
-            }
-            numAnchors--;
-            Serial.println("Inactive device removed.");
-            break;
-        }
-    }
+    Serial.print("delete inactive device: ");
+    Serial.println(device->getShortAddress(), HEX);
 }

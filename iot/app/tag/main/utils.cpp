@@ -1,43 +1,29 @@
 #include "utils.h"
 
-void logDistances(const uint8_t *address, float range)
+void logDistances(uint16_t address, float range)
 {
     Serial.print("Range to ANCHOR ");
-    for (int i = 0; i < 8; i++)
-    {
-        if (address[i] < 0x10)
-            Serial.print("0");
-        Serial.print(address[i], HEX);
-        if (i < 7)
-            Serial.print(":");
-    }
+    if (address < 0x1000) // Formatting to ensure you always have 4 hexadecimal digits
+        Serial.print("0");
+    Serial.print(address, HEX);
+
     Serial.print(" Distance: ");
     Serial.print(range);
     Serial.println(" m");
 }
 
-String getAddress(const uint8_t *address)
+String getAddress(uint16_t address)
 {
     String addressStr = "";
-    for (int i = 0; i < 8; i++)
-    {
-        if (address[i] < 0x10)
-            addressStr += "0";
-        addressStr += String(address[i], HEX);
-        if (i < 7)
-            addressStr += ":";
-    }
+    if (address < 0x1000)
+        addressStr += "0";
+    addressStr += String(address, HEX);
     return addressStr;
 }
 
-void printAddress(const uint8_t *address) // Ajoutez cette définition
+void printAddress(uint16_t address)
 {
-    for (int i = 0; i < 8; i++)
-    {
-        if (address[i] < 0x10)
-            Serial.print("0");
-        Serial.print(address[i], HEX);
-        if (i < 7)
-            Serial.print(":");
-    }
+    if (address < 0x1000)
+        Serial.print("0");
+    Serial.print(address, HEX);
 }

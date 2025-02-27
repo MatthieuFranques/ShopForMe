@@ -2,10 +2,10 @@
 #define UWB_TAG_H
 
 #include <SPI.h>
-#include <DW1000Ranging.h>
+#include "DW1000Ranging.h"
+#include "DW1000.h"
 
 // SPI and UWB pin configuration
-#define TAG_ADDRESS "82:17:5B:D5:A9:9A:E2:9C"
 #define SPI_SCK 18
 #define SPI_MISO 19
 #define SPI_MOSI 23
@@ -14,13 +14,12 @@
 #define PIN_SS 4
 
 // Tag constants
-const float DISTANCE_OFFSET = 0.7;
-const long interval = 3000;
+const long interval = 200;
 
 // Anchor structure
 struct Anchor
 {
-    uint8_t address[8];
+    uint16_t address;
     float distance;
     bool active;
 };
