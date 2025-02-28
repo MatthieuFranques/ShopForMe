@@ -242,7 +242,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     if (!const DeepCollectionEquality().equals(shortestPath, [
       [-1000, -1000]
     ])) {
-      print("if ok");
       emit(NavigationLoadedState(
         objectName: "Riz",
         instruction: _generateInstruction(shortestPath),
@@ -271,6 +270,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           arrowDirection: ArrowDirection.nord,
           isLastProduct: true,
         ));
+        close();
         return;
       }
 
