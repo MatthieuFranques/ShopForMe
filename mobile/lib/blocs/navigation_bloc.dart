@@ -86,6 +86,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   Grid? _cachedGrid;
   List<List<int>>? _cacheBeaconPositions;
   List<int>? _cacheProductPosition;
+  List<List<int>>? _cachePath;
+
   // const String jsonFilePath = 'assets/demo/plan_test.json';
   String jsonFilePath = 'assets/demo/plan28_11_24.json';
 
@@ -225,6 +227,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     for (int i = 0; i < values.length; i++) {
       parsedData['Tag $i'] = double.tryParse(values[i]);
     }
+    //TODO CALL triangulation
+    // appel de la fonction + regarde en fonction du plus court chemin ou es ce que l'utilisateur est
+    // si l'utilisateur n'est plus dans la bonne position alors on recalcule le chemin
+    // Sinon on regarde si il est dans la bonne position changer emit si il arrive a la position ou il doit tourné
+
+    //TODO if _cachePath == null
+
     final List<List<int>> shortestPath =
         await _locationService.FindPositionFinal(jsonEncode(parsedData),
             _cacheProductPosition!, _cacheBeaconPositions!, _cachedGrid!);
@@ -319,6 +328,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   }
 
   String _generateInstruction(List<List<int>> path) {
+    // TODO a changer mais garder cette logique pour la fin de la navigation (l'arriver vers le produit)
+    // exemple si distance = 1 alors on concidère qu'on est arriver.
     final distance = path.length - 1;
     final direction = _calculateDirection(path);
 
