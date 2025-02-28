@@ -5,9 +5,9 @@ import 'package:mobile/models/grid.dart';
 import 'package:mobile/models/node.dart';
 
 class LocationService {
-  double distance1 = 0.0;
-  double distance2 = 0.0;
-  double distance3 = 0.0;
+  double tagLeft = 0.0;
+  double tagMiddle = 0.0;
+  double tagRight = 0.0;
 
   ///Converts the json plan to grid type. To know if the path is passable or not
   ///@param : String jsonFilePath : market plan
@@ -57,14 +57,14 @@ class LocationService {
     if (jsonData.containsKey('Tag 0') &&
         jsonData.containsKey('Tag 1') &&
         jsonData.containsKey('Tag 2')) {
-      distance1 = jsonData['Tag 0'];
-      distance2 = jsonData['Tag 1'];
-      distance3 = jsonData['Tag 2'];
+      tagLeft = jsonData['Tag 0'];
+      tagMiddle = jsonData['Tag 1'];
+      tagRight = jsonData['Tag 2'];
 
       return [
-        distance1.toString(),
-        distance2.toString(),
-        distance3.toString(),
+        tagLeft.toString(),
+        tagMiddle.toString(),
+        tagRight.toString(),
       ];
     } else {
       throw Exception('Le JSON ne contient pas les balises nécessaires.');
@@ -160,29 +160,36 @@ class LocationService {
   }
 
   ///Allows you to calculate the user's position
-  ///@param : List<int> pos1 = first beacon position on type [0.0]
-  ///@param : List<int> pos2 = second beacon position on type [0.0]
-  ///@param : List<int> pos3 = third beacon position on type [0.0]
-  ///@param : double r1      = Distance(m or cm)  of the first beacon from the user
-  ///@param : double r2      = Distance(m or cm)  of the second beacon from the user
-  ///@param : double r3      = Distance(m or cm)  of the third beacon from the user
+  ///@param : List<int> anchorLeft = first beacon position on type [0.0]
+  ///@param : List<int> anchorMiddle = second beacon position on type [0.0]
+  ///@param : List<int> anchorRight = third beacon position on type [0.0]
+  ///@param : double distanceLeft      = Distance(m or cm)  of the first beacon from the user
+  ///@param : double distanceMiddle      = Distance(m or cm)  of the second beacon from the user
+  ///@param : double distanceRight      = Distance(m or cm)  of the third beacon from the user
   ///Return the postion of user on matrix
-  Future<List<double>> triangulateData(List<int> pos1, double r1,
-      List<int> pos2, double r2, List<int> pos3, double r3) async {
+  Future<List<double>> triangulateData(
+      List<int> anchorLeft,
+      double distanceLeft,
+      List<int> anchorMiddle,
+      double distanceMiddle,
+      List<int> anchorRight,
+      double distanceRight) async {
     const double echelle = 50.0; // 1 carreau = 50 cm
 
     // Convertir les positions en double
-    final double x1 = pos1[0].toDouble();
-    final double y1 = pos1[1].toDouble();
-    final double x2 = pos2[0].toDouble();
-    final double y2 = pos2[1].toDouble();
-    final double x3 = pos3[0].toDouble();
-    final double y3 = pos3[1].toDouble();
-
+    final double x1 = anchorLeft[0].toDouble();
+    final double y1 = anchorLeft[1].toDouble();
+    final double x2 = anchorMiddle[0].toDouble();
+    final double y2 = anchorMiddle[1].toDouble();
+    final double x3 = anchorRight[0].toDouble();
+    final double y3 = anchorRight[1].toDouble();
+    print("x1 : $x1 y1: $y1 x2: $x2 y2: $y2 y3: $y3 x3: $x3");
+    print(
+        "distanceLeft : $distanceLeft distanceMiddle: $distanceMiddle  distanceRight: $distanceRight");
     // Convertir les distances en carreaux
-    final double d1 = r1 / echelle;
-    final double d2 = r2 / echelle;
-    final double d3 = r3 / echelle;
+    final double d1 = distanceLeft / echelle;
+    final double d2 = distanceMiddle / echelle;
+    final double d3 = distanceRight / echelle;
 
     // Calcul des coefficients
     final double A = 2 * (x2 - x1);
@@ -234,14 +241,48 @@ class LocationService {
     List<int> sizeGrid = await getMatrixSize('assets/demo/plan28_11_24.json');
 
     await loadDistances(jsonDistanceFile);
-    if (beaconPositions.length >= 3) {
+
+    if (beaconPositions.length >= 3 &&
+        tagLeft != 0.0 &&
+        tagMiddle != 0.0 &&
+        tagRight != 0.0) {
+      List<int> anchorLeft = [1, 1];
+      List<int> anchorMiddle = [3, 3];
+      List<int> anchorRight = [4, 4];
+
+      //[[2, 12] middle, [16, 3]left, [16, 17]Right]
+      //TODO To refacto
+      ListEquality equality = ListEquality();
+
+      for (int i = 0; i < beaconPositions.length; i++) {
+        print("beaconPositions[i] : ${beaconPositions[i]}");
+
+        if (equality.equals(beaconPositions[i], [2, 12])) {
+          print("if (beaconPositions[i] == [2, 12])");
+          anchorMiddle = beaconPositions[i];
+        }
+        if (equality.equals(beaconPositions[i], [16, 3])) {
+          print("(beaconPositions[i] == [16, 3])");
+          anchorLeft = beaconPositions[i];
+        }
+        if (equality.equals(beaconPositions[i], [16, 17])) {
+          print("(beaconPositions[i] == [16, 17])");
+          anchorRight = beaconPositions[i];
+        }
+      }
+
+      print(
+          "anchorLeft : $anchorLeft , anchorMiddle : $anchorMiddle , anchorRight : $anchorRight");
+      print(
+          "tagLeft : $tagLeft , tagMiddle : $tagMiddle , tagRight : $tagRight");
+
       final List<double> targetPosition = await triangulateData(
-        beaconPositions[0],
-        distance1,
-        beaconPositions[1],
-        distance2,
-        beaconPositions[2],
-        distance3,
+        anchorLeft,
+        tagLeft,
+        anchorMiddle,
+        tagMiddle,
+        anchorRight,
+        tagRight,
       );
 
       final List<int> currentPosition = [
@@ -249,7 +290,7 @@ class LocationService {
         targetPosition[1].round()
       ];
       print(
-          "distance1 : $distance1 , distance2 : $distance2 , distance3: $distance3");
+          "tagLeft : $tagLeft , tagMiddle : $tagMiddle , tagRight: $tagRight");
       print("beaconPositions : $beaconPositions");
       print("currentPosition : $currentPosition");
       print("End : $productPosition");

@@ -225,7 +225,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     for (int i = 0; i < values.length; i++) {
       parsedData['Tag $i'] = double.tryParse(values[i]);
     }
-
     final List<List<int>> shortestPath =
         await _locationService.FindPositionFinal(jsonEncode(parsedData),
             _cacheProductPosition!, _cacheBeaconPositions!, _cachedGrid!);
