@@ -173,9 +173,8 @@ class LocationService {
     return productPositions;
   }
 
-  Future<List<List<int>>?> getShortestPath(
-    List<String> anchorDistances, Grid grid) async {
-
+  Future<List<int>?> getCurrentPosition(
+      List<String> anchorDistances, Grid grid) async {
     final List<double> distances = loadDistances(anchorDistances);
     final [anchorLeftDistance, anchorMiddleDistance, anchorRightDistance] =
         distances;
@@ -186,7 +185,6 @@ class LocationService {
       final List<int> anchorLeft = grid.beaconPositions[0];
       final List<int> anchorMiddle = grid.beaconPositions[1];
       final List<int> anchorRight = grid.beaconPositions[2];
-
       print(
           "anchorLeft : $anchorLeft , anchorMiddle : $anchorMiddle , anchorRight : $anchorRight");
       print(
@@ -200,21 +198,27 @@ class LocationService {
         anchorRight,
         anchorRightDistance,
       );
-      final int gridRowsCount = grid.rows;
-      final int gridColsCount = grid.cols; 
-      print("currentPosition : $currentPosition, rows: $gridRowsCount, gridColsCount = $gridColsCount");
-
-      if (grid.isValid(currentPosition[0], currentPosition[1])) {
-        final List<List<int>> path =
-            findShortestPath(grid, currentPosition, grid.productPosition);
-        print("Chemin le plus court : $path");
-        return path;
-      } else {
-        print("Current position is not valid");
-        return null;
-      }
+      print("currentPosition : $currentPosition");
+      return currentPosition;
     } else {
-      print("Pas assez de beacons pour la triangulation.");
+      print("Valeur null");
+      return null;
+    }
+  }
+
+  Future<List<List<int>>?> getShortestPath(
+      List<String> anchorDistances, Grid grid) async {
+    List<int>? currentPosition =
+        await getCurrentPosition(anchorDistances, grid);
+
+    if (currentPosition == null) return null;
+    if (grid.isValid(currentPosition[0], currentPosition[1])) {
+      final List<List<int>> path =
+          findShortestPath(grid, currentPosition, grid.productPosition);
+      print("Chemin le plus court : $path");
+      return path;
+    } else {
+      print("Current position is not valid");
       return null;
     }
   }

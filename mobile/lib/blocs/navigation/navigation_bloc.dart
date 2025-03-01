@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/models/grid.dart';
@@ -25,6 +26,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   Grid? _cachedGrid;
   List<int>? _cacheProductPosition;
   List<List<int>>? _cachePath;
+  List<int>? _cacheCurrentPosition;
 
   // const String jsonFilePath = 'assets/demo/plan_test.json';
   String jsonFilePath = 'assets/demo/plan28_11_24.json';
@@ -62,76 +64,36 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   }
 
   // TODO _onLoadNavigation with no blu (test)
-  // Future<void> _onLoadNavigation(
-  //   LoadNavigationEvent event,
-  //   Emitter<NavigationState> emit,
-  // ) async {
-  //   try {
-  //     // Vérifier les permissions
-  //     final bool permission = await checkPermissions();
-  //     if (!permission) {
-  //       throw Exception("Permissions not granted.");
-  //     }
-  //     // TODO
-  //     // Cache init
-  //     if (_cachedGrid == null) {
-  //       print("Chargement du PLAN depuis $jsonFilePath");
-  //       _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath);
-  //     }
-  //     _cacheBeaconPositions ??=
-  //         await _locationService.getBeaconPositions(jsonFilePath);
-
-  //     _cacheProductPosition ??=
-  //         await _locationService.getProductPosition(jsonFilePath);
-  //     print("Starting Bluetooth scan...");
-
-  //     _navigationTimer =
-  //         Timer.periodic(const Duration(milliseconds: 2000), (timer) {
-  //       // Valeurs de base
-  //       final List<double> baseValues = [100, 100, 100];
-  //       final random = Random();
-
-  //       // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
-  //       final List<String> newValues = baseValues.map((base) {
-  //         double variation =
-  //             random.nextDouble() * 10 - 5; // variation entre -5 et +5
-  //         double newValue = base + variation;
-  //         return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
-  //       }).toList();
-
-  //       // Decode data row
-  //       String decodedData = newValues.join("/");
-  //       // Call the emit to update with _onUpdateNavigation
-  //       add(UpdateNavigationEventDataRow(decodedData));
-  //     });
-  //   } catch (e) {
-  //     print("Error: $e");
-  //     if (!emit.isDone) {
-  //       emit(NavigationError(e.toString()));
-  //     }
-  //   }
-  // }
-
-  // TODO _onLoadNavigation with blu
   Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
-  )
-  async {
+  ) async {
     try {
       // TODO
-      await checkPermissions();
-      _cachedGrid == null ? _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath) : null;
-      final device = await _bluetoothService.startScan();
-      device == null ? throw Exception("No device found!") : null;
-      
-      await _bluetoothService.connectToDevice(device,
-          onDataReceived: (String decodedData) async {
-        print("decodedData : $decodedData");
-        if (decodedData != "") {
-          print(" if (decodedData != " ") {");
-          add(UpdateNavigationEventDataRow(decodedData));
-        }
+      // Cache init
+      if (_cachedGrid == null) {
+        print("Chargement du PLAN depuis $jsonFilePath");
+        _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath);
+      }
+
+      _navigationTimer =
+          Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+        // Valeurs de base
+        final List<double> baseValues = [400, 100, 200];
+        final random = Random();
+
+        // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
+        final List<String> newValues = baseValues.map((base) {
+          double variation =
+              random.nextDouble() * 200 - 50; // variation entre -5 et +5
+          double newValue = base + variation;
+          return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
+        }).toList();
+
+        // Decode data row
+        String decodedData = newValues.join("/");
+        // Call the emit to update with _onUpdateNavigation
+        add(UpdateNavigationEventDataRow(decodedData));
       });
     } catch (e) {
       print("Error: $e");
@@ -140,6 +102,35 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       }
     }
   }
+
+  // TODO _onLoadNavigation with blu
+  // Future<void> _onLoadNavigation(
+  //   LoadNavigationEvent event,
+  //   Emitter<NavigationState> emit,
+  // )
+  // async {
+  //   try {
+  //     // TODO
+  //     await checkPermissions();
+  //     _cachedGrid == null ? _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath) : null;
+  //     final device = await _bluetoothService.startScan();
+  //     device == null ? throw Exception("No device found!") : null;
+
+  //     await _bluetoothService.connectToDevice(device,
+  //         onDataReceived: (String decodedData) async {
+  //       print("decodedData : $decodedData");
+  //       if (decodedData != "") {
+  //         print(" if (decodedData != " ") {");
+  //         add(UpdateNavigationEventDataRow(decodedData));
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print("Error: $e");
+  //     if (!emit.isDone) {
+  //       emit(NavigationError(e.toString()));
+  //     }
+  //   }
+  // }
 
   /// Update of navigation change state of arow and position user
   void _onUpdateNavigation(
@@ -150,8 +141,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     final List<List<int>>? shortestPath =
         await _locationService.getShortestPath(anchorDistances, _cachedGrid!);
     print("shortestPath : $shortestPath");
-    if (!const DeepCollectionEquality().equals(shortestPath, null
-    )) {
+    if (!const DeepCollectionEquality().equals(shortestPath, null)) {
       emit(NavigationLoadedState(
         objectName: "Riz",
         instruction: _generateInstruction(shortestPath!),
@@ -237,29 +227,92 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     return ArrowDirection.est;
   }
 
-  String _generateInstruction(List<List<int>> path) {
-    // TODO a changer mais garder cette logique pour la fin de la navigation (l'arriver vers le produit)
-    // exemple si distance = 1 alors on concidère qu'on est arriver.
-    final distance = path.length - 1;
-    final direction = _calculateDirection(path);
-
-    switch (direction) {
-      case ArrowDirection.nord:
-        return " 12H00 , Avancez de $distance pas";
-      case ArrowDirection.sud:
-        return "6H00 , Avancez de $distance pas";
-      case ArrowDirection.est:
-        return " 3H00 , Avancez de $distance pas";
-      case ArrowDirection.ouest:
-        return " 9H00 , Avancez de $distance pas";
-    }
-  }
-
   Future<void> checkPermissions() async {
     if (!await Permission.bluetoothScan.request().isGranted ||
         !await Permission.bluetoothConnect.request().isGranted ||
         !await Permission.locationWhenInUse.request().isGranted) {
-          throw Exception("Permissions not granted.");
+      throw Exception("Permissions not granted.");
+    }
+  }
+
+  String _generateInstruction(List<List<int>> path) {
+    if (path.isEmpty || _cacheCurrentPosition == null) {
+      return "Aucune instruction disponible";
+    }
+    List<List<int>> fullPath = [_cacheCurrentPosition!, ...path];
+
+    // Déterminer la direction initiale
+    ArrowDirection initialDirection = _calculateDirection(fullPath);
+    int distance = 0;
+
+    // Parcourir le chemin jusqu'au premier changement de direction
+    for (int i = 0; i < fullPath.length - 1; i++) {
+      final nextDirection = _calculateDirection([fullPath[i], fullPath[i + 1]]);
+
+      if (nextDirection == initialDirection) {
+        distance++;
+      } else {
+        break;
+      }
+    }
+    print("distance : $distance");
+    switch (initialDirection) {
+      case ArrowDirection.nord:
+        return "12H00, Avancez de $distance pas";
+      case ArrowDirection.sud:
+        return "6H00, Avancez de $distance pas";
+      case ArrowDirection.est:
+        return "3H00, Avancez de $distance pas";
+      case ArrowDirection.ouest:
+        return "9H00, Avancez de $distance pas";
+      default:
+        return "Direction inconnue";
+    }
+  }
+
+  ///Update the _cacheCurrentPosition
+  ///@param : String ESP response distance
+  Future<void> updatePosition(List<String> anchorDistances) async {
+    // Toujours recalculer la position actuelle avec la triangulation
+    _cacheCurrentPosition = await _locationService.getCurrentPosition(
+        anchorDistances, _cachedGrid!);
+
+    if (_cachePath == null || _cachePath!.isEmpty) {
+      print("Si aucun chemin n'est défini, recalculer le chemin initial");
+      await recalculatePath();
+      return;
+    }
+    if (!isPositionNearPath(_cacheCurrentPosition!, _cachePath!)) {
+      print("Utilisateur hors chemin, recalcul du plus court chemin...");
+      await recalculatePath();
+    }
+  }
+
+  ///Check if the user is still on the right path with a margin of ±1
+  ///@param : currentPosition
+  ///@param : path
+  bool isPositionNearPath(List<int> currentPosition, List<List<int>> path) {
+    for (var step in path) {
+      if ((currentPosition[0] - step[0]).abs() <= 1 &&
+          (currentPosition[1] - step[1]).abs() <= 1) {
+        print("L'utilisateur est encore proche du chemin prévu");
+        return true;
+      }
+    }
+    print("L'utilisateur s'est trop éloigné");
+    return false;
+  }
+
+  ///Reload the Path
+  ///Update the _cachePath & _cacheCurrentPosition
+  Future<void> recalculatePath(List<String> anchorDistances) async {
+    _cachePath = await _locationService.getShortestPath(
+      anchorDistances,
+      _cachedGrid!,
+    );
+    if (_cachePath != null && _cachePath!.isNotEmpty) {
+      print("Nouvelle currentPosition calculer");
+      _cacheCurrentPosition = _cachePath![0];
     }
   }
 }
