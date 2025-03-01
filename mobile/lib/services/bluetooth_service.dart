@@ -94,6 +94,7 @@ class BluetoothScanService {
   }
 
   Future<BluetoothDevice> startScan() async {
+    print("Starting Bluetooth scan...");
     print("startScan FUTURE");
     // Créez une instance de FlutterBlue pour le scan
     FlutterBlue flutterBlue = FlutterBlue.instance;

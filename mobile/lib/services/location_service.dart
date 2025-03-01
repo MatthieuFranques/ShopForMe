@@ -5,92 +5,56 @@ import 'package:mobile/models/grid.dart';
 import 'package:mobile/models/node.dart';
 
 class LocationService {
-  double tagLeft = 0.0;
-  double tagMiddle = 0.0;
-  double tagRight = 0.0;
-
   ///Converts the json plan to grid type. To know if the path is passable or not
   ///@param : String jsonFilePath : market plan
   ///Return Return the market plan in Grid
   Future<Grid> loadGridFromJson(String jsonFilePath) async {
+    print("Chargement du PLAN depuis $jsonFilePath");
+
+    // Load the plan from the JSON file
     final String response = await rootBundle.loadString(jsonFilePath);
-    final List<dynamic> jsonData = jsonDecode(response);
+    final List<dynamic> plan = jsonDecode(response);
+    final int numRows = plan.length;
+    final int numCols = plan[0].length;
+    final List<int> productPosition = await getProductPosition();
 
-    final List<List<int>> grid = List.generate(
-        jsonData.length, (_) => List<int>.filled(jsonData[0].length, 1));
+    // TODO
+    // Modifier Grid charger les rayons disponibles dans Grid
 
+    // Initialize the grid with default values
+    final List<List<int>> grid =
+        List.generate(numRows, (_) => List<int>.filled(numCols, 1));
     final List<List<int>> beaconPositions = [];
 
-    for (int rowIndex = 0; rowIndex < jsonData.length; rowIndex++) {
-      final List<dynamic> row = jsonData[rowIndex];
-      for (int colIndex = 0; colIndex < row.length; colIndex++) {
-        final Map<String, dynamic> cell = row[colIndex];
-        if (cell['type'] == "VIDE") {
-          grid[rowIndex][colIndex] = 0;
-        } else {
-          grid[rowIndex][colIndex] = 1;
-        }
-        if (cell['isBeacon'] == true) {
-          beaconPositions.add([rowIndex, colIndex]);
-        }
+    for (int row = 0; row < numRows; row++) {
+      final List<dynamic> rowData = plan[row];
+
+      for (int col = 0; col < numCols; col++) {
+        final Map<String, dynamic> cell = rowData[col];
+
+        // Assign grid values based on cell type
+        grid[row][col] = (cell['type'] == "VIDE") ? 0 : 1;
+
+        // Check if the cell is a beacon
+        // TODO
+        // if (cell['isBeacon'] == true) {
+        //   beaconPositions.add([row, col]);
+        // }
+        beaconPositions.add([16, 3]);
+        beaconPositions.add([2, 12]);
+        beaconPositions.add([16, 17]);
       }
     }
-    return Grid(jsonData.length, jsonData[0].length, grid);
+    return Grid(numRows, numCols, grid, beaconPositions, productPosition);
   }
 
-  ///Function which allows you to retrieve the distance of the beacons from the user
-  ///@param : String jsonFilePath = json text of recive data bluetow
-  Future<List<String>> loadDistances(String jsonInput) async {
-    String jsonString;
-
-    // Verif the enter of JSON {  or [
-    if (jsonInput.startsWith('{') || jsonInput.startsWith('[')) {
-      jsonString = jsonInput;
-    } else {
-      jsonString = await rootBundle.loadString(jsonInput);
-    }
-
-    //Decode JSON to Map
-    final Map<String, dynamic> jsonData = jsonDecode(jsonString);
-
-    //Verif if key exist
-    if (jsonData.containsKey('Tag 0') &&
-        jsonData.containsKey('Tag 1') &&
-        jsonData.containsKey('Tag 2')) {
-      tagLeft = jsonData['Tag 0'];
-      tagMiddle = jsonData['Tag 1'];
-      tagRight = jsonData['Tag 2'];
-
-      return [
-        tagLeft.toString(),
-        tagMiddle.toString(),
-        tagRight.toString(),
-      ];
-    } else {
-      throw Exception('Le JSON ne contient pas les balises nécessaires.');
-    }
-  }
-
-  /// Function which allows us to know the position of our Beacons on our market
-  ///@param : String jsonFilePath = Market
-  ///Return all position of Beacon in the market
-  Future<List<List<int>>> getBeaconPositions(String jsonFilePath) async {
-    final String response = await rootBundle.loadString(jsonFilePath);
-    final List<dynamic> jsonData = jsonDecode(response);
-
-    final List<List<int>> beaconPositions = [];
-
-    for (int rowIndex = 0; rowIndex < jsonData.length; rowIndex++) {
-      final List<dynamic> row = jsonData[rowIndex];
-      for (int colIndex = 0; colIndex < row.length; colIndex++) {
-        final Map<String, dynamic> cell = row[colIndex];
-        if (cell['isBeacon'] == true) {
-          beaconPositions.add([rowIndex, colIndex]);
-        }
-      }
-    }
-
-    return beaconPositions;
+  /// Function that returns the distances between the user and the anchors
+  ///@param : List<String> anchorDistances: the distances between the user and the anchors (String formatted)
+  List<double> loadDistances(List<String> anchorDistances) {
+    double anchorLeftDistance = double.parse(anchorDistances[0]);
+    double anchorMiddleDistance = double.parse(anchorDistances[1]);
+    double anchorRightDistance = double.parse(anchorDistances[2]);
+    return [anchorLeftDistance, anchorMiddleDistance, anchorRightDistance];
   }
 
   /// Function that returns the shortest path
@@ -99,64 +63,56 @@ class LocationService {
   ///@param : List<int> goal  =  Position of matrice of goal
   ///Return  the path to the goal  List<List<int>>
   List<List<int>> findShortestPath(Grid grid, List<int> start, List<int> goal) {
-    final int n = grid.n;
-    final int m = grid.m;
-    final List<List<int>> distances =
-        List.generate(n, (_) => List<int>.filled(m, 999999));
-    final List<List<int>> previous =
-        List.generate(n, (_) => List<int>.filled(m, -1));
     final PriorityQueue<Node> queue = PriorityQueue<Node>();
-
-    distances[start[0]][start[1]] = 0;
-    queue.add(Node(start[0], start[1], 0));
-
+    final Map<int, int> previous =
+        {}; // Stores previous node in 1D index format
+    final Set<int> visited = {}; // Track visited nodes
     final List<List<int>> directions = [
       [0, 1],
       [1, 0],
       [0, -1],
       [-1, 0]
     ];
+    final int cols = grid.cols;
+
+    queue.add(Node(start[0], start[1], 0));
+    previous[start[0] * cols + start[1]] = -1; // Mark start
 
     while (queue.isNotEmpty) {
       final Node current = queue.removeFirst();
-      final int x = current.x;
-      final int y = current.y;
+      final int x = current.x, y = current.y;
+      final int index = x * cols + y;
 
-      if (x == goal[0] && y == goal[1]) {
-        break;
-      }
+      if (visited.contains(index)) continue;
+      visited.add(index);
 
-      for (List<int> direction in directions) {
-        final int newX = x + direction[0];
-        final int newY = y + direction[1];
+      if (x == goal[0] && y == goal[1]) break; // Stop if goal reached
 
-        if (grid.isValid(newX, newY)) {
-          final int newDist = distances[x][y] + 1;
+      for (var dir in directions) {
+        final int newX = x + dir[0], newY = y + dir[1];
+        final int newIndex = newX * cols + newY;
 
-          if (newDist < distances[newX][newY]) {
-            distances[newX][newY] = newDist;
-            previous[newX][newY] = x * m + y;
-            queue.add(Node(newX, newY, newDist));
-          }
+        if (grid.isValid(newX, newY) && !visited.contains(newIndex)) {
+          queue.add(Node(newX, newY, current.distance + 1));
+          previous[newIndex] = index;
         }
       }
     }
 
-    List<List<int>> path = [];
-    int x = goal[0];
-    int y = goal[1];
+    return reconstructPath(previous, start, goal, cols);
+  }
 
-    while (x != start[0] || y != start[1]) {
-      path.add([x, y]);
-      final int prev = previous[x][y];
-      x = prev ~/ m;
-      y = prev % m;
+  List<List<int>> reconstructPath(
+      Map<int, int> previous, List<int> start, List<int> goal, int cols) {
+    List<List<int>> path = [];
+    int index = goal[0] * cols + goal[1];
+
+    while (index != -1) {
+      path.add([index ~/ cols, index % cols]);
+      index = previous[index] ?? -1;
     }
 
-    path.add(start);
-    path = path.reversed.toList();
-
-    return path;
+    return path.reversed.toList();
   }
 
   ///Allows you to calculate the user's position
@@ -167,7 +123,7 @@ class LocationService {
   ///@param : double distanceMiddle      = Distance(m or cm)  of the second beacon from the user
   ///@param : double distanceRight      = Distance(m or cm)  of the third beacon from the user
   ///Return the postion of user on matrix
-  Future<List<double>> triangulateData(
+  Future<List<int>> triangulateData(
       List<int> anchorLeft,
       double distanceLeft,
       List<int> anchorMiddle,
@@ -209,140 +165,57 @@ class LocationService {
     final double x = (C * E - F * B) / denominator;
     final double y = (C * D - A * F) / (B * D - A * E);
 
-    return [x, y]; // Coordonnées en unités de carreaux
+    return [x.round(), y.round()]; // Coordonnées en unités de carreaux
   }
 
-  Future<List<int>> getProductPosition(String jsonFilePath) async {
-    // TODO uncomment
-    // final String response = await rootBundle.loadString(jsonFilePath);
-    // final List<dynamic> jsonData = jsonDecode(response);
-
+  Future<List<int>> getProductPosition() async {
     final List<int> productPositions = [17, 12];
-
-    // for (int rowIndex = 0; rowIndex < jsonData.length; rowIndex++) {
-    //   final List<dynamic> row = jsonData[rowIndex];
-    //   for (int colIndex = 0; colIndex < row.length; colIndex++) {
-    //     final Map<String, dynamic> cell = row[colIndex];
-    // TODO Mettre la condition qui est bonne
-    // if (cell['isBeacon'] == true) {
-    //   productPositions.add([rowIndex, colIndex]);
-    // }
-    // }
-    // }
-
     return productPositions;
   }
 
-  Future<List<List<int>>> FindPositionFinal(
-      String jsonDistanceFile,
-      List<int> productPosition,
-      List<List<int>> beaconPositions,
-      Grid grid) async {
-    List<int> sizeGrid = await getMatrixSize('assets/demo/plan28_11_24.json');
+  Future<List<List<int>>?> getShortestPath(
+    List<String> anchorDistances, Grid grid) async {
 
-    await loadDistances(jsonDistanceFile);
+    final List<double> distances = loadDistances(anchorDistances);
+    final [anchorLeftDistance, anchorMiddleDistance, anchorRightDistance] =
+        distances;
 
-    if (beaconPositions.length >= 3 &&
-        tagLeft != 0.0 &&
-        tagMiddle != 0.0 &&
-        tagRight != 0.0) {
-      List<int> anchorLeft = [1, 1];
-      List<int> anchorMiddle = [3, 3];
-      List<int> anchorRight = [4, 4];
-
-      //[[2, 12] middle, [16, 3]left, [16, 17]Right]
-      //TODO To refacto
-      ListEquality equality = ListEquality();
-
-      for (int i = 0; i < beaconPositions.length; i++) {
-        print("beaconPositions[i] : ${beaconPositions[i]}");
-
-        if (equality.equals(beaconPositions[i], [2, 12])) {
-          print("if (beaconPositions[i] == [2, 12])");
-          anchorMiddle = beaconPositions[i];
-        }
-        if (equality.equals(beaconPositions[i], [16, 3])) {
-          print("(beaconPositions[i] == [16, 3])");
-          anchorLeft = beaconPositions[i];
-        }
-        if (equality.equals(beaconPositions[i], [16, 17])) {
-          print("(beaconPositions[i] == [16, 17])");
-          anchorRight = beaconPositions[i];
-        }
-      }
+    if (anchorLeftDistance != 0.0 &&
+        anchorMiddleDistance != 0.0 &&
+        anchorRightDistance != 0.0) {
+      final List<int> anchorLeft = grid.beaconPositions[0];
+      final List<int> anchorMiddle = grid.beaconPositions[1];
+      final List<int> anchorRight = grid.beaconPositions[2];
 
       print(
           "anchorLeft : $anchorLeft , anchorMiddle : $anchorMiddle , anchorRight : $anchorRight");
       print(
-          "tagLeft : $tagLeft , tagMiddle : $tagMiddle , tagRight : $tagRight");
+          "tagLeft : $anchorLeftDistance , tagMiddle : $anchorMiddleDistance , tagRight : $anchorRightDistance");
 
-      final List<double> targetPosition = await triangulateData(
+      final List<int> currentPosition = await triangulateData(
         anchorLeft,
-        tagLeft,
+        anchorLeftDistance,
         anchorMiddle,
-        tagMiddle,
+        anchorMiddleDistance,
         anchorRight,
-        tagRight,
+        anchorRightDistance,
       );
+      final int gridRowsCount = grid.rows;
+      final int gridColsCount = grid.cols; 
+      print("currentPosition : $currentPosition, rows: $gridRowsCount, gridColsCount = $gridColsCount");
 
-      final List<int> currentPosition = [
-        targetPosition[0].round(),
-        targetPosition[1].round()
-      ];
-      print(
-          "tagLeft : $tagLeft , tagMiddle : $tagMiddle , tagRight: $tagRight");
-      print("beaconPositions : $beaconPositions");
-      print("currentPosition : $currentPosition");
-      print("End : $productPosition");
-
-      //Verif the height of currentPosition if is outh of the grid [[-1000, -1000]]
-      if (isPositionValid(sizeGrid, currentPosition) == true) {
+      if (grid.isValid(currentPosition[0], currentPosition[1])) {
         final List<List<int>> path =
-            findShortestPath(grid, currentPosition, productPosition);
+            findShortestPath(grid, currentPosition, grid.productPosition);
         print("Chemin le plus court : $path");
         return path;
       } else {
-        print("currentPosition : $currentPosition + sizeGrid : $sizeGrid");
-        return [
-          [-1000, -1000]
-        ];
+        print("Current position is not valid");
+        return null;
       }
     } else {
       print("Pas assez de beacons pour la triangulation.");
-      return [
-        [-1000, -1000]
-      ];
+      return null;
     }
-  }
-
-  Future<List<int>> getMatrixSize(String jsonFilePath) async {
-    try {
-      final String response = await rootBundle.loadString(jsonFilePath);
-      List<dynamic> jsonData = jsonDecode(response);
-
-      if (jsonData is List && jsonData.isNotEmpty && jsonData[0] is List) {
-        int rowCount = jsonData.length;
-        int columnCount = (jsonData[0] as List).length;
-        return [rowCount, columnCount];
-      } else {
-        print("Erreur : Le JSON ne contient pas une matrice valide.");
-        return [0, 0];
-      }
-    } catch (e) {
-      print("Erreur lors du parsing du JSON : $e");
-      return [0, 0];
-    }
-  }
-
-  bool isPositionValid(List<int> sizeGrid, List<int> currentPosition) {
-    if (sizeGrid.length != currentPosition.length) {
-      return false;
-    }
-    for (int i = 0; i < sizeGrid.length; i++) {
-      if (currentPosition[i] < 0 || currentPosition[i] > sizeGrid[i]) {
-        return false;
-      }
-    }
-    return true;
   }
 }

@@ -1,7 +1,7 @@
 // app_header.dart
 import 'package:flutter/material.dart';
-import '../../utils/screen_utils.dart';
-import '../../models/shopping_list.dart';
+import 'package:mobile/utils/screen_utils.dart';
+import 'package:mobile/models/shopping_list.dart';
 
 class AppHeader extends StatelessWidget {
   final List<ShoppingList> shoppingLists;

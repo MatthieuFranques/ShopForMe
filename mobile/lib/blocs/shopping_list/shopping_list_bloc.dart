@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:equatable/equatable.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,83 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/models/shopping_list.dart';
 import 'package:mobile/models/shop.dart';
-
-// Events
-abstract class ShoppingListEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class LoadShoppingList extends ShoppingListEvent {}
-
-class AddProductToShoppingList extends ShoppingListEvent {
-  final Product product;
-  AddProductToShoppingList(this.product);
-
-  @override
-  List<Object?> get props => [product];
-}
-
-class RemoveProductFromList extends ShoppingListEvent {
-  final String productId;
-  RemoveProductFromList(this.productId);
-
-  @override
-  List<Object?> get props => [productId];
-}
-
-class SelectShoppingList extends ShoppingListEvent {
-  final String listId;
-  SelectShoppingList(this.listId);
-  
-  @override
-  List<Object?> get props => [listId];
-}
-
-class CreateNewShoppingList extends ShoppingListEvent {}
-
-class ValidateShoppingList extends ShoppingListEvent {}
-
-class DeleteShoppingList extends ShoppingListEvent {
-  final String listId;
-  DeleteShoppingList(this.listId);
-
-  @override
-  List<Object?> get props => [listId];
-}
-
-// States
-abstract class ShoppingListState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class ShoppingListLoading extends ShoppingListState {}
-
-class ShoppingListLoaded extends ShoppingListState {
-  final List<ShoppingList> shoppingLists;
-  final ShoppingList currentList;
-  final List<String> validationErrors;
-  final List<Product> invalidProducts;
-
-  ShoppingListLoaded(
-    this.shoppingLists,
-    this.currentList, {
-    this.validationErrors = const [],
-    this.invalidProducts = const [],
-  });
-
-  @override
-  List<Object?> get props => [shoppingLists, currentList, validationErrors, invalidProducts];
-}
-
-class ShoppingListError extends ShoppingListState {
-  final String message;
-  ShoppingListError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
+import './shopping_list_event.dart';
+import './shopping_list_state.dart';
 
 // Bloc
 class ShoppingListBloc extends Bloc<ShoppingListEvent, ShoppingListState> {

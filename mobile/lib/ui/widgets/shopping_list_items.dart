@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/blocs/shopping_list_bloc.dart';
+import 'package:mobile/blocs/shopping_list/shopping_list_export.dart';
 import 'package:mobile/ui/widgets/action_button.dart';
 import 'package:mobile/utils/screen_utils.dart';
 

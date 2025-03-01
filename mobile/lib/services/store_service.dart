@@ -2,8 +2,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mobile/services/cache_service.dart';
 import 'package:mobile/utils/constants.dart';
-import '../models/product.dart';
-import '../models/shop.dart';
+import 'package:mobile/models/product.dart';
+import 'package:mobile/models/shop.dart';
 
 class StoreService {
   final CacheService _cacheService;

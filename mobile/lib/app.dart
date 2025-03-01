@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/blocs/navigation_bloc.dart';
-import 'package:mobile/blocs/product_search_bloc.dart';
-import 'package:mobile/blocs/shopping_list_bloc.dart';
+import 'package:mobile/blocs/product_search/product_search_export.dart';
+import 'package:mobile/blocs/shopping_list/shopping_list_export.dart';
 import 'ui/screens/home_screen.dart';
 import 'config/theme.dart';
 import 'utils/screen_utils.dart';

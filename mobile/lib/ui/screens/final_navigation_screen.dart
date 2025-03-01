@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile/blocs/navigation_bloc.dart';
+import 'package:mobile/blocs/navigation/navigation_export.dart';
 import 'package:mobile/ui/screens/home_screen.dart';
 
 class FinalNavigationScreen extends StatefulWidget {

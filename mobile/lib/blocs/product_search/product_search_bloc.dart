@@ -1,62 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
-import '../services/store_service.dart';
-import '../models/product.dart';
+import 'package:mobile/models/product.dart';
+import 'package:mobile/services/store_service.dart';
+import './product_search_event.dart';
+import './product_search_state.dart';
 
-// Events
-abstract class ProductSearchEvent extends Equatable {
-  const ProductSearchEvent();
-
-  @override
-  List<Object> get props => [];
-}
-
-class LoadProducts extends ProductSearchEvent {}
-
-class SearchProducts extends ProductSearchEvent {
-  final String query;
-  const SearchProducts(this.query);
-
-  @override
-  List<Object> get props => [query];
-}
-
-// States
-abstract class ProductSearchState extends Equatable {
-  const ProductSearchState();
-  
-  @override
-  List<Object> get props => [];
-}
-
-class ProductSearchInitial extends ProductSearchState {}
-
-class ProductSearchLoading extends ProductSearchState {}
-
-class ProductSearchLoaded extends ProductSearchState {
-  final List<Product> products;
-  final List<Product> filteredProducts;
-  final String currentQuery;
-
-  const ProductSearchLoaded({
-    required this.products,
-    required this.filteredProducts,
-    this.currentQuery = '',
-  });
-
-  @override
-  List<Object> get props => [products, filteredProducts, currentQuery];
-}
-
-class ProductSearchError extends ProductSearchState {
-  final String message;
-  const ProductSearchError(this.message);
-
-  @override
-  List<Object> get props => [message];
-}
-
-// BLoC
 class ProductSearchBloc extends Bloc<ProductSearchEvent, ProductSearchState> {
   final StoreService _storeService;
   List<Product> _allProducts = [];

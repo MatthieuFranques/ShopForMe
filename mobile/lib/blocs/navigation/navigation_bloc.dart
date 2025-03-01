@@ -1,79 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:isolate';
-import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/models/grid.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../models/product.dart';
-import '../services/store_service.dart';
-import '../services/location_service.dart';
-import '../services/location_product_service.dart';
-
-enum ArrowDirection { nord, sud, est, ouest }
+import 'package:mobile/models/product.dart';
+import 'package:mobile/services/store_service.dart';
+import 'package:mobile/services/location_service.dart';
+import 'package:mobile/services/location_product_service.dart';
+import './navigation_event.dart';
+import './navigation_state.dart';
 
 Timer? _navigationTimer;
-
-// Events
-abstract class NavigationEvent {}
-
-class LoadNavigationEvent extends NavigationEvent {
-  final List<Product> products;
-  LoadNavigationEvent({required this.products});
-}
-
-class UpdateNavigationEvent extends NavigationEvent {
-  final Product product;
-  UpdateNavigationEvent({required this.product});
-}
-
-class ProductFoundEvent extends NavigationEvent {
-  final Product product;
-  ProductFoundEvent({required this.product});
-}
-
-class UpdatePositionEvent extends NavigationEvent {
-  final Product currentProduct;
-  UpdatePositionEvent(this.currentProduct);
-}
-
-// Ajoutez cet événement dans vos événements existants
-class UpdateNavigationEventDataRow extends NavigationEvent {
-  final String decodedData;
-  UpdateNavigationEventDataRow(this.decodedData);
-}
-
-// States
-abstract class NavigationState {}
-
-class NavigationInitial extends NavigationState {}
-
-class NavigationLoading extends NavigationState {}
-
-class NavigationLoadedState extends NavigationState {
-  final String objectName;
-  final String instruction;
-  final ArrowDirection arrowDirection;
-  final bool isLastProduct;
-  final bool isDone;
-
-  NavigationLoadedState({
-    required this.objectName,
-    required this.instruction,
-    required this.arrowDirection,
-    this.isLastProduct = false,
-    this.isDone = false,
-  });
-}
-
-class NavigationError extends NavigationState {
-  final String message;
-  NavigationError(this.message);
-}
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   final StoreService _storeService;
@@ -84,7 +23,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   // TODO change to true value
   Grid? _cachedGrid;
-  List<List<int>>? _cacheBeaconPositions;
   List<int>? _cacheProductPosition;
   List<List<int>>? _cachePath;
 
@@ -178,29 +116,15 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
-  ) async {
+  )
+  async {
     try {
-      // Vérifier les permissions
-      final bool permission = await checkPermissions();
-      if (!permission) {
-        throw Exception("Permissions not granted.");
-      }
       // TODO
-      // Cache init
-      if (_cachedGrid == null) {
-        print("Chargement du PLAN depuis $jsonFilePath");
-        _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath);
-      }
-      _cacheBeaconPositions ??=
-          await _locationService.getBeaconPositions(jsonFilePath);
-
-      _cacheProductPosition ??=
-          await _locationService.getProductPosition(jsonFilePath);
-      print("Starting Bluetooth scan...");
+      await checkPermissions();
+      _cachedGrid == null ? _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath) : null;
       final device = await _bluetoothService.startScan();
-      if (device == null) {
-        throw Exception("No device found!");
-      }
+      device == null ? throw Exception("No device found!") : null;
+      
       await _bluetoothService.connectToDevice(device,
           onDataReceived: (String decodedData) async {
         print("decodedData : $decodedData");
@@ -222,35 +146,21 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     UpdateNavigationEventDataRow event,
     Emitter<NavigationState> emit,
   ) async {
-    final values = event.decodedData.split('/');
-    final parsedData = <String, dynamic>{};
-    for (int i = 0; i < values.length; i++) {
-      parsedData['Tag $i'] = double.tryParse(values[i]);
-    }
-    //TODO CALL triangulation
-    // appel de la fonction + regarde en fonction du plus court chemin ou es ce que l'utilisateur est
-    // si l'utilisateur n'est plus dans la bonne position alors on recalcule le chemin
-    // Sinon on regarde si il est dans la bonne position changer emit si il arrive a la position ou il doit tourné
-
-    //TODO if _cachePath == null
-
-    final List<List<int>> shortestPath =
-        await _locationService.FindPositionFinal(jsonEncode(parsedData),
-            _cacheProductPosition!, _cacheBeaconPositions!, _cachedGrid!);
-    //If is false return [-1000, -1000]
+    final anchorDistances = event.decodedData.split("/");
+    final List<List<int>>? shortestPath =
+        await _locationService.getShortestPath(anchorDistances, _cachedGrid!);
     print("shortestPath : $shortestPath");
-    if (!const DeepCollectionEquality().equals(shortestPath, [
-      [-1000, -1000]
-    ])) {
+    if (!const DeepCollectionEquality().equals(shortestPath, null
+    )) {
       emit(NavigationLoadedState(
         objectName: "Riz",
-        instruction: _generateInstruction(shortestPath),
+        instruction: _generateInstruction(shortestPath!),
         arrowDirection: _calculateDirection(shortestPath),
         isLastProduct: false,
         isDone: false,
       ));
     } else {
-      print("Error :  [[-1000, -1000]] on the navigation");
+      print("Error : null on the navigation");
     }
   }
 
@@ -345,15 +255,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  Future<bool> checkPermissions() async {
-    if (await Permission.bluetoothScan.request().isGranted &&
-        await Permission.bluetoothConnect.request().isGranted &&
-        await Permission.locationWhenInUse.request().isGranted) {
-      // if everything is OK, return true
-      return true;
-    } else {
-      // otherwise, false
-      return false;
+  Future<void> checkPermissions() async {
+    if (!await Permission.bluetoothScan.request().isGranted ||
+        !await Permission.bluetoothConnect.request().isGranted ||
+        !await Permission.locationWhenInUse.request().isGranted) {
+          throw Exception("Permissions not granted.");
     }
   }
 }

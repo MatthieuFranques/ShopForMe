@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/screen_utils.dart';
+import 'package:mobile/utils/screen_utils.dart';
 
 class Shop4MeTheme {
   static ThemeData getLightTheme(BuildContext context) {
