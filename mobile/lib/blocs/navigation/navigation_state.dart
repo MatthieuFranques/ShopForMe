@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-enum ArrowDirection { nord, sud, est, ouest }
+import 'package:mobile/services/navigation/direction_service.dart';
 
 abstract class NavigationState extends Equatable {
   @override
