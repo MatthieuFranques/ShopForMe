@@ -24,8 +24,25 @@ class BluetoothScanService {
   //   });
   // }
 
-  /// Méthode pour se connecter à un périphérique BLE et écouter les données
-
+  /// Connects to a Bluetooth device and listens for incoming data, handling connection and service discovery.
+  /// 
+  /// This function connects to a Bluetooth device if it is not already connected, subscribes to notifications for
+  /// characteristics that support it, and processes the received data via the provided callback.
+  /// 
+  /// ### Parameters:
+  /// - `device`: The Bluetooth device to connect to.
+  /// - `onDataReceived`: A callback function that will be triggered when data is received from the device. The
+  ///   function will be passed the decoded data as a string.
+  /// 
+  /// ### Throws:
+  /// - Throws a [BluetoothDeviceState] error if the connection or subscription fails.
+  /// 
+  /// ### Example:
+  /// ```dart
+  /// await getAnchorDistances(device, onDataReceived: (decodedData) {
+  ///   print("Decoded data: $decodedData");
+  /// });
+  /// ```
   Future<void> getAnchorDistances(
   BluetoothDevice device, {
   required Future<void> Function(String decodedData) onDataReceived,
@@ -74,6 +91,22 @@ class BluetoothScanService {
   }
 }
 
+  /// Scans for Bluetooth devices and returns the first device with the name 'ESP32_BLE'.
+  /// 
+  /// This function starts a Bluetooth scan, looks for devices with the name 'ESP32_BLE', and returns the first
+  /// matching device. The scan is automatically stopped once the device is found.
+  /// 
+  /// ### Returns:
+  /// A [BluetoothDevice] representing the found device.
+  /// 
+  /// ### Throws:
+  /// - If no device is found within 5 seconds, an error is returned stating 'Device not found'.
+  /// 
+  /// ### Example:
+  /// ```dart
+  /// BluetoothDevice device = await getBluetoothDevice();
+  /// print("Found device: ${device.name}");
+  /// ```
   Future<BluetoothDevice> getBluetoothDevice() async {
   print("Starting Bluetooth scan...");
 

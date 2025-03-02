@@ -3,8 +3,23 @@ import 'package:mobile/models/grid.dart';
 import 'package:mobile/models/node.dart';
 
 class LocationService {
-  /// Function that returns the distances between the user and the anchors
-  ///@param : List<String> anchorDistances: the distances between the user and the anchors (String formatted)
+  /// Converts a list of string distances from anchors into a list of double distances.
+  /// 
+  /// This function parses the string values of anchor distances from the list [anchorDistances] 
+  /// and converts them to double values representing the distances from the user to each anchor.
+  ///
+  /// ### Parameters:
+  /// - `anchorDistances`: A list of strings representing the distances from the user to three anchors.
+  ///
+  /// ### Returns:
+  /// A list of doubles representing the anchor distances from the user.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// List<String> distances = ["100.0", "200.0", "300.0"];
+  /// List<double> parsedDistances = loadDistances(distances);
+  /// print(parsedDistances); // [100.0, 200.0, 300.0]
+  /// ```
   List<double> loadDistances(List<String> anchorDistances) {
     final double anchorLeftDistance = double.parse(anchorDistances[0]);
     final double anchorMiddleDistance = double.parse(anchorDistances[1]);
@@ -12,11 +27,35 @@ class LocationService {
     return [anchorLeftDistance, anchorMiddleDistance, anchorRightDistance];
   }
 
-  /// Function that returns the shortest path
-  ///@param : Grid grid       =  Grid of shop
-  ///@param : List<int> start =  Position of matrice of start
-  ///@param : List<int> goal  =  Position of matrice of goal
-  ///Return  the path to the goal  List<List<int>>
+  /// Finds the shortest path between the [start] and [goal] within the given [grid].
+  /// The function uses a breadth-first search (BFS) algorithm to find the shortest
+  /// path and returns the path as a list of `[row, col]` coordinates.
+  ///
+  /// The function considers 4 possible directions: right, down, left, and up to 
+  /// navigate through the grid. It uses a priority queue to explore the grid, 
+  /// and tracks visited nodes and their previous nodes to reconstruct the path.
+  ///
+  /// The [grid] is represented by a list of rows and columns where:
+  /// - `grid[posX][posY] == 0` means the position is valid (passable).
+  /// - Any position with a value other than 0 is considered blocked.
+  ///
+  /// ### Parameters:
+  /// - `grid`: The grid containing the layout, used to check valid positions.
+  /// - `start`: A list representing the `[row, col]` coordinates of the starting position.
+  /// - `goal`: A list representing the `[row, col]` coordinates of the goal position.
+  ///
+  /// ### Returns:
+  /// A list of `[row, col]` coordinates representing the shortest path from `start` to `goal`.
+  /// If no path is found, an empty list is returned.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// Grid grid = Grid(5, 5, [[0, 0, 0, 0, 0], [0, 1, 1, 1, 0], [0, 1, 0, 0, 0], [0, 1, 0, 1, 0], [0, 0, 0, 0, 0]], [], []);
+  /// List<int> start = [0, 0];
+  /// List<int> goal = [4, 4];
+  /// List<List<int>> path = findShortestPath(grid, start, goal);
+  /// print(path); // [[0, 0], [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [4, 2], [4, 3], [4, 4]]
+  /// ```
   List<List<int>> findShortestPath(Grid grid, List<int> start, List<int> goal) {
     final PriorityQueue<Node> queue = PriorityQueue<Node>();
     final Map<int, int> previous =
@@ -57,6 +96,33 @@ class LocationService {
     return reconstructPath(previous, start, goal, cols);
   }
 
+  /// Reconstructs the path from the goal to the start using a map of previous nodes.
+  ///
+  /// This function takes a map of `previous` nodes, a `start` position, a `goal` position, 
+  /// and the number of columns (`cols`) in the grid. It traces back from the `goal` to the 
+  /// `start` using the `previous` map and reconstructs the path.
+  ///
+  /// The function returns a list of `[row, col]` positions representing the reconstructed path.
+  ///
+  /// ### Parameters:
+  /// - `previous`: A map where the key is a grid index and the value is the previous index in the path.
+  /// - `start`: A list representing the `[row, col]` coordinates of the starting position.
+  /// - `goal`: A list representing the `[row, col]` coordinates of the goal position.
+  /// - `cols`: The number of columns in the grid (used for index calculations).
+  ///
+  /// ### Returns:
+  /// A list of `[row, col]` coordinates representing the reconstructed path from start to goal.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// Map<int, int> previous = {4: 3, 3: 2, 2: 1, 1: -1}; 
+  /// List<int> start = [0, 1];
+  /// List<int> goal = [1, 1];
+  /// int cols = 3;
+  ///
+  /// List<List<int>> path = reconstructPath(previous, start, goal, cols);
+  /// print(path); // [[0, 1], [0, 2], [1, 2], [1, 1]]
+  /// ```
   List<List<int>> reconstructPath(
       Map<int, int> previous, List<int> start, List<int> goal, int cols) {
     final List<List<int>> path = [];
@@ -70,14 +136,56 @@ class LocationService {
     return path.reversed.toList();
   }
 
-  ///Allows you to calculate the user's position
-  ///@param : List<int> anchorLeft = first beacon position on type [0.0]
-  ///@param : List<int> anchorMiddle = second beacon position on type [0.0]
-  ///@param : List<int> anchorRight = third beacon position on type [0.0]
-  ///@param : double distanceLeft      = Distance(m or cm)  of the first beacon from the user
-  ///@param : double distanceMiddle      = Distance(m or cm)  of the second beacon from the user
-  ///@param : double distanceRight      = Distance(m or cm)  of the third beacon from the user
-  ///Return the postion of user on matrix
+  /// Triangulates the position of a point based on the distances from three anchor points.
+  ///
+  /// This method calculates the (x, y) coordinates of a point using trilateration, 
+  /// given the positions of three known anchor points and their respective distances 
+  /// to the point being located. The distances are provided in centimeters, and the 
+  /// function converts them to grid units (carreaux). The grid is assumed to have 
+  /// a scale of 1 carreau = 50 cm.
+  ///
+  /// The triangulation process uses the following formula to solve for the point's coordinates:
+  /// - \( x \) is calculated using the formula: 
+  ///     \[
+  ///     x = \frac{C * E - F * B}{E * A - B * D}
+  ///     \]
+  /// - \( y \) is calculated using the formula:
+  ///     \[
+  ///     y = \frac{C * D - A * F}{B * D - A * E}
+  ///     \]
+  ///
+  /// ### Parameters:
+  /// - `anchorLeft`: The coordinates of the left anchor point as a list of integers 
+  ///   representing [x, y] in grid units.
+  /// - `distanceLeft`: The distance from the point to the left anchor in centimeters.
+  /// - `anchorMiddle`: The coordinates of the middle anchor point as a list of integers 
+  ///   representing [x, y] in grid units.
+  /// - `distanceMiddle`: The distance from the point to the middle anchor in centimeters.
+  /// - `anchorRight`: The coordinates of the right anchor point as a list of integers 
+  ///   representing [x, y] in grid units.
+  /// - `distanceRight`: The distance from the point to the right anchor in centimeters.
+  ///
+  /// ### Returns:
+  /// A `Future<List<int>>` that resolves to a list of two integers [x, y], 
+  /// which represent the triangulated position in grid units (carreaux).
+  ///
+  /// ### Throws:
+  /// - Throws an `Exception` if the denominator in the triangulation calculation is zero, 
+  ///   which would indicate that the given distances are inconsistent or invalid.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// List<int> anchorLeft = [0, 0];
+  /// double distanceLeft = 100.0;
+  /// List<int> anchorMiddle = [50, 0];
+  /// double distanceMiddle = 70.0;
+  /// List<int> anchorRight = [100, 0];
+  /// double distanceRight = 120.0;
+  /// 
+  /// triangulateData(anchorLeft, distanceLeft, anchorMiddle, distanceMiddle, anchorRight, distanceRight)
+  ///     .then((result) => print("Triangulated position: $result"));
+  /// ```
+  /// This will output the triangulated position based on the given anchor points and distances.
   Future<List<int>> triangulateData(
       List<int> anchorLeft,
       double distanceLeft,
@@ -123,7 +231,26 @@ class LocationService {
     return [x.round(), y.round()]; // Coordonnées en unités de carreaux
   }
 
-
+  /// Calculates the user's current position based on the distances to three anchor points.
+  /// 
+  /// This function uses triangulation to compute the user's position using the provided anchor distances.
+  /// If any of the anchor distances is zero, the function returns `null` indicating the position cannot be determined.
+  ///
+  /// ### Parameters:
+  /// - `anchorDistances`: A list of strings representing the distances to three anchor points.
+  /// - `grid`: An instance of [Grid] that contains information about the grid and beacon positions.
+  ///
+  /// ### Returns:
+  /// A [Future] that resolves to a list of integers representing the user's current position in the grid.
+  /// Returns `null` if the distances are invalid (i.e., zero distance).
+  ///
+  /// ### Example:
+  /// ```dart
+  /// List<String> distances = ["100.0", "200.0", "300.0"];
+  /// Grid grid = Grid(5, 5, [[0, 0], [1, 0], [2, 0]], [], [4, 4]);
+  /// List<int>? position = await getCurrentPosition(distances, grid);
+  /// print(position); // Prints the user's current position.
+  /// ```
   Future<List<int>?> getCurrentPosition(
       List<String> anchorDistances, Grid grid) async {
     final List<double> distances = loadDistances(anchorDistances);
@@ -157,6 +284,26 @@ class LocationService {
     }
   }
 
+  /// Retrieves the shortest path from the user's current position to the target (product position) on the grid.
+  /// 
+  /// This function first calculates the current position using the [getCurrentPosition] function, then checks if
+  /// the position is valid on the grid. If valid, it finds and returns the shortest path to the product's position.
+  ///
+  /// ### Parameters:
+  /// - `anchorDistances`: A list of strings representing the distances to three anchor points.
+  /// - `grid`: An instance of [Grid] that contains the grid layout and beacon positions.
+  ///
+  /// ### Returns:
+  /// A [Future] that resolves to a list of lists of integers representing the shortest path from the current position to the target.
+  /// Returns `null` if the position is invalid or the shortest path cannot be found.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// List<String> distances = ["100.0", "200.0", "300.0"];
+  /// Grid grid = Grid(5, 5, [[0, 0], [1, 0], [2, 0]], [], [4, 4]);
+  /// List<List<int>>? path = await getShortestPath(distances, grid);
+  /// print(path); // Prints the shortest path if available, otherwise null.
+  /// ```
   Future<List<List<int>>?> getShortestPath(
       List<String> anchorDistances, Grid grid) async {
     final List<int>? currentPosition =
@@ -174,9 +321,26 @@ class LocationService {
     }
   }
 
-   ///Check if the user is still on the right path with a margin of ±1
-  ///@param : currentPosition
-  ///@param : path
+  /// Checks if the user's current position is close to the planned path with a margin of ±1.
+  /// 
+  /// This function compares the user's current position with each step in the path and returns `true` if the user
+  /// is within a margin of ±1 from any step on the path. This is useful to check if the user is still on track
+  /// with the planned navigation.
+  ///
+  /// ### Parameters:
+  /// - `currentPosition`: A list of integers representing the user's current position on the grid.
+  /// - `path`: A list of lists representing the planned path, with each step being a coordinate in the grid.
+  ///
+  /// ### Returns:
+  /// A boolean indicating whether the user's position is near any step in the path (within ±1 margin).
+  ///
+  /// ### Example:
+  /// ```dart
+  /// List<int> position = [1, 2];
+  /// List<List<int>> path = [[1, 1], [2, 2], [3, 3]];
+  /// bool isNear = isPositionNearPath(position, path);
+  /// print(isNear); // Prints true if the user is near the path.
+  /// ```
   bool isPositionNearPath(List<int> currentPosition, List<List<int>> path) {
     for (var step in path) {
       if ((currentPosition[0] - step[0]).abs() <= 1 &&
@@ -188,5 +352,4 @@ class LocationService {
     print("L'utilisateur s'est trop éloigné");
     return false;
   }
-
 }

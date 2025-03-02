@@ -16,6 +16,8 @@ import './navigation_state.dart';
 
 Timer? _navigationTimer;
 
+/// A Bloc that handles navigation events and states related to the user's location,
+/// Bluetooth device interaction, and product pathfinding.
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   final StoreService _storeService;
   late final LocationService _locationService;
@@ -38,6 +40,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   final List<Product> _products = [];
   int _currentProductIndex = 0;
 
+  /// Initializes the NavigationBloc with the provided [StoreService] and sets up event handlers.
   NavigationBloc(this._storeService) : super(NavigationInitial()) {
     _locationService = LocationService();
     _locationProductService = LocationProductService(_storeService);
@@ -50,6 +53,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<UpdatePositionEvent>(_onUpdatePosition);
   }
 
+  /// Closes the bloc, cancels any ongoing navigation timers.
   @override
   Future<void> close() {
     print("Enter in 'Close' : navigation_bloc");
@@ -58,6 +62,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     return super.close();
   }
 
+  /// Starts periodic updates for navigation when a product is found.
+  /// [product] The product that the navigation updates will be based on.
   void _startNavigationUpdates(Product product) {
     _navigationUpdateTimer?.cancel();
     _navigationUpdateTimer = Timer.periodic(
@@ -66,6 +72,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     );
   }
 
+  /// Loads the navigation grid from a JSON file and starts periodic updates for navigation.
+  /// [event] The event that triggered the navigation load.
+  /// [emit] The emitter used to send states to the UI.
   // TODO _onLoadNavigation with no blu (test)
   Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
@@ -106,7 +115,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  // TODO _onLoadNavigation with blu
+  /// Loads navigation via Bluetooth Low Energy (BLE) by checking permissions
+  /// and obtaining anchor distances from the Bluetooth device.
+  /// [event] The event that triggered the navigation load.
+  /// [emit] The emitter used to send states to the UI.
   Future<void> _onLoadNavigationBLE(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
@@ -134,7 +146,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  /// Update of navigation change state of arow and position user
+  /// Handles the update of the navigation state based on new anchor distances.
+  /// [event] The event containing the decoded data from anchor distances.
+  /// [emit] The emitter used to send states to the UI.
   void _onUpdateNavigation(
     UpdateNavigationEventDataRow event,
     Emitter<NavigationState> emit,
@@ -160,7 +174,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  /// ENd of Navigation
+  /// Handles the event when a product is found and updates the navigation state.
+  /// [event] The event containing the found product.
+  /// [emit] The emitter used to send states to the UI.
   Future<void> _onProductFound(
     ProductFoundEvent event,
     Emitter<NavigationState> emit,
@@ -187,6 +203,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
+  /// Updates the navigation state by calculating the direction towards the next product.
+  /// [event] The event containing the current product.
+  /// [emit] The emitter used to send states to the UI.
   Future<void> _onUpdatePosition(
     UpdatePositionEvent event,
     Emitter<NavigationState> emit,
@@ -198,7 +217,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  //  Change status of arrow
+  /// Updates the navigation by calculating the next direction towards a product based on the current path.
+  /// [product] The product the navigation is guiding to.
+  /// [emit] The emitter used to send states to the UI.
   Future<void> _updateNavigation(
       Product product, Emitter<NavigationState> emit) async {
     const currentPath = null;
@@ -219,8 +240,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  ///Update the _cacheCurrentPosition
-  ///@param : String ESP response distance
+  /// Updates the current position based on the anchor distances received from BLE devices.
+  /// [anchorDistances] The distances received from the BLE anchors used to calculate the position.
   Future<void> updatePosition(List<String> anchorDistances) async {
     // Toujours recalculer la position actuelle avec la triangulation
     _cacheCurrentPosition = await _locationService.getCurrentPosition(
@@ -237,8 +258,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     }
   }
 
-  ///Reload the Path
-  ///Update the _cachePath & _cacheCurrentPosition
+  /// Reloads the path to the target product and updates the cached path and current position.
+  /// [anchorDistances] The distances received from the BLE anchors used to recalculate the path.
   Future<void> recalculatePath(List<String> anchorDistances) async {
     _cachePath = await _locationService.getShortestPath(
       anchorDistances,

@@ -4,9 +4,22 @@ import 'package:mobile/models/grid.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class InitNavigationService {
-  ///Converts the json plan to grid type. To know if the path is passable or not
-  ///@param : String jsonFilePath : market plan
-  ///Return Return the market plan in Grid
+  /// Converts a JSON store plan into a [Grid] object. The plan is stored at [jsonFilePath].
+  /// 
+  /// This function reads the store plan from a JSON file located at [jsonFilePath], decodes it, and creates a grid
+  /// based on the data. It initializes the grid with default values and identifies the beacon positions in the store.
+  /// 
+  /// ### Parameters:
+  /// - `jsonFilePath`: A string representing the file path to the JSON plan.
+  /// 
+  /// ### Returns:
+  /// A [Future] that resolves to a [Grid] object representing the store grid with beacon positions and product location.
+  /// 
+  /// ### Example:
+  /// ```dart
+  /// Grid grid = await loadGridFromJson('assets/store_plan.json');
+  /// print(grid); // Prints the grid object.
+  /// ```
   Future<Grid> loadGridFromJson(String jsonFilePath) async {
     print("Chargement du PLAN depuis $jsonFilePath");
 
@@ -47,12 +60,36 @@ class InitNavigationService {
     return Grid(numRows, numCols, grid, beaconPositions, productPosition);
   }
 
+  /// Gets the current product position.
+  /// 
+  /// Currently, this function returns a fixed position for the product (in the future, it will return positions of all
+  /// products in the shopping list). TODO
+  /// 
+  /// ### Returns:
+  /// A [Future] that resolves to a list of integers representing the product's position in the grid.
+  /// 
+  /// ### Example:
+  /// ```dart
+  /// List<int> productPosition = await getProductPosition();
+  /// print(productPosition); // Prints the product position [17, 12].
+  /// ```
   Future<List<int>> getProductPosition() async {
-    // TODO
     final List<int> productPositions = [17, 12];
     return productPositions;
   }
 
+  /// Checks if the necessary permissions for Bluetooth scanning, connection, and location are granted.
+  /// 
+  /// This function requests the required permissions for Bluetooth scanning, Bluetooth connection, and location access.
+  /// If any of the permissions are not granted, it throws an exception.
+  ///
+  /// ### Throws:
+  /// - `Exception`: If any of the required permissions are not granted.
+  ///
+  /// ### Example:
+  /// ```dart
+  /// await checkPermissions(); // Ensures the required permissions are granted.
+  /// ```
   Future<void> checkPermissions() async {
     if (!await Permission.bluetoothScan.request().isGranted ||
         !await Permission.bluetoothConnect.request().isGranted ||
