@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:isolate';
 
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/services/shared_service.dart';
@@ -28,115 +26,102 @@ class BluetoothScanService {
 
   /// Méthode pour se connecter à un périphérique BLE et écouter les données
 
-  Future<void> connectToDevice(
-    BluetoothDevice device, {
-    required Future<void> Function(String decodedData) onDataReceived,
-  }) async {
-    try {
-      print("Connecting to device: ${device.name}");
+  Future<void> getAnchorDistances(
+  BluetoothDevice device, {
+  required Future<void> Function(String decodedData) onDataReceived,
+}) async {
+  try {
+    // Check if the device is already connected
+    final BluetoothDeviceState currentState = await device.state.first;
+    
+    if (currentState == BluetoothDeviceState.connected) {
+      print("Device already connected. Skipping reconnection...");
+    } else {
+      print("Connecting to device: ${device.name}...");
+      
+      // Ensure previous connection is fully closed
       await device.disconnect();
-      await device.connect();
+      await Future.delayed(const Duration(seconds: 1)); // Allow ESP32 to reset
+      
+      await device.connect(autoConnect: false);
       print("Connected to device.");
+    }
 
-      // Discover services and characteristics
-      print("Discovering services...");
-      final services = await device.discoverServices();
-      for (final service in services) {
-        for (final characteristic in service.characteristics) {
-          // If a characteristic allows notification
-          if (characteristic.properties.notify) {
-            print(
-                "Characteristic with notifications found: ${characteristic.uuid}");
-            await characteristic.setNotifyValue(true);
+    // Discover services and characteristics
+    print("Discovering services...");
+    for (final service in await device.discoverServices()) {
+      for (final characteristic in service.characteristics) {
+        if (characteristic.properties.notify) {
+          print("Subscribing to notifications: ${characteristic.uuid}");
+          await characteristic.setNotifyValue(true);
 
-            // Listen for data
-            characteristic.value.listen((data) async {
-              try {
-                final decodedData = utf8.decode(data);
-                print("Data received: $decodedData");
-                await onDataReceived(
-                    decodedData); // Ensure this callback is awaited
-              } catch (e) {
-                print("Error decoding data: $e");
-              }
-            });
-          }
+          // Listen for incoming data
+          characteristic.value.listen((data) async {
+            try {
+              final decodedData = utf8.decode(data);
+              print("Data received: $decodedData");
+              await onDataReceived(decodedData);
+            } catch (e) {
+              print("Error decoding data: $e");
+            }
+          });
         }
       }
-    } catch (e) {
-      print("Error connecting to device: $e");
-      rethrow; // Allow the caller to handle the error
     }
+  } catch (e) {
+    print("Connection error: $e");
+    rethrow;
+  }
+}
+
+  Future<BluetoothDevice> getBluetoothDevice() async {
+  print("Starting Bluetooth scan...");
+
+  // Créer une instance de FlutterBlue pour le scan
+  final FlutterBlue flutterBlue = FlutterBlue.instance;
+
+  // Ensure any ongoing scan is stopped before starting a new one
+  if (await flutterBlue.isScanning.first) {
+    print("Stopping previous scan...");
+    await flutterBlue.stopScan();
+    await Future.delayed(const Duration(seconds: 1)); // Allow cleanup
   }
 
-  /// Traite les données reçues du périphérique Bluetooth
-  void _processData(List<int> data) {
-    try {
-      final decodedData = utf8.decode(data);
-      print("Données décodées : $decodedData");
+  // Lancer un scan pour trouver les appareils
+  final completer = Completer<BluetoothDevice>();
+  late StreamSubscription<ScanResult> scanSubscription;
 
-      if (decodedData.isNotEmpty) {
-        final values = decodedData.split('/');
-        final parsedData = <String, dynamic>{};
+  // Écouter les résultats du scan
+  scanSubscription = flutterBlue.scan().listen((scanResult) async {
+    if (scanResult.device.name == 'ESP32_BLE') {
+      print("Device found: ${scanResult.device.name}");
 
-        // Construction du map de données
-        for (int i = 0; i < values.length; i++) {
-          parsedData['Tag $i'] = double.tryParse(values[i]);
-        }
-
-        print("Données traitées : $parsedData");
-        _dataController.add(parsedData);
-      }
-    } catch (e) {
-      print("Erreur de traitement des données : $e");
-      _dataController.addError(e);
-    }
-  }
-
-  Future<BluetoothDevice> startScan() async {
-    print("Starting Bluetooth scan...");
-    print("startScan FUTURE");
-    // Créez une instance de FlutterBlue pour le scan
-    FlutterBlue flutterBlue = FlutterBlue.instance;
-    print("startScan flutterBlue");
-
-    // Lancez un scan pour trouver les appareils
-    final completer = Completer<BluetoothDevice>(); // Création du Completer
-    print("startScan completer");
-
-    if (await flutterBlue.isScanning.first) {
+      // Arrêter le scan une fois que l'appareil est trouvé
       await flutterBlue.stopScan();
+      await scanSubscription.cancel();
+
+      // Retourner le périphérique trouvé
+      completer.complete(scanResult.device);
     }
+  });
 
-    // Écoutez les résultats du scan
-    var scanSubscription = flutterBlue.scan().listen((scanResult) {
-      print("startScan scanSubscription");
-      // Lorsque le périphérique souhaité est trouvé
-      if (scanResult.device.name == 'ESP32_BLE') {
-        // Arrêtez le scan une fois que l'appareil est trouvé
-        flutterBlue.stopScan();
+  // Wait for a max of 5 seconds for a device to be found
+  await Future.delayed(const Duration(seconds: 5));
 
-        // Retournez le périphérique trouvé
-        completer.complete(scanResult
-            .device); // Complétez le Future avec le périphérique trouvé
-      }
-    });
-
-    // Si le scan prend trop de temps sans trouver l'appareil, on peut gérer un timeout
-    await Future.delayed(const Duration(seconds: 5));
-
-    // Si l'appareil n'a pas été trouvé, on annule le scan
-    if (!completer.isCompleted) {
-      flutterBlue.stopScan();
-      completer.completeError(
-          'Device not found'); // Retourner une erreur si le périphérique n'est pas trouvé
-    }
-    // Attendez et retournez le périphérique trouvé
-    return completer.future;
+  // Si l'appareil n'a pas été trouvé, le scan s'arrête
+  if (!completer.isCompleted) {
+    await flutterBlue.stopScan();
+    await scanSubscription.cancel();
+    completer.completeError('Device not found');
   }
+
+  return completer.future;
+}
 
   // Disconnect from device
   void disconnect() {
     connectedDevice?.disconnect();
   }
 }
+
+

@@ -6,9 +6,9 @@ class LocationService {
   /// Function that returns the distances between the user and the anchors
   ///@param : List<String> anchorDistances: the distances between the user and the anchors (String formatted)
   List<double> loadDistances(List<String> anchorDistances) {
-    double anchorLeftDistance = double.parse(anchorDistances[0]);
-    double anchorMiddleDistance = double.parse(anchorDistances[1]);
-    double anchorRightDistance = double.parse(anchorDistances[2]);
+    final double anchorLeftDistance = double.parse(anchorDistances[0]);
+    final double anchorMiddleDistance = double.parse(anchorDistances[1]);
+    final double anchorRightDistance = double.parse(anchorDistances[2]);
     return [anchorLeftDistance, anchorMiddleDistance, anchorRightDistance];
   }
 
@@ -59,7 +59,7 @@ class LocationService {
 
   List<List<int>> reconstructPath(
       Map<int, int> previous, List<int> start, List<int> goal, int cols) {
-    List<List<int>> path = [];
+    final List<List<int>> path = [];
     int index = goal[0] * cols + goal[1];
 
     while (index != -1) {
@@ -159,7 +159,7 @@ class LocationService {
 
   Future<List<List<int>>?> getShortestPath(
       List<String> anchorDistances, Grid grid) async {
-    List<int>? currentPosition =
+    final List<int>? currentPosition =
         await getCurrentPosition(anchorDistances, grid);
 
     if (currentPosition == null) return null;

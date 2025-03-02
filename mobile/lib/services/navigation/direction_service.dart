@@ -18,14 +18,14 @@ class DirectionService {
   
   
   List<Object> getNextDirection(List<List<int>> path, List<int> currentPosition) {
-    if (path.isEmpty || currentPosition == null) {
+    if (path.isEmpty) {
       print("Aucune instruction disponible");
       return ["Aucune instruction disponible", Null];
     }
     final List<List<int>> fullPath = [currentPosition, ...path];
 
     // Déterminer la direction initiale
-    ArrowDirection initialDirection = calculateDirection(fullPath);
+    final ArrowDirection initialDirection = calculateDirection(fullPath);
     int distance = 0;
 
     // Parcourir le chemin jusqu'au premier changement de direction

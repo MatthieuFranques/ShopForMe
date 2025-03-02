@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/models/grid.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:mobile/models/product.dart';
@@ -28,12 +29,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   Grid? _cachedGrid;
   List<List<int>>? _cachePath;
   List<int>? _cacheCurrentPosition;
+  BluetoothDevice? _cacheDevice;
 
   // const String jsonFilePath = 'assets/demo/plan_test.json';
   String jsonFilePath = 'assets/demo/plan28_11_24.json';
 
   Timer? _navigationUpdateTimer;
-  List<Product> _products = [];
+  final List<Product> _products = [];
   int _currentProductIndex = 0;
 
   NavigationBloc(this._storeService) : super(NavigationInitial()) {
@@ -85,14 +87,14 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
         // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
         final List<String> newValues = baseValues.map((base) {
-          double variation =
+          final double variation =
               random.nextDouble() * 200 - 50; // variation entre -5 et +5
-          double newValue = base + variation;
+          final double newValue = base + variation;
           return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
         }).toList();
 
         // Decode data row
-        String decodedData = newValues.join("/");
+        final String decodedData = newValues.join("/");
         // Call the emit to update with _onUpdateNavigation
         add(UpdateNavigationEventDataRow(decodedData));
       });
@@ -114,10 +116,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       // TODO
       await _initNavigationService.checkPermissions();
       _cachedGrid == null ? _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath) : null;
-      final device = await _bluetoothService.startScan();
-      device == null ? throw Exception("No device found!") : null;
+      _cacheDevice == null ? _cacheDevice = await _bluetoothService.getBluetoothDevice() : null;
 
-      await _bluetoothService.connectToDevice(device,
+      await _bluetoothService.getAnchorDistances(_cacheDevice!,
           onDataReceived: (String decodedData) async {
         print("decodedData : $decodedData");
         if (decodedData != "") {
