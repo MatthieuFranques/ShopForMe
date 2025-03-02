@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:mobile/models/grid.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class InitNavigationService {
   ///Converts the json plan to grid type. To know if the path is passable or not
@@ -50,5 +51,13 @@ class InitNavigationService {
     // TODO
     final List<int> productPositions = [17, 12];
     return productPositions;
+  }
+
+  Future<void> checkPermissions() async {
+    if (!await Permission.bluetoothScan.request().isGranted ||
+        !await Permission.bluetoothConnect.request().isGranted ||
+        !await Permission.locationWhenInUse.request().isGranted) {
+      throw Exception("Permissions not granted.");
+    }
   }
 }

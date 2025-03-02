@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:mobile/models/grid.dart';
 import 'package:mobile/models/node.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class LocationService {
   /// Function that returns the distances between the user and the anchors
@@ -190,11 +189,4 @@ class LocationService {
     return false;
   }
 
-  Future<void> checkPermissions() async {
-    if (!await Permission.bluetoothScan.request().isGranted ||
-        !await Permission.bluetoothConnect.request().isGranted ||
-        !await Permission.locationWhenInUse.request().isGranted) {
-      throw Exception("Permissions not granted.");
-    }
-  }
 }

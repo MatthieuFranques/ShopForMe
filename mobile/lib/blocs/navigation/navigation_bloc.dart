@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,33 +105,33 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   }
 
   // TODO _onLoadNavigation with blu
-  // Future<void> _onLoadNavigation(
-  //   LoadNavigationEvent event,
-  //   Emitter<NavigationState> emit,
-  // )
-  // async {
-  //   try {
-  //     // TODO
-  //     await checkPermissions();
-  //     _cachedGrid == null ? _cachedGrid = await _locationService.loadGridFromJson(jsonFilePath) : null;
-  //     final device = await _bluetoothService.startScan();
-  //     device == null ? throw Exception("No device found!") : null;
+  Future<void> _onLoadNavigationBLE(
+    LoadNavigationEvent event,
+    Emitter<NavigationState> emit,
+  )
+  async {
+    try {
+      // TODO
+      await _initNavigationService.checkPermissions();
+      _cachedGrid == null ? _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath) : null;
+      final device = await _bluetoothService.startScan();
+      device == null ? throw Exception("No device found!") : null;
 
-  //     await _bluetoothService.connectToDevice(device,
-  //         onDataReceived: (String decodedData) async {
-  //       print("decodedData : $decodedData");
-  //       if (decodedData != "") {
-  //         print(" if (decodedData != " ") {");
-  //         add(UpdateNavigationEventDataRow(decodedData));
-  //       }
-  //     });
-  //   } catch (e) {
-  //     print("Error: $e");
-  //     if (!emit.isDone) {
-  //       emit(NavigationError(e.toString()));
-  //     }
-  //   }
-  // }
+      await _bluetoothService.connectToDevice(device,
+          onDataReceived: (String decodedData) async {
+        print("decodedData : $decodedData");
+        if (decodedData != "") {
+          print(" if (decodedData != " ") {");
+          add(UpdateNavigationEventDataRow(decodedData));
+        }
+      });
+    } catch (e) {
+      print("Error: $e");
+      if (!emit.isDone) {
+        emit(NavigationError(e.toString()));
+      }
+    }
+  }
 
   /// Update of navigation change state of arow and position user
   void _onUpdateNavigation(
