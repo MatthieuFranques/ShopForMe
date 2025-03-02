@@ -133,3 +133,22 @@ export async function getProductsBySectionName(sectionName: string) {
         throw error;
     }
 }
+
+export async function getSectionByProductId(productId: number) {
+    try {
+        const section = await prisma.section.findFirst({
+            where: {
+                productId: productId
+            }
+        });
+        if (!section) {
+            return []
+        }
+
+        return section;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+

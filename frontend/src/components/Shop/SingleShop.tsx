@@ -165,6 +165,7 @@ const Plan = (props: CustomProps) => {
                         updatedRow[colIndex] = {
                             name: value,
                             type: PlanType.RAYON,
+                            size: 0,
                             isBeacon: updatedRow[colIndex].isBeacon
                         };
                     }

@@ -86,8 +86,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         print("Chargement du PLAN depuis $jsonFilePath");
         _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath);
       }
-      // print(await _apiService.getAllProducts());
-      // print(await _apiService.getProductsByShop("1"));
+      // print(await _apiService.getAllProductByShop(defaultShopId));
+      // print(await _apiService.getShopById(defaultShopId));
+      // print (await _apiService.getSectionForProduct(1));
 
       _navigationTimer =
           Timer.periodic(const Duration(milliseconds: 1000), (timer) {

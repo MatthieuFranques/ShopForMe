@@ -16,18 +16,15 @@ void main() async {
   }
   if (!Hive.isAdapterRegistered(1)) {
     Hive.registerAdapter(ShopCellAdapter());
-  }
+  
   if (!Hive.isAdapterRegistered(2)) {
     Hive.registerAdapter(ProductAdapter());
   }
 
-  final cacheService = CacheService();
-  await cacheService.init();
 
 
   runApp(
-    Shop4MeApp(
-      cacheService: cacheService,
-    ),
+    const Shop4MeApp(),
   );
+}
 }

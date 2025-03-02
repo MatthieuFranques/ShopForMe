@@ -19,17 +19,26 @@ class SectionAdapter extends TypeAdapter<Section> {
     return Section(
       id: fields[0] as String,
       name: fields[1] as String,
+      price: fields[2] as int,
+      storeId: fields[3] as int,
+      productId: fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Section obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.price)
+      ..writeByte(3)
+      ..write(obj.storeId)
+      ..writeByte(4)
+      ..write(obj.productId);
   }
 
   @override

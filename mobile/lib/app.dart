@@ -5,23 +5,16 @@ import 'package:mobile/blocs/shopping_list/shopping_list_export.dart';
 import 'ui/screens/home_screen.dart';
 import 'config/theme.dart';
 import 'utils/screen_utils.dart';
-import 'services/cache_service.dart';
 
 class Shop4MeApp extends StatelessWidget {
-  final CacheService cacheService;
 
   const Shop4MeApp({
     super.key,
-    required this.cacheService,
   });
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider.value(value: cacheService),
-      ],
-      child: MultiBlocProvider(
+    return MultiBlocProvider(
         providers: [
           // BlocProvider(
           //   create: (context) => NavigationBloc(storeService)
@@ -47,7 +40,6 @@ class Shop4MeApp extends StatelessWidget {
             );
           },
         ),
-      ),
     );
   }
 }

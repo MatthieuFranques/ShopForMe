@@ -20,44 +20,28 @@ class Shop extends HiveObject {
   @HiveField(4)
   final List<List<ShopCell>> layout;
 
-  @HiveField(5)
-  final DateTime createdAt;
-
-  @HiveField(6)
-  final DateTime updatedAt;
-
-  @HiveField(7)
-  final DateTime? deletedAt;
-
   Shop({
     required this.id,
     required this.name,
     required this.ville,
     required this.adresse,
     required this.layout,
-    required this.createdAt,
-    required this.updatedAt,
-    this.deletedAt,
   });
 
   factory Shop.fromJson(Map<String, dynamic> json) {
-    return Shop(
-      id: json['id'],
-      name: json['name'],
-      ville: json['ville'],
-      adresse: json['adresse'],
-      layout: (json['layout'] as List)
-          .map((row) => (row as List)
-              .map((cell) => ShopCell.fromJson(cell))
-              .toList())
-          .toList(),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      deletedAt: json['deletedAt'] != null 
-          ? DateTime.parse(json['deletedAt'])
-          : null,
-    );
-  }
+  return Shop(
+    id: (json['id'] is int) ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
+    name: json['name'],
+    ville: json['ville'],
+    adresse: json['adresse'],
+    layout: (json['layout'] as List)
+        .map((row) => (row as List)
+            .map((cell) => ShopCell.fromJson(cell as Map<String, dynamic>))
+            .toList())
+        .toList(),
+  );
+}
+
 }
 
 @HiveType(typeId: 1)
