@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/models/grid.dart';
+import 'package:mobile/services/api_service.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/services/store_service.dart';
@@ -13,6 +14,8 @@ import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/services/navigation/init_navigation_service.dart';
 import './navigation_event.dart';
 import './navigation_state.dart';
+import 'package:mobile/utils/constants.dart';
+
 
 Timer? _navigationTimer;
 
@@ -23,14 +26,15 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   late final LocationService _locationService;
   late final LocationProductService _locationProductService;
   late final BluetoothScanService _bluetoothService = BluetoothScanService();
-  late final DirectionService _directionService;
-  late final InitNavigationService _initNavigationService;
+  late final DirectionService _directionService = DirectionService();
+  late final InitNavigationService _initNavigationService = InitNavigationService();
+  late final ApiService _apiService = ApiService(baseUrl: baseUrl);
   late StreamController<String> _dataController;
 
   // TODO change to true value
   Grid? _cachedGrid;
   List<List<int>>? _cachePath;
-  List<int>? _cacheCurrentPosition;
+  List<int>? _cacheCurrentPosition = [0,0];
   BluetoothDevice? _cacheDevice;
 
   // const String jsonFilePath = 'assets/demo/plan_test.json';
@@ -87,6 +91,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         print("Chargement du PLAN depuis $jsonFilePath");
         _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath);
       }
+      // print(await _apiService.getAllProducts());
+      // print(await _apiService.getProductsByShop("1"));
 
       _navigationTimer =
           Timer.periodic(const Duration(milliseconds: 1000), (timer) {
@@ -158,9 +164,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         await _locationService.getShortestPath(anchorDistances, _cachedGrid!);
     print("shortestPath : $shortestPath");
     if (!const DeepCollectionEquality().equals(shortestPath, null)) {
+      print("Shortest path non null, getNextDirection");
+      print("Cache current position $_cacheCurrentPosition");
       final List<Object> instruction = _directionService.getNextDirection(shortestPath!, _cacheCurrentPosition!);
       final instructionMsg = instruction[0] as String;
       final arrowDirection = instruction[1] as ArrowDirection;
+      print("InstructionMsg: $instructionMsg, arrowDirection: $arrowDirection");
 
       emit(NavigationLoadedState(
         objectName: "Riz",

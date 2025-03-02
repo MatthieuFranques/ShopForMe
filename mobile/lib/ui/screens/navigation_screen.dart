@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/navigation/navigation_export.dart';
 import 'package:mobile/models/product.dart';
+import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/services/store_service.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
@@ -96,118 +97,118 @@ class _NavigationViewState extends State<NavigationView> {
           }
 
           if (state is NavigationLoadedState) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Bloc avec l'aliment recherché
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    height: screenHeight * 0.15,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Center(
-                      child: Text(
-                        state.objectName,
-                        style: TextStyle(
-                          fontSize: screenHeight * 0.05,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+            return SafeArea(
+              child: Column(
+                children: [
+                  // Bloc avec l'aliment recherché
+                  Padding(
+                    padding: const EdgeInsets.all(8.0), // Reduced padding
+                    child: Container(
+                      height: screenHeight * 0.08, // Reduced height
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Center(
+                        child: Text(
+                          state.objectName,
+                          style: TextStyle(
+                            fontSize: screenHeight * 0.035, // Reduced font size
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                ),
-                // Icône de navigation
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Icon(
-                    _getDirectionIcon(state.arrowDirection),
-                    size: screenWidth * 0.65,
-                    color: const Color.fromARGB(255, 1, 28, 64),
-                  ),
-                ),
-                // Instruction de navigation
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Text(
-                    state.instruction,
-                    style: TextStyle(
-                      fontSize: screenHeight * 0.05,
-                      color: const Color.fromARGB(255, 1, 28, 64),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const Spacer(),
-                // Boutons de contrôle
-                if (!state.isLastProduct)
+                  // Icône de navigation
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () =>
-                                _handleProductFound(context, state),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero,
-                              ),
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              height: screenHeight * 0.1,
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Icons.check,
-                                size: screenHeight * 0.08,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () => _handleSkipProduct(context),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero,
-                              ),
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary,
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              height: screenHeight * 0.1,
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Icons.skip_next,
-                                size: screenHeight * 0.08,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    padding: const EdgeInsets.symmetric(vertical: 4), // Minimal padding
+                    child: Icon(
+                      _getDirectionIcon(state.arrowDirection),
+                      size: screenWidth * 0.3, // Further reduced size
+                      color: const Color.fromARGB(255, 1, 28, 64),
                     ),
                   ),
-              ],
+                  // Instruction de navigation
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4), // Minimal padding
+                    child: Text(
+                      state.instruction,
+                      style: TextStyle(
+                        fontSize: screenHeight * 0.03, // Further reduced font size
+                        color: const Color.fromARGB(255, 1, 28, 64),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(child: SizedBox()), // Flexible space
+                  // Boutons de contrôle
+                  if (!state.isLastProduct)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4), // Minimal padding
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () =>
+                                  _handleProductFound(context, state),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                              child: Container(
+                                width: double.infinity,
+                                height: screenHeight * 0.06, // Further reduced height
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.check,
+                                  size: screenHeight * 0.04, // Further reduced size
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => _handleSkipProduct(context),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
+                              ),
+                              child: Container(
+                                width: double.infinity,
+                                height: screenHeight * 0.06, // Further reduced height
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.skip_next,
+                                  size: screenHeight * 0.04, // Further reduced size
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             );
           }
 
           return const Center(
-              child:
-                  CircularProgressIndicator()); // Garde l'utilisateur dans un état de chargement.
+              child: CircularProgressIndicator()); // Garde l'utilisateur dans un état de chargement.
         },
       ),
     );

@@ -9,7 +9,6 @@ class StoreService {
   final CacheService _cacheService;
   final http.Client _client;
   Shop? _currentShop;
-  static const int defaultShopId = 2; // ID du magasin par défaut
 
   StoreService(this._cacheService, {http.Client? client}) 
       : _client = client ?? http.Client() {
@@ -110,8 +109,10 @@ class StoreService {
         'Content-Type': 'application/json; charset=UTF-8',
       };
 
-      final Uri url = Uri.parse('$baseUrl/shop/$shopId');
+      final Uri url = Uri.parse('$baseUrl/shops/$shopId');
       final response = await _client.get(url, headers: headers);
+      print("Successfully fetched from backend");
+      print(response);
 
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
