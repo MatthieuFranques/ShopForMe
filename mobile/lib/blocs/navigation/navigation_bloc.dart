@@ -7,9 +7,7 @@ import 'package:mobile/models/grid.dart';
 import 'package:mobile/services/api_service.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:mobile/models/product.dart';
-import 'package:mobile/services/store_service.dart';
 import 'package:mobile/services/navigation/location_service.dart';
-import 'package:mobile/services/location_product_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/services/navigation/init_navigation_service.dart';
 import './navigation_event.dart';
@@ -22,9 +20,7 @@ Timer? _navigationTimer;
 /// A Bloc that handles navigation events and states related to the user's location,
 /// Bluetooth device interaction, and product pathfinding.
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
-  final StoreService _storeService;
   late final LocationService _locationService;
-  late final LocationProductService _locationProductService;
   late final BluetoothScanService _bluetoothService = BluetoothScanService();
   late final DirectionService _directionService = DirectionService();
   late final InitNavigationService _initNavigationService = InitNavigationService();
@@ -45,9 +41,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   int _currentProductIndex = 0;
 
   /// Initializes the NavigationBloc with the provided [StoreService] and sets up event handlers.
-  NavigationBloc(this._storeService) : super(NavigationInitial()) {
+  NavigationBloc() : super(NavigationInitial()) {
     _locationService = LocationService();
-    _locationProductService = LocationProductService(_storeService);
 
     on<LoadNavigationEvent>(_onLoadNavigation);
     // on<UpdateNavigationEvent>(_onUpdateNavigation);
@@ -160,13 +155,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) async {
     final anchorDistances = event.decodedData.split("/");
-    final List<List<int>>? shortestPath =
-        await _locationService.getShortestPath(anchorDistances, _cachedGrid!);
-    print("shortestPath : $shortestPath");
-    if (!const DeepCollectionEquality().equals(shortestPath, null)) {
+    await updatePosition(anchorDistances);
+
+    print("shortestPath : $_cachePath");
+    if (!const DeepCollectionEquality().equals(_cachePath, null)) {
       print("Shortest path non null, getNextDirection");
       print("Cache current position $_cacheCurrentPosition");
-      final List<Object> instruction = _directionService.getNextDirection(shortestPath!, _cacheCurrentPosition!);
+      final List<Object> instruction = _directionService.getNextDirection(_cachePath!, _cacheCurrentPosition!);
       final instructionMsg = instruction[0] as String;
       final arrowDirection = instruction[1] as ArrowDirection;
       print("InstructionMsg: $instructionMsg, arrowDirection: $arrowDirection");
@@ -274,9 +269,5 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       anchorDistances,
       _cachedGrid!,
     );
-    if (_cachePath != null && _cachePath!.isNotEmpty) {
-      print("Nouvelle currentPosition calculer");
-      _cacheCurrentPosition = _cachePath![0];
-    }
   }
 }

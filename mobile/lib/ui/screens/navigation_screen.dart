@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/navigation/navigation_export.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
-import 'package:mobile/services/store_service.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
 class NavigationPage extends StatelessWidget {
@@ -17,10 +16,9 @@ class NavigationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 🔥 Récupération de StoreService depuis le RepositoryProvider
-    final storeService = RepositoryProvider.of<StoreService>(context);
 
     return BlocProvider(
-      create: (context) => NavigationBloc(storeService)
+      create: (context) => NavigationBloc()
         ..add(LoadNavigationEvent(products: shoppingList)),
       child: NavigationView(shoppingList: shoppingList),
     );

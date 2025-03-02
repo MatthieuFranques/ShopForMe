@@ -5,16 +5,13 @@ import 'package:mobile/blocs/shopping_list/shopping_list_export.dart';
 import 'ui/screens/home_screen.dart';
 import 'config/theme.dart';
 import 'utils/screen_utils.dart';
-import 'services/store_service.dart';
 import 'services/cache_service.dart';
 
 class Shop4MeApp extends StatelessWidget {
-  final StoreService storeService;
   final CacheService cacheService;
 
   const Shop4MeApp({
     super.key,
-    required this.storeService,
     required this.cacheService,
   });
 
@@ -22,7 +19,6 @@ class Shop4MeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider.value(value: storeService),
         RepositoryProvider.value(value: cacheService),
       ],
       child: MultiBlocProvider(
@@ -33,11 +29,10 @@ class Shop4MeApp extends StatelessWidget {
           //         products: [])), // Initialisation avec une liste vide
           // ),
           BlocProvider(
-            create: (context) => ProductSearchBloc(storeService),
+            create: (context) => ProductSearchBloc(),
           ),
           BlocProvider(
             create: (context) => ShoppingListBloc(
-              currentShop: storeService.currentShop,
             )..add(LoadShoppingList()), // Dispatch de l'événement ici
           ),
         ],

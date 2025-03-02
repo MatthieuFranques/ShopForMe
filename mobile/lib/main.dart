@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'services/cache_service.dart';
-import 'services/store_service.dart';
 import 'models/shop.dart';
 import 'models/product.dart';
 import 'app.dart';
@@ -25,11 +24,9 @@ void main() async {
   final cacheService = CacheService();
   await cacheService.init();
 
-  final storeService = StoreService(cacheService);
 
   runApp(
     Shop4MeApp(
-      storeService: storeService,
       cacheService: cacheService,
     ),
   );

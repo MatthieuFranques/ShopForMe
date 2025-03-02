@@ -1,14 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/models/product.dart';
-import 'package:mobile/services/store_service.dart';
 import './product_search_event.dart';
 import './product_search_state.dart';
 
 class ProductSearchBloc extends Bloc<ProductSearchEvent, ProductSearchState> {
-  final StoreService _storeService;
   List<Product> _allProducts = [];
 
-  ProductSearchBloc(this._storeService) : super(ProductSearchInitial()) {
+  ProductSearchBloc() : super(ProductSearchInitial()) {
     on<LoadProducts>(_onLoadProducts);
     on<SearchProducts>(_onSearchProducts);
   }
@@ -28,7 +26,7 @@ class ProductSearchBloc extends Bloc<ProductSearchEvent, ProductSearchState> {
     emit(ProductSearchLoading());
     try {
       print('🔄 Loading products');
-      final products = await _storeService.getProducts();
+      final List<Product> products = [Product(id: "1", name: "pomme", category: "", rayon: "" )];
       _allProducts = products;
       print('✅ Loaded ${products.length} products');
       
