@@ -1,25 +1,44 @@
+/**
+ * @file anchor1/main.ino
+ * @brief Program to initialise an ESP32 as a DW1000 anchor and measure the distance with a tag.
+ * 
+ * This program configures the ESP32 as a DW1000 anchor and uses the ranging protocol to measure distances.
+ * It initializes SPI communication and handles interrupts to retrieve distances from DW1000 tags.
+ *
+ * @date 03/2025
+ */
+
 #include <SPI.h>
 #include "DW1000Ranging.h"
 #include "DW1000.h"
 
-// anchor adress
+/// Anchor address
 char ANCHOR_ADDRESS[] = "7D:00:22:EA:82:60:3B:9C";
 
-// calibrated Antenna Delay setting for this anchor
+/// Calibrated antenna delay for this anchor
 uint16_t Adelay = 16580;
 
-// calibration distance
-float dist_m = (285 - 1.75) * 0.0254; //meters
+/// Calibration distance in metres
+float dist_m = (285 - 1.75) * 0.0254;
 
+/// SPI pins
 #define SPI_SCK 18
 #define SPI_MISO 19
 #define SPI_MOSI 23
 #define DW_CS 4
 
-const uint8_t PIN_RST = 27; // reset pin
-const uint8_t PIN_IRQ = 34; // irq pin
-const uint8_t PIN_SS = 4;   // spi select pin
+/// Reset pin
+const uint8_t PIN_RST = 27;
+/// Interrupt pin
+const uint8_t PIN_IRQ = 34;
+/// SPI selection pin
+const uint8_t PIN_SS = 4;
 
+/**
+ * @brief Initializes the ESP32 as a DW1000 anchor.
+ * 
+ * Configures SPI communication and initializes the DW1000Ranging library.
+ */
 void setup() {
     Serial.begin(115200);
     delay(1000);
@@ -36,10 +55,20 @@ void setup() {
     Serial.println("ANCHOR initialized and running...");
 }
 
+/**
+ * @brief Main loop executing the ranging logic.
+ * 
+ * This function continuously executes the distance measurement logic.
+ */
 void loop() {
     DW1000Ranging.loop();
 }
 
+/**
+ * @brief Callback function called when a new distance is measured.
+ * 
+ * Displays the distance measured between the anchor and a DW1000 tag.
+ */
 void newRange()
 {
     Serial.print(DW1000Ranging.getDistantDevice()->getShortAddress(), HEX);
