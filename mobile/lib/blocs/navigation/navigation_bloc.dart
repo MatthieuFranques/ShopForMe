@@ -75,7 +75,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
   // TODO _onLoadNavigation with no blu (test)
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigationTest(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -121,7 +121,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// and obtaining anchor distances from the Bluetooth device.
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigationBLE(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   )
