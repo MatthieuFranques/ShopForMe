@@ -6,8 +6,7 @@
  * measurements, and handle devices in the range. It interfaces with the DW1000 
  * device to handle distance measurements, devices, and the package construction 
  * for sending the data via Bluetooth.
- * 
- * @author Your Name
+ *
  * @date 03/2025
  */
 
