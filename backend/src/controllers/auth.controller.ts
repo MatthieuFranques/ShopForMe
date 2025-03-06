@@ -1,3 +1,7 @@
+/**
+ * @module Controllers/Auth
+ * @description This module is responsible for handling user registration and login.
+ */
 import { Request, Response } from "express";
 import { isValidEmail } from "../utils/email";
 import bcrypt from 'bcryptjs';
@@ -5,7 +9,15 @@ import { CompleteUser, ReturnUser } from "../models/user";
 import { createUser, getByEmailAndPwd } from "../services/auth.service";
 import { completeUserToCreateUser } from "../models/userDto";
 
-
+/**
+ * @function register
+ * @description Handles user registration by validating the email, hashing the password, and creating the user in the database.
+ * 
+ * @param {Request} req - The Express request object containing the user's email and password.
+ * @param {Response} res - The Express response object used to send the response back to the client.
+ * @returns {Response} - A response with a success message and the created user data, or an error message.
+ * @throws {Error} - If there is an error during the registration process.
+ */
 export const register = async (req: Request, res: Response) => {
     const { email, password }: { email: string, password: string } = req.body;
     try {
@@ -28,6 +40,15 @@ export const register = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * @function login
+ * @description Handles user login by checking if the user exists and verifying the password.
+ *
+ * @param {Request} req - The Express request object containing the user's email and password.
+ * @param {Response} res - The Express response object used to send the response back to the client.
+ * @returns {Response} - A response with a success message and the user data, or an error message.
+ * @throws {Error} - If there is an error during the login process.
+ */
 export const login = async (req: Request, res: Response) => {
     const { email, password }: { email: string, password: string } = req.body;
     try {
