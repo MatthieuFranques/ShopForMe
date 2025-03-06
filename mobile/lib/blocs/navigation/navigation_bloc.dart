@@ -14,7 +14,6 @@ import './navigation_event.dart';
 import './navigation_state.dart';
 import 'package:mobile/utils/constants.dart';
 
-
 Timer? _navigationTimer;
 
 /// A Bloc that handles navigation events and states related to the user's location,
@@ -23,14 +22,15 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   late final LocationService _locationService;
   late final BluetoothScanService _bluetoothService = BluetoothScanService();
   late final DirectionService _directionService = DirectionService();
-  late final InitNavigationService _initNavigationService = InitNavigationService();
+  late final InitNavigationService _initNavigationService =
+      InitNavigationService();
   late final ApiService _apiService = ApiService(baseUrl: baseUrl);
   late StreamController<String> _dataController;
 
   // TODO change to true value
   Grid? _cachedGrid;
   List<List<int>>? _cachePath;
-  List<int>? _cacheCurrentPosition = [0,0];
+  List<int>? _cacheCurrentPosition = [0, 0];
   BluetoothDevice? _cacheDevice;
 
   // const String jsonFilePath = 'assets/demo/plan_test.json';
@@ -75,7 +75,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
   // TODO _onLoadNavigation with no blu (test)
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigationTest(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -84,7 +84,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       // Cache init
       if (_cachedGrid == null) {
         print("Chargement du PLAN depuis $jsonFilePath");
-        _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath);
+        _cachedGrid =
+            await _initNavigationService.loadGridFromJson(jsonFilePath);
       }
       // print(await _apiService.getAllProductByShop(defaultShopId));
       // print(await _apiService.getShopById(defaultShopId));
@@ -121,16 +122,20 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// and obtaining anchor distances from the Bluetooth device.
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigationBLE(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
-  )
-  async {
+  ) async {
     try {
       // TODO
       await _initNavigationService.checkPermissions();
-      _cachedGrid == null ? _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath) : null;
-      _cacheDevice == null ? _cacheDevice = await _bluetoothService.getBluetoothDevice() : null;
+      _cachedGrid == null
+          ? _cachedGrid =
+              await _initNavigationService.loadGridFromJson(jsonFilePath)
+          : null;
+      _cacheDevice == null
+          ? _cacheDevice = await _bluetoothService.getBluetoothDevice()
+          : null;
 
       await _bluetoothService.getAnchorDistances(_cacheDevice!,
           onDataReceived: (String decodedData) async {
@@ -156,13 +161,15 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) async {
     final anchorDistances = event.decodedData.split("/");
+    print("anchorDistances : $anchorDistances");
     await updatePosition(anchorDistances);
 
     print("shortestPath : $_cachePath");
     if (!const DeepCollectionEquality().equals(_cachePath, null)) {
       print("Shortest path non null, getNextDirection");
       print("Cache current position $_cacheCurrentPosition");
-      final List<Object> instruction = _directionService.getNextDirection(_cachePath!, _cacheCurrentPosition!);
+      final List<Object> instruction = _directionService.getNextDirection(
+          _cachePath!, _cacheCurrentPosition!);
       final instructionMsg = instruction[0] as String;
       final arrowDirection = instruction[1] as ArrowDirection;
       print("InstructionMsg: $instructionMsg, arrowDirection: $arrowDirection");
@@ -231,7 +238,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     //await _locationService.findTargetPosition(productPosition);
 
     if (currentPath != null && currentPath.isNotEmpty) {
-      final List<Object> instruction = _directionService.getNextDirection(currentPath, _cacheCurrentPosition!);
+      final List<Object> instruction = _directionService.getNextDirection(
+          currentPath, _cacheCurrentPosition!);
       final instructionMsg = instruction[0] as String;
       final arrowDirection = instruction[1] as ArrowDirection;
       emit(NavigationLoadedState(
@@ -257,7 +265,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       await recalculatePath(anchorDistances);
       return;
     }
-    if (!_locationService.isPositionNearPath(_cacheCurrentPosition!, _cachePath!)) {
+    if (!_locationService.isPositionNearPath(
+        _cacheCurrentPosition!, _cachePath!)) {
       print("Utilisateur hors chemin, recalcul du plus court chemin...");
       await recalculatePath(anchorDistances);
     }
