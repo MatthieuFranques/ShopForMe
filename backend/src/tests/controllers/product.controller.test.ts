@@ -7,7 +7,8 @@ import {
     getFreeProduct,
     getAllProductByShopP,
     addNewProductToRayonP,
-    getProductsBySectionNameP
+    getProductsBySectionNameP,
+    getSectionByProductIdP
 } from "../../controllers/product.controller";
 import {
     create,
@@ -16,7 +17,9 @@ import {
     update,
     getFree,
     getAllProductByShop,
-    addNewProductToRayon
+    addNewProductToRayon,
+    getProductsBySectionName,
+    getSectionByProductId
 } from "../../services/product.service";
 
 jest.mock("../../services/product.service");
@@ -199,6 +202,30 @@ describe("Product Controller", () => {
             req.body = { storeId: 1, productId: 1, name: "Product 1" };
 
             await addNewProductToRayonP(req as Request, res as Response);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ message: "Internal Server Error", error: new Error("Internal Server Error") });
+        });
+    });
+
+    describe("getSectionByProductIdP", () => {
+        it("should return section by product id", async () => {
+            const section = { id: 1, name: "Section 1"};
+            (getSectionByProductId as jest.Mock).mockResolvedValue(section);
+            req.params = { id: "1" };
+
+            await getSectionByProductIdP(req as Request, res as Response);
+
+            expect(getSectionByProductId).toHaveBeenCalledWith(1);
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith(section);
+        });
+
+        it("should return 500 if there is an error", async () => {
+            (getSectionByProductId as jest.Mock).mockRejectedValue(new Error("Internal Server Error"));
+            req.params = { id: "1" };
+
+            await getSectionByProductIdP(req as Request, res as Response);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ message: "Internal Server Error", error: new Error("Internal Server Error") });
