@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math' as math;
 import 'package:mobile/blocs/navigation/navigation_export.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
@@ -37,7 +38,27 @@ class NavigationView extends StatefulWidget {
   State<NavigationView> createState() => _NavigationViewState();
 }
 
-class _NavigationViewState extends State<NavigationView> {
+class _NavigationViewState extends State<NavigationView> with SingleTickerProviderStateMixin {
+  // Contrôleur d'animation pour l'icône de direction
+  late AnimationController _animationController;
+  
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialisation du contrôleur d'animation
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+  
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _handleProductFound(BuildContext context, NavigationLoadedState state) {
     if (state.isLastProduct) {
       Navigator.pushReplacement(
@@ -55,6 +76,20 @@ class _NavigationViewState extends State<NavigationView> {
     context.read<NavigationBloc>().add(ProductFoundEvent(
           product: widget.shoppingList[0], // Le produit actuel
         ));
+  }
+
+  // Fonction pour obtenir l'icône correspondant à la direction
+  IconData _getDirectionIcon(ArrowDirection direction) {
+    switch (direction) {
+      case ArrowDirection.nord:
+        return Icons.arrow_upward;
+      case ArrowDirection.sud:
+        return Icons.arrow_downward;
+      case ArrowDirection.est:
+        return Icons.arrow_forward;
+      case ArrowDirection.ouest:
+        return Icons.arrow_back;
+    }
   }
 
   @override
@@ -95,14 +130,18 @@ class _NavigationViewState extends State<NavigationView> {
           }
 
           if (state is NavigationLoadedState) {
+            // Pour permettre une rotation fluide de l'icône de navigation
+            _animationController.value = 0.0;
+            _animationController.forward();
+            
             return SafeArea(
               child: Column(
                 children: [
                   // Bloc avec l'aliment recherché
                   Padding(
-                    padding: const EdgeInsets.all(8.0), // Reduced padding
+                    padding: const EdgeInsets.all(8.0), // Padding réduit
                     child: Container(
-                      height: screenHeight * 0.08, // Reduced height
+                      height: screenHeight * 0.08, // Hauteur réduite
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
@@ -112,7 +151,7 @@ class _NavigationViewState extends State<NavigationView> {
                         child: Text(
                           state.objectName,
                           style: TextStyle(
-                            fontSize: screenHeight * 0.035, // Reduced font size
+                            fontSize: screenHeight * 0.035, // Taille de police réduite
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -121,54 +160,100 @@ class _NavigationViewState extends State<NavigationView> {
                       ),
                     ),
                   ),
-                  // Icône de navigation
+                  
+                  // Section information sur l'orientation
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4), // Minimal padding
-                    child: Icon(
-                      _getDirectionIcon(state.arrowDirection),
-                      size: screenWidth * 0.3, // Further reduced size
-                      color: const Color.fromARGB(255, 1, 28, 64),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Direction: ${state.compassDirection.toStringAsFixed(0)}°",
+                          style: TextStyle(
+                            fontSize: screenHeight * 0.02,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          "Cible: ${state.targetAngle.toStringAsFixed(0)}°",
+                          style: TextStyle(
+                            fontSize: screenHeight * 0.02,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  
+                  // Icône de navigation avec boussole
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: -state.adjustedAngle * (math.pi / 180),
+                          child: Icon(
+                            Icons.navigation,
+                            size: screenWidth * 0.4,
+                            color: const Color.fromARGB(255, 1, 28, 64),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  
                   // Instruction de navigation
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4), // Minimal padding
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Text(
                       state.instruction,
                       style: TextStyle(
-                        fontSize: screenHeight * 0.03, // Further reduced font size
+                        fontSize: screenHeight * 0.03,
                         color: const Color.fromARGB(255, 1, 28, 64),
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Expanded(child: SizedBox()), // Flexible space
+                  
+                  // Direction classique (pour compatibilité et accessibilité)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Icon(
+                      _getDirectionIcon(state.arrowDirection),
+                      size: screenWidth * 0.2,
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                  
+                  // Espace flexible
+                  const Spacer(),
+                  
                   // Boutons de contrôle
                   if (!state.isLastProduct)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 4), // Minimal padding
+                      padding: const EdgeInsets.only(bottom: 4), // Padding minimal
                       child: Row(
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () =>
-                                  _handleProductFound(context, state),
+                              onPressed: () => _handleProductFound(context, state),
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.zero,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.zero,
                                 ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
+                                backgroundColor: Theme.of(context).colorScheme.primary,
                               ),
                               child: Container(
                                 width: double.infinity,
-                                height: screenHeight * 0.06, // Further reduced height
+                                height: screenHeight * 0.06, // Hauteur réduite
                                 alignment: Alignment.center,
                                 child: Icon(
                                   Icons.check,
-                                  size: screenHeight * 0.04, // Further reduced size
+                                  size: screenHeight * 0.04, // Taille réduite
                                   color: Colors.white,
                                 ),
                               ),
@@ -182,16 +267,15 @@ class _NavigationViewState extends State<NavigationView> {
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.zero,
                                 ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
+                                backgroundColor: Theme.of(context).colorScheme.secondary,
                               ),
                               child: Container(
                                 width: double.infinity,
-                                height: screenHeight * 0.06, // Further reduced height
+                                height: screenHeight * 0.06, // Hauteur réduite
                                 alignment: Alignment.center,
                                 child: Icon(
                                   Icons.skip_next,
-                                  size: screenHeight * 0.04, // Further reduced size
+                                  size: screenHeight * 0.04, // Taille réduite
                                   color: Colors.white,
                                 ),
                               ),
@@ -205,23 +289,12 @@ class _NavigationViewState extends State<NavigationView> {
             );
           }
 
+          // État par défaut
           return const Center(
-              child: CircularProgressIndicator()); // Garde l'utilisateur dans un état de chargement.
+            child: Text('Une erreur est survenue lors du chargement de la navigation'),
+          );
         },
       ),
     );
-  }
-
-  IconData _getDirectionIcon(ArrowDirection direction) {
-    switch (direction) {
-      case ArrowDirection.nord:
-        return Icons.arrow_upward;
-      case ArrowDirection.sud:
-        return Icons.arrow_downward;
-      case ArrowDirection.est:
-        return Icons.arrow_forward;
-      case ArrowDirection.ouest:
-        return Icons.arrow_back;
-    }
   }
 }

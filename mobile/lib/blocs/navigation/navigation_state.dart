@@ -16,6 +16,10 @@ class NavigationLoadedState extends NavigationState {
   final ArrowDirection arrowDirection;
   final bool isLastProduct;
   final bool isDone;
+  
+  // Propriétés essentielles pour le compass
+  final double compassDirection;  // Direction actuelle en degrés
+  final double adjustedAngle;     // Angle ajusté pour la rotation de l'UI
 
   NavigationLoadedState({
     required this.objectName,
@@ -23,10 +27,20 @@ class NavigationLoadedState extends NavigationState {
     required this.arrowDirection,
     this.isLastProduct = false,
     this.isDone = false,
+    this.compassDirection = 0.0,
+    this.adjustedAngle = 0.0,
   });
 
   @override
-  List<Object?> get props => [objectName, instruction, arrowDirection, isLastProduct, isDone];
+  List<Object?> get props => [
+    objectName, 
+    instruction, 
+    arrowDirection, 
+    isLastProduct, 
+    isDone,
+    compassDirection,
+    adjustedAngle,
+  ];
 }
 
 class NavigationError extends NavigationState {
