@@ -15,10 +15,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-            
-      # 📌 Installer lcov
-      - name: Install lcov
-        run: sudo apt-get install lcov
 
       # 📌 Checking for Flutter (mobile repository)
       - name: Install Flutter
@@ -40,11 +36,6 @@ jobs:
           cd mobile
           flutter test --coverage
         continue-on-error: true
-          
-      - name: Filter Flutter Coverage Report
-        run: |
-          cd mobile
-          lcov --remove coverage/lcov.info '*/test/*' -o coverage/lcov.info
 
       # 📌 Checking for NodeJS (backend repository)
       - name: Setup Node.js (Backend)
