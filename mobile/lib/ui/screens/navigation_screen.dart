@@ -176,7 +176,7 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                         ),
                         const SizedBox(width: 16),
                         Text(
-                          "Cible: ${state.targetAngle.toStringAsFixed(0)}°",
+                          "Angle: ${state.adjustedAngle.toStringAsFixed(0)}°",
                           style: TextStyle(
                             fontSize: screenHeight * 0.02,
                             color: Colors.grey[600],
