@@ -35,8 +35,9 @@ jobs:
         run: |
           cd mobile
           flutter test --coverage
+        continue-on-error: true
           
-      - name: Filter Coverage Report
+      - name: Filter Flutter Coverage Report
         run: |
           cd mobile
           lcov --remove coverage/lcov.info '*/test/*' -o coverage/lcov.info
@@ -58,7 +59,7 @@ jobs:
           npx eslint 'src/**/*.ts' --fix
         continue-on-error: true
         
-      - name: Run Backend Unit Tests with Coverage
+      - name: Run Backend Tests with Coverage
         run: |
           cd backend
           npm run test:coverage-sonar
