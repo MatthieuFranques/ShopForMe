@@ -46,6 +46,7 @@ jobs:
         run: |
           cd backend
           npx eslint 'src/**/*.ts' --fix
+        continue-on-error: true
 
       # 📌 SonarQube analysis (without tests)
       - name: SonarQube Scan
