@@ -30,6 +30,16 @@ jobs:
       - name: Build Flutter app (Debug)
         run: flutter build apk --debug
         working-directory: mobile
+        
+      - name: Run Flutter Tests with Coverage
+        run: |
+          cd mobile
+          flutter test --coverage
+          
+      - name: Filter Coverage Report
+        run: |
+          cd mobile
+          lcov --remove coverage/lcov.info '*/test/*' -o coverage/lcov.info
 
       # 📌 Checking for NodeJS (backend repository)
       - name: Setup Node.js (Backend)
