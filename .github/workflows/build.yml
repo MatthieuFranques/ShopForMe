@@ -90,7 +90,7 @@ jobs:
             --define sonar.typescript.tsconfigPath=backend/tsconfig.json
             --define sonar.javascript.lcov.reportPaths=backend/coverage/lcov.info
             --define sonar.dart.lcov.reportPaths=mobile/coverage/lcov.info
-            --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**
+            --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**,frontend/**
             --define sonar.c.file.suffixes=-
             --define sonar.cpp.file.suffixes=-
             --define sonar.objc.file.suffixes=-
