@@ -59,6 +59,23 @@ jobs:
           cd backend
           npm run test:coverage-sonar
 
+      # 📌 Checking for NodeJS (frontend repository)
+      - name: Setup Node.js (Frontend)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Lint Frontend code
+        run: |
+          cd frontend
+          npm run lint
+        continue-on-error: true
+
       # 📌 SonarQube analysis (without tests)
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
