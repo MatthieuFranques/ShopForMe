@@ -73,7 +73,7 @@ class ApiService {
 
 //Send shortestPath on the backend
   Future<void> sendPosition(List<int> currentPosition,
-      List<int> productPosition, List<List<int>> shortestPath) async {
+      List<int> productPosition, List<List<int>>? shortestPath) async {
     final url = Uri.parse('$baseUrl/shop/sendposition');
     final Map<String, dynamic> data = {
       'currentPosition': currentPosition,
