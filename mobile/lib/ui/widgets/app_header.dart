@@ -45,22 +45,36 @@ class AppHeader extends StatelessWidget {
   }
 
   Widget _buildArrow(BuildContext context, IconData icon, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: context.getResponsiveSize(40),
-        color: Colors.transparent,
-        child: Icon(icon,
-            color: Colors.white, size: context.getResponsiveSize(24)),
+    return Semantics(
+      label: icon == Icons.arrow_back ? "Autre liste" : "Autre liste",
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: context.getResponsiveSize(40),
+          color: Colors.transparent,
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: context.getResponsiveSize(24),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildAddButton(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.add,
-          color: Colors.white, size: context.getResponsiveSize(24)),
-      onPressed: onAddList,
+    return Semantics(
+      label: "Ajouter une liste",
+      button: true,
+      child: IconButton(
+        icon: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: context.getResponsiveSize(24),
+        ),
+        onPressed: onAddList,
+      ),
     );
   }
 

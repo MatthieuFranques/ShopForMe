@@ -23,9 +23,6 @@ class Shop4MeApp extends StatelessWidget {
       child: Builder(
         builder: (context) {
           ScreenUtils.init(context);
-          context.read<TtsBloc>().add(TtsSpeak(
-              "Bienvenue sur shop for mi, votre assistant de shopping intelligent."));
-
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Shop4Me',
