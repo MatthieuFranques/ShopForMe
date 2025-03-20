@@ -288,10 +288,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       _cachedGrid!,
     );
     //call request API for send data to backend
-    await _apiService.sendPosition(
-      _cacheCurrentPosition!,
-      _cachedGrid!.productPosition,
-      _cachePath!,
-    );
+    // TODO uncomment if the backend root is ok because the error break the recalculatePath
+    // await _apiService.sendPosition(
+    //   _cacheCurrentPosition!,
+    //   _cachedGrid!.productPosition,
+    //   _cachePath!,
+    // );
   }
 }
