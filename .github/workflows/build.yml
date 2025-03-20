@@ -85,7 +85,8 @@ jobs:
           args: >
             --define sonar.projectKey=shopforme
             --define sonar.organization=shopforme
-            --define sonar.sources=mobile/lib,mobile/test,backend/src
+            --define sonar.sources=mobile/lib,mobile/test,backend/src,frontend/src
+            --define sonar.exclusions=frontend/src/fonts/**,frontend/src/models/**,frontend/src/images/**
             --define sonar.typescript.tsconfigPath=backend/tsconfig.json
             --define sonar.javascript.lcov.reportPaths=backend/coverage/lcov.info
             --define sonar.dart.lcov.reportPaths=mobile/coverage/lcov.info
