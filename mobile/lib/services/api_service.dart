@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mobile/models/shop.dart';
 import '../models/product.dart';
 import '../models/section.dart';
+import 'package:mobile/utils/constants.dart';
 
 class ApiService {
   final String baseUrl;
@@ -16,7 +17,7 @@ class ApiService {
       // Then fetch the section details using the rayon name
       final response = await http.get(
         Uri.parse('$baseUrl/products/getSectionByProductId/$productId'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
       );
 
       if (response.statusCode == 200) {
@@ -36,7 +37,7 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/products/getAllProductByShop/$shopId'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
       );
 
       if (response.statusCode == 200) {
@@ -56,7 +57,7 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/shops/$shopId'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
       );
 
       if (response.statusCode == 200) {
@@ -83,7 +84,7 @@ class ApiService {
 
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
       body: json.encode(data),
     );
 
