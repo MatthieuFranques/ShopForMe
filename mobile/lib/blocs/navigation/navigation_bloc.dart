@@ -75,7 +75,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
   // TODO _onLoadNavigation with no blu (test)
-  Future<void> _onLoadNavigationTest(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -122,7 +122,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// and obtaining anchor distances from the Bluetooth device.
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigation2(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -260,6 +260,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     _cacheCurrentPosition = await _locationService.getCurrentPosition(
         anchorDistances, _cachedGrid!);
 
+    //call request API for send data to backend
+    await _apiService.sendPosition(
+      _cacheCurrentPosition!,
+      _cachedGrid!.productPosition,
+      _cachePath!,
+    );
+
     if (_cachePath == null || _cachePath!.isEmpty) {
       print("Si aucun chemin n'est défini, recalculer le chemin initial");
       await recalculatePath(anchorDistances);
@@ -278,6 +285,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     _cachePath = await _locationService.getShortestPath(
       anchorDistances,
       _cachedGrid!,
+    );
+    //call request API for send data to backend
+    await _apiService.sendPosition(
+      _cacheCurrentPosition!,
+      _cachedGrid!.productPosition,
+      _cachePath!,
     );
   }
 }
