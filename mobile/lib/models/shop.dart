@@ -29,19 +29,32 @@ class Shop extends HiveObject {
   });
 
   factory Shop.fromJson(Map<String, dynamic> json) {
-  return Shop(
-    id: (json['id'] is int) ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
-    name: json['name'],
-    ville: json['ville'],
-    adresse: json['adresse'],
-    layout: (json['layout'] as List)
-        .map((row) => (row as List)
-            .map((cell) => ShopCell.fromJson(cell as Map<String, dynamic>))
-            .toList())
-        .toList(),
-  );
-}
+    return Shop(
+      id: (json['id'] is int)
+          ? json['id']
+          : int.tryParse(json['id'].toString()) ?? 0,
+      name: json['name'],
+      ville: json['ville'],
+      adresse: json['adresse'],
+      layout: (json['layout'] as List)
+          .map((row) => (row as List)
+              .map((cell) => ShopCell.fromJson(cell as Map<String, dynamic>))
+              .toList())
+          .toList(),
+    );
+  }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'ville': ville,
+      'adresse': adresse,
+      'layout': layout.map((row) {
+        return row.map((cell) => cell.toJson()).toList();
+      }).toList(),
+    };
+  }
 }
 
 @HiveType(typeId: 1)
@@ -72,5 +85,14 @@ class ShopCell extends HiveObject {
       type: json['type'],
       isBeacon: json['isBeacon'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'size': size,
+      'type': type,
+      'isBeacon': isBeacon,
+    };
   }
 }

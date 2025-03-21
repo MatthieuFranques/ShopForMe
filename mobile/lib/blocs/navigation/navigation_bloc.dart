@@ -23,7 +23,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   late final LocationService _locationService;
   late final BluetoothScanService _bluetoothService = BluetoothScanService();
   late final DirectionService _directionService = DirectionService();
-  late final InitNavigationService _initNavigationService = InitNavigationService();
+  late final InitNavigationService _initNavigationService =
+      InitNavigationService();
   late final ApiService _apiService = ApiService(baseUrl: baseUrl);
   late final compass.CompassService _compassService = compass.CompassService();
   late StreamSubscription? _compassSubscription;
@@ -90,10 +91,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   ) {
     if (state is NavigationLoadedState) {
       final currentState = state as NavigationLoadedState;
-      
+
       // Calculate the adjusted angle between the current compass direction and target
-      double adjustedAngle = _getAdjustedDirectionFromArrow(currentState.arrowDirection);
-      
+      double adjustedAngle =
+          _getAdjustedDirectionFromArrow(currentState.arrowDirection);
+
       emit(NavigationLoadedState(
         objectName: currentState.objectName,
         instruction: currentState.instruction,
@@ -126,7 +128,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         targetAngle = 270.0;
         break;
     }
-    
+
     // Calculate the adjusted angle (angle the user needs to turn to)
     return (targetAngle - _compassDirection + 360) % 360;
   }
@@ -143,31 +145,35 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       // Cache initialization
       if (_cachedGrid == null) {
         print("Chargement du PLAN depuis $jsonFilePath");
-        _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath);
+        _cachedGrid =
+            await _initNavigationService.loadGridFromJson(jsonFilePath);
       }
-      
+
       // Store products for navigation
       if (event.products.isNotEmpty) {
         _products.clear();
         _products.addAll(event.products);
         _currentProductIndex = 0;
-        
+
         // Get the position of the first product
         if (_products.isNotEmpty) {
           try {
-            _cacheTargetPosition = await _initNavigationService.getProductPosition();
+            _cacheTargetPosition =
+                await _initNavigationService.getProductPosition();
           } catch (e) {
-            print("Erreur lors de la récupération de la position du produit: $e");
+            print(
+                "Erreur lors de la récupération de la position du produit: $e");
           }
         }
       }
-      
+
       // print(await _apiService.getAllProductByShop(defaultShopId));
       // print(await _apiService.getShopById(defaultShopId));
       // print(await _apiService.getSectionForProduct(1));
 
       // Create a timer that simulates ESP device signals by generating random distance values
-      _navigationTimer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+      _navigationTimer =
+          Timer.periodic(const Duration(milliseconds: 1000), (timer) {
         // Base values for the anchor distances
         final List<double> baseValues = [400, 100, 200];
         final random = Random();
@@ -181,14 +187,16 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
         // Join the values with "/" to create a simulated data row
         final String decodedData = newValues.join("/");
-        
+
         // Send the simulated data to the update handler
         add(UpdateNavigationEventDataRow(decodedData));
       });
-      
+
       // Emit initial state
       emit(NavigationLoadedState(
-        objectName: _products.isNotEmpty ? _products[_currentProductIndex].name : "Produit inconnu",
+        objectName: _products.isNotEmpty
+            ? _products[_currentProductIndex].name
+            : "Produit inconnu",
         instruction: "Initialisation de la navigation...",
         arrowDirection: ArrowDirection.nord,
         isLastProduct: false,
@@ -203,7 +211,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       }
     }
   }
-  
+
   /// Loads navigation via Bluetooth Low Energy (BLE) by checking permissions
   /// and obtaining anchor distances from the Bluetooth device.
   /// This is the real implementation that connects to actual ESP devices
@@ -217,21 +225,24 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       // Cache initialization
       if (_cachedGrid == null) {
         print("Chargement du PLAN depuis $jsonFilePath");
-        _cachedGrid = await _initNavigationService.loadGridFromJson(jsonFilePath);
+        _cachedGrid =
+            await _initNavigationService.loadGridFromJson(jsonFilePath);
       }
-      
+
       // Store products for navigation
       if (event.products.isNotEmpty) {
         _products.clear();
         _products.addAll(event.products);
         _currentProductIndex = 0;
-        
+
         // Get the position of the first product
         if (_products.isNotEmpty) {
           try {
-            _cacheTargetPosition = await _initNavigationService.getProductPosition();
+            _cacheTargetPosition =
+                await _initNavigationService.getProductPosition();
           } catch (e) {
-            print("Erreur lors de la récupération de la position du produit: $e");
+            print(
+                "Erreur lors de la récupération de la position du produit: $e");
           }
         }
       }
@@ -254,7 +265,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
       // Emit initial state
       emit(NavigationLoadedState(
-        objectName: _products.isNotEmpty ? _products[_currentProductIndex].name : "Produit inconnu",
+        objectName: _products.isNotEmpty
+            ? _products[_currentProductIndex].name
+            : "Produit inconnu",
         instruction: "Initialisation de la navigation...",
         arrowDirection: ArrowDirection.nord,
         isLastProduct: false,
@@ -295,7 +308,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       double adjustedAngle = _getAdjustedDirectionFromArrow(arrowDirection);
 
       emit(NavigationLoadedState(
-        objectName: _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
+        objectName:
+            _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
         instruction: instructionMsg,
         arrowDirection: arrowDirection,
         isLastProduct: false,
@@ -366,10 +380,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           currentPath, _cacheCurrentPosition!);
       final instructionMsg = instruction[0] as String;
       final arrowDirection = instruction[1] as ArrowDirection;
-      
+
       // Calculate adjusted angle
       double adjustedAngle = _getAdjustedDirectionFromArrow(arrowDirection);
-      
+
       emit(NavigationLoadedState(
         objectName: product.name,
         arrowDirection: arrowDirection,
@@ -390,6 +404,14 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     _cacheCurrentPosition = await _locationService.getCurrentPosition(
         anchorDistances, _cachedGrid!);
 
+    //call request API for send data to backend
+    // TODO uncomment if the backend root is ok because the error break the recalculatePath
+    // await _apiService.sendPosition(
+    //   _cacheCurrentPosition!,
+    //   _cachedGrid!.productPosition,
+    //   _cachePath,
+    // );
+
     if (_cachePath == null || _cachePath!.isEmpty) {
       print("Si aucun chemin n'est défini, recalculer le chemin initial");
       await recalculatePath(anchorDistances);
@@ -409,5 +431,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       anchorDistances,
       _cachedGrid!,
     );
+    //call request API for send data to backend
+    // TODO uncomment if the backend root is ok because the error break the recalculatePath
+    // await _apiService.sendPosition(
+    //   _cacheCurrentPosition!,
+    //   _cachedGrid!.productPosition,
+    //   _cachePath!,
+    // );
   }
 }
