@@ -116,16 +116,16 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     double targetAngle = 0.0;
     switch (arrowDirection) {
       case ArrowDirection.nord:
-        targetAngle = 0.0;
+        targetAngle = 155.0;
         break;
       case ArrowDirection.est:
-        targetAngle = 90.0;
+        targetAngle = 245.0;
         break;
       case ArrowDirection.sud:
-        targetAngle = 180.0;
+        targetAngle = 335.0;
         break;
       case ArrowDirection.ouest:
-        targetAngle = 270.0;
+        targetAngle = 65.0;
         break;
     }
 
