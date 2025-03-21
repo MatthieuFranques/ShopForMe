@@ -54,12 +54,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<ProductFoundEvent>(_onProductFound);
     on<UpdatePositionEvent>(_onUpdatePosition);
     on<CompassUpdateEvent>(_onCompassUpdate);
-
-    // Subscribe to compass updates
-    _compassSubscription = _compassService.compassStream.listen((direction) {
-      _compassDirection = direction;
-      add(CompassUpdateEvent(direction));
-    });
   }
 
   /// Closes the bloc, cancels any ongoing navigation timers.
@@ -116,21 +110,22 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     double targetAngle = 0.0;
     switch (arrowDirection) {
       case ArrowDirection.nord:
-        targetAngle = 155.0;
+        targetAngle = 145.0;
         break;
       case ArrowDirection.est:
-        targetAngle = 245.0;
+        targetAngle = 235.0;
         break;
       case ArrowDirection.sud:
-        targetAngle = 335.0;
+        targetAngle = 325.0;
         break;
       case ArrowDirection.ouest:
-        targetAngle = 65.0;
+        targetAngle = 55.0;
         break;
     }
 
     // Calculate the adjusted angle (angle the user needs to turn to)
-    return (targetAngle - _compassDirection + 360) % 360;
+
+    return _compassService.getAdjustedDirection(targetAngle);
   }
 
   /// Loads the navigation grid from a JSON file and starts periodic updates using simulated data
@@ -142,68 +137,42 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) async {
     try {
-      // Cache initialization
+      // TODO
+      // Cache init
       if (_cachedGrid == null) {
         print("Chargement du PLAN depuis $jsonFilePath");
         _cachedGrid =
             await _initNavigationService.loadGridFromJson(jsonFilePath);
       }
-
-      // Store products for navigation
-      if (event.products.isNotEmpty) {
-        _products.clear();
-        _products.addAll(event.products);
-        _currentProductIndex = 0;
-
-        // Get the position of the first product
-        if (_products.isNotEmpty) {
-          try {
-            _cacheTargetPosition =
-                await _initNavigationService.getProductPosition();
-          } catch (e) {
-            print(
-                "Erreur lors de la récupération de la position du produit: $e");
-          }
-        }
-      }
-
       // print(await _apiService.getAllProductByShop(defaultShopId));
       // print(await _apiService.getShopById(defaultShopId));
       // print(await _apiService.getSectionForProduct(1));
+      // Subscribe to compass updates
 
-      // Create a timer that simulates ESP device signals by generating random distance values
+      _compassSubscription = _compassService.compassStream.listen((direction) {
+        _compassDirection = direction;
+        add(CompassUpdateEvent(direction));
+      });
+
       _navigationTimer =
           Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-        // Base values for the anchor distances
+        // Valeurs de base
         final List<double> baseValues = [400, 100, 200];
         final random = Random();
 
-        // For each base value, add a random variation between -50 and +150
+        // Pour chaque valeur, ajouter une variation aléatoire entre -5 et +5
         final List<String> newValues = baseValues.map((base) {
-          final double variation = random.nextDouble() * 200 - 50;
+          final double variation =
+              random.nextDouble() * 200 - 50; // variation entre -5 et +5
           final double newValue = base + variation;
-          return newValue.toStringAsFixed(1); // 1 decimal place
+          return newValue.toStringAsFixed(1); // 1 chiffre après la virgule
         }).toList();
 
-        // Join the values with "/" to create a simulated data row
+        // Decode data row
         final String decodedData = newValues.join("/");
-
-        // Send the simulated data to the update handler
+        // Call the emit to update with _onUpdateNavigation
         add(UpdateNavigationEventDataRow(decodedData));
       });
-
-      // Emit initial state
-      emit(NavigationLoadedState(
-        objectName: _products.isNotEmpty
-            ? _products[_currentProductIndex].name
-            : "Produit inconnu",
-        instruction: "Initialisation de la navigation...",
-        arrowDirection: ArrowDirection.nord,
-        isLastProduct: false,
-        isDone: false,
-        compassDirection: _compassDirection,
-        adjustedAngle: 0.0,
-      ));
     } catch (e) {
       print("Error: $e");
       if (!emit.isDone) {
@@ -222,59 +191,28 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) async {
     try {
-      // Cache initialization
-      if (_cachedGrid == null) {
-        print("Chargement du PLAN depuis $jsonFilePath");
-        _cachedGrid =
-            await _initNavigationService.loadGridFromJson(jsonFilePath);
-      }
-
-      // Store products for navigation
-      if (event.products.isNotEmpty) {
-        _products.clear();
-        _products.addAll(event.products);
-        _currentProductIndex = 0;
-
-        // Get the position of the first product
-        if (_products.isNotEmpty) {
-          try {
-            _cacheTargetPosition =
-                await _initNavigationService.getProductPosition();
-          } catch (e) {
-            print(
-                "Erreur lors de la récupération de la position du produit: $e");
-          }
-        }
-      }
-
-      // Initialize Bluetooth connection
+      // TODO
       await _initNavigationService.checkPermissions();
+      _cachedGrid == null
+          ? _cachedGrid =
+              await _initNavigationService.loadGridFromJson(jsonFilePath)
+          : null;
       _cacheDevice == null
           ? _cacheDevice = await _bluetoothService.getBluetoothDevice()
           : null;
 
-      // Subscribe to data updates from Bluetooth device
+      _compassSubscription = _compassService.compassStream.listen((direction) {
+        _compassDirection = direction;
+        add(CompassUpdateEvent(direction));
+      });
       await _bluetoothService.getAnchorDistances(_cacheDevice!,
           onDataReceived: (String decodedData) async {
         print("decodedData : $decodedData");
         if (decodedData != "") {
-          print(" if (decodedData != '') {");
+          print(" if (decodedData != " ") {");
           add(UpdateNavigationEventDataRow(decodedData));
         }
       });
-
-      // Emit initial state
-      emit(NavigationLoadedState(
-        objectName: _products.isNotEmpty
-            ? _products[_currentProductIndex].name
-            : "Produit inconnu",
-        instruction: "Initialisation de la navigation...",
-        arrowDirection: ArrowDirection.nord,
-        isLastProduct: false,
-        isDone: false,
-        compassDirection: _compassDirection,
-        adjustedAngle: 0.0,
-      ));
     } catch (e) {
       print("Error: $e");
       if (!emit.isDone) {
@@ -394,6 +332,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       ));
     } else {
       emit(NavigationError("Impossible de trouver un chemin vers le produit"));
+      close();
     }
   }
 

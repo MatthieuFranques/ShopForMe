@@ -19,8 +19,8 @@ class NavigationPage extends StatelessWidget {
     // 🔥 Récupération de StoreService depuis le RepositoryProvider
 
     return BlocProvider(
-      create: (context) => NavigationBloc()
-        ..add(LoadNavigationEvent(products: shoppingList)),
+      create: (context) =>
+          NavigationBloc()..add(LoadNavigationEvent(products: shoppingList)),
       child: NavigationView(shoppingList: shoppingList),
     );
   }
@@ -38,21 +38,22 @@ class NavigationView extends StatefulWidget {
   State<NavigationView> createState() => _NavigationViewState();
 }
 
-class _NavigationViewState extends State<NavigationView> with SingleTickerProviderStateMixin {
+class _NavigationViewState extends State<NavigationView>
+    with SingleTickerProviderStateMixin {
   // Contrôleur d'animation pour l'icône de direction
   late AnimationController _animationController;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Initialisation du contrôleur d'animation
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -133,7 +134,7 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
             // Pour permettre une rotation fluide de l'icône de navigation
             _animationController.value = 0.0;
             _animationController.forward();
-            
+
             return SafeArea(
               child: Column(
                 children: [
@@ -151,7 +152,8 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                         child: Text(
                           state.objectName,
                           style: TextStyle(
-                            fontSize: screenHeight * 0.035, // Taille de police réduite
+                            fontSize: screenHeight *
+                                0.035, // Taille de police réduite
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -160,7 +162,7 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                       ),
                     ),
                   ),
-                  
+
                   // Section information sur l'orientation
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
@@ -185,7 +187,7 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                       ],
                     ),
                   ),
-                  
+
                   // Icône de navigation avec boussole
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -193,7 +195,7 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                       animation: _animationController,
                       builder: (context, child) {
                         return Transform.rotate(
-                          angle: -state.adjustedAngle * (math.pi / 180),
+                          angle: (state.adjustedAngle * (math.pi / 180) * -1),
                           child: Icon(
                             Icons.navigation,
                             size: screenWidth * 0.4,
@@ -203,7 +205,7 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                       },
                     ),
                   ),
-                  
+
                   // Instruction de navigation
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -217,7 +219,7 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  
+
                   // Direction classique (pour compatibilité et accessibilité)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -227,25 +229,28 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                       color: Colors.grey[400],
                     ),
                   ),
-                  
+
                   // Espace flexible
                   const Spacer(),
-                  
+
                   // Boutons de contrôle
                   if (!state.isLastProduct)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 4), // Padding minimal
+                      padding:
+                          const EdgeInsets.only(bottom: 4), // Padding minimal
                       child: Row(
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () => _handleProductFound(context, state),
+                              onPressed: () =>
+                                  _handleProductFound(context, state),
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.zero,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.zero,
                                 ),
-                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
                               ),
                               child: Container(
                                 width: double.infinity,
@@ -267,7 +272,8 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.zero,
                                 ),
-                                backgroundColor: Theme.of(context).colorScheme.secondary,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
                               ),
                               child: Container(
                                 width: double.infinity,
@@ -291,7 +297,8 @@ class _NavigationViewState extends State<NavigationView> with SingleTickerProvid
 
           // État par défaut
           return const Center(
-            child: Text('Une erreur est survenue lors du chargement de la navigation'),
+            child: Text(
+                'Une erreur est survenue lors du chargement de la navigation'),
           );
         },
       ),
