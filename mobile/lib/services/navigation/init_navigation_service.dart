@@ -5,16 +5,16 @@ import 'package:permission_handler/permission_handler.dart';
 
 class InitNavigationService {
   /// Converts a JSON store plan into a [Grid] object. The plan is stored at [jsonFilePath].
-  /// 
+  ///
   /// This function reads the store plan from a JSON file located at [jsonFilePath], decodes it, and creates a grid
   /// based on the data. It initializes the grid with default values and identifies the beacon positions in the store.
-  /// 
+  ///
   /// ### Parameters:
   /// - `jsonFilePath`: A string representing the file path to the JSON plan.
-  /// 
+  ///
   /// ### Returns:
   /// A [Future] that resolves to a [Grid] object representing the store grid with beacon positions and product location.
-  /// 
+  ///
   /// ### Example:
   /// ```dart
   /// Grid grid = await loadGridFromJson('assets/store_plan.json');
@@ -37,7 +37,9 @@ class InitNavigationService {
     final List<List<int>> grid =
         List.generate(numRows, (_) => List<int>.filled(numCols, 1));
     final List<List<int>> beaconPositions = [];
-
+    beaconPositions.add([16, 3]);
+    beaconPositions.add([2, 12]);
+    beaconPositions.add([16, 17]);
     for (int row = 0; row < numRows; row++) {
       final List<dynamic> rowData = plan[row];
 
@@ -52,22 +54,19 @@ class InitNavigationService {
         // if (cell['isBeacon'] == true) {
         //   beaconPositions.add([row, col]);
         // }
-        beaconPositions.add([16, 3]);
-        beaconPositions.add([2, 12]);
-        beaconPositions.add([16, 17]);
       }
     }
     return Grid(numRows, numCols, grid, beaconPositions, productPosition);
   }
 
   /// Gets the current product position.
-  /// 
+  ///
   /// Currently, this function returns a fixed position for the product (in the future, it will return positions of all
   /// products in the shopping list). TODO
-  /// 
+  ///
   /// ### Returns:
   /// A [Future] that resolves to a list of integers representing the product's position in the grid.
-  /// 
+  ///
   /// ### Example:
   /// ```dart
   /// List<int> productPosition = await getProductPosition();
@@ -79,7 +78,7 @@ class InitNavigationService {
   }
 
   /// Checks if the necessary permissions for Bluetooth scanning, connection, and location are granted.
-  /// 
+  ///
   /// This function requests the required permissions for Bluetooth scanning, Bluetooth connection, and location access.
   /// If any of the permissions are not granted, it throws an exception.
   ///

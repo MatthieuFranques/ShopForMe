@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/shopping_list/shopping_list_export.dart';
-
 import 'package:mobile/ui/screens/navigation_screen.dart';
 import 'package:mobile/ui/screens/product_search_screen.dart';
 import 'package:mobile/ui/screens/shopping_list_screen.dart';
-
 import 'package:mobile/ui/widgets/action_button.dart';
 import 'package:mobile/ui/widgets/app_header.dart';
-import 'package:mobile/ui/widgets/start_button.dart';
-
 import 'package:mobile/utils/screen_utils.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-/// Functions to handle user actions
   void _navigateToEditList(BuildContext context, ShoppingListLoaded state) {
     if (state.shoppingLists.isEmpty) {
       _showErrorSnackBar(context, 'Aucune liste de courses disponible');
@@ -73,12 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-      builder: (context) => NavigationPage(
-        shoppingList: state.currentList.products,
-      ),
+        builder: (context) => NavigationPage(
+          shoppingList: state.currentList.products,
+        ),
       ),
     );
-    }
+  }
 
   void _showErrorSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -94,7 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<ShoppingListBloc>().add(CreateNewShoppingList());
   }
 
-  void _handleIndexChanged(BuildContext context, int index, ShoppingListLoaded state) {
+  void _handleIndexChanged(
+      BuildContext context, int index, ShoppingListLoaded state) {
     setState(() {
       currentIndex = index;
     });
@@ -110,24 +105,39 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Supprimer la liste'),
-          content: Text('Voulez-vous vraiment supprimer "${state.currentList.name}" ?'),
+          title: Semantics(
+            label: 'Supprimer la liste',
+            child: const Text('Supprimer la liste'),
+          ),
+          content: Semantics(
+            label: 'Confirmation de suppression',
+            child: Text(
+                'Voulez-vous vraiment supprimer "${state.currentList.name}" ?'),
+          ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Annuler'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                context.read<ShoppingListBloc>().add(
-                      DeleteShoppingList(state.currentList.id),
-                    );
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
+            Semantics(
+              label: 'Annuler la suppression',
+              button: true,
+              child: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Annuler'),
               ),
-              child: const Text('Supprimer'),
+            ),
+            Semantics(
+              label: 'Confirmer la suppression',
+              button: true,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<ShoppingListBloc>().add(
+                        DeleteShoppingList(state.currentList.id),
+                      );
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red,
+                ),
+                child: const Text('Supprimer'),
+              ),
             ),
           ],
         );
@@ -135,7 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-/// Build method
   @override
   Widget build(BuildContext context) {
     ScreenUtils.init(context);
@@ -152,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is ShoppingListLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-/// Main content
+
             if (state is ShoppingListLoaded) {
               return SingleChildScrollView(
                 child: Padding(
@@ -163,12 +172,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        'Shop4Me',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontSize: titleSize,
-                            ),
-                        textAlign: TextAlign.center,
+                      Semantics(
+                        label: 'Titre de l\'écran d\'accueil',
+                        child: Text(
+                          'Shop4Me',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                fontSize: titleSize,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                       SizedBox(height: spacingHeight),
                       SizedBox(
@@ -176,7 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: AppHeader(
                           shoppingLists: state.shoppingLists,
                           currentIndex: currentIndex,
-                          onIndexChanged: (index) => _handleIndexChanged(context, index, state),
+                          onIndexChanged: (index) =>
+                              _handleIndexChanged(context, index, state),
                           onAddList: () => _handleAddList(context),
                         ),
                       ),
@@ -184,41 +200,55 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: ActionButton(
-                              icon: Icons.edit,
-                              color: Theme.of(context).colorScheme.secondary,
-                              onPressed: () => _navigateToEditList(context, state),
+                            child: Semantics(
+                              label: 'Éditer la liste de courses',
+                              button: true,
+                              child: ActionButton(
+                                icon: Icons.edit,
+                                color: Theme.of(context).colorScheme.secondary,
+                                onPressed: () =>
+                                    _navigateToEditList(context, state),
+                              ),
                             ),
                           ),
                           SizedBox(width: context.getResponsiveSize(16)),
                           Expanded(
-                            child: ActionButton(
-                              icon: Icons.search,
-                              color: Theme.of(context).colorScheme.primary,
-                              onPressed: () => _searchProduct(context, state),
+                            child: Semantics(
+                              label: 'Rechercher un produit',
+                              button: true,
+                              child: ActionButton(
+                                icon: Icons.search,
+                                color: Theme.of(context).colorScheme.primary,
+                                onPressed: () => _searchProduct(context, state),
+                              ),
                             ),
                           ),
                         ],
                       ),
                       SizedBox(height: spacingHeight * 2),
-                      Center(
-                        child: StartButton(
-                          onPressed: () {
-                            if (state.shoppingLists.isNotEmpty) {
-                              _startShopping(context, state);
-                            }
-                          },
-                        ),
-                      ),
+                      Semantics(
+                          label: 'Démarrer la course',
+                          button: true,
+                          child: _buildRoundButton(
+                            context,
+                            state.shoppingLists.isNotEmpty,
+                            () => _startShopping(context,
+                                state), // Passe la fonction de démarrage
+                          )),
                       if (state.shoppingLists.isNotEmpty) ...[
                         SizedBox(height: spacingHeight),
                         Center(
-                          child: TextButton.icon(
-                            onPressed: () => _handleDeleteList(context, state),
-                            icon: const Icon(Icons.delete_outline),
-                            label: const Text('Supprimer la liste'),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.red,
+                          child: Semantics(
+                            label: 'Supprimer la liste de courses',
+                            button: true,
+                            child: TextButton.icon(
+                              onPressed: () =>
+                                  _handleDeleteList(context, state),
+                              icon: const Icon(Icons.delete_outline),
+                              label: const Text('Supprimer la liste'),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.red,
+                              ),
                             ),
                           ),
                         ),
@@ -228,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }
-/// Error state
+
             if (state is ShoppingListError) {
               return Center(
                 child: Column(
@@ -250,7 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        context.read<ShoppingListBloc>().add(LoadShoppingList());
+                        context
+                            .read<ShoppingListBloc>()
+                            .add(LoadShoppingList());
                       },
                       child: const Text('Réessayer'),
                     ),
@@ -258,9 +290,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }
-/// Default state
+
             return const Center(child: Text('État inconnu'));
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRoundButton(BuildContext context, bool hasShoppingLists,
+      VoidCallback onStartShopping) {
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Material(
+        color: Theme.of(context).colorScheme.secondary,
+        shape: const CircleBorder(),
+        child: InkWell(
+          onTap: hasShoppingLists
+              ? onStartShopping
+              : null, // Désactive si pas de liste
+          customBorder: const CircleBorder(),
+          child: const Center(
+            child: Icon(
+              Icons.play_arrow,
+              color: Colors.white,
+              size: 120,
+            ),
+          ),
         ),
       ),
     );
