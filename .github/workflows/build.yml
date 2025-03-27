@@ -76,6 +76,18 @@ jobs:
           npm run lint
         continue-on-error: true
 
+      # 🔧 Add for compile_commands.json generation
+      - name: Setup PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Generate Compilation DB
+        run: |
+          cd iot/app
+          pio init --ide clion  # Génère compile_commands.json
+          pio run  # Build du projet Arduino
+        env:
+          PLATFORMIO_BUILD_FLAGS: -D GENERATE_COMPDB=1
+
       # 📌 SonarQube analysis
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
@@ -85,6 +97,7 @@ jobs:
           args: >
             --define sonar.projectKey=shopforme
             --define sonar.organization=shopforme
+            --define sonar.cfamily.compile-commands=iot/app/compile_commands.json
             --define sonar.sources=mobile/lib,mobile/test,backend/src,frontend/src,iot/app
             --define sonar.exclusions=frontend/src/fonts/**,frontend/src/models/**,frontend/src/images/**
             --define sonar.typescript.tsconfigPath=backend/tsconfig.json
