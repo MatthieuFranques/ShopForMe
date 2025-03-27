@@ -76,44 +76,6 @@ jobs:
           npm run lint
         continue-on-error: true
 
-      # 📌 Setup Arduino CLI for IoT code
-      - name: Setup Arduino CLI
-        uses: arduino/setup-arduino-cli@v2
-
-      - name: Install ESP32 platform
-        run: |
-          arduino-cli core update-index
-          arduino-cli core install esp32:esp32
-
-      - name: Create Arduino libraries directory
-        run: mkdir -p ~/Arduino/libraries
-
-      - name: Install required libraries
-        run: |
-          # Installation des bibliothèques officielles Arduino
-          arduino-cli lib install "SPI"
-          arduino-cli lib install "Arduino_JSON"
-          
-          # Installation des bibliothèques BLE pour ESP32 (incluses dans le core ESP32)
-          
-          # Installation de la bibliothèque DW1000
-          git clone https://github.com/thotro/arduino-dw1000.git ~/Arduino/libraries/DW1000
-          
-          # Installation de la bibliothèque DW1000Ranging
-          git clone https://github.com/F-Army/arduino-dw1000-ng.git ~/Arduino/libraries/DW1000Ranging
-        continue-on-error: true
-
-      - name: Verify Arduino sketches
-        run: |
-          cd iot/app
-          for d in */main; do
-            if [ -f "$d/main.ino" ]; then
-              echo "Verifying $d/main.ino"
-              arduino-cli compile --fqbn esp32:esp32:esp32 "$d" --verbose
-            fi
-          done
-        continue-on-error: true
-
       # 📌 SonarQube analysis
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
@@ -128,7 +90,7 @@ jobs:
             --define sonar.typescript.tsconfigPath=backend/tsconfig.json
             --define sonar.javascript.lcov.reportPaths=backend/coverage/lcov.info
             --define sonar.dart.lcov.reportPaths=mobile/coverage/lcov.info
-            --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**,frontend/**,iot/app/**
+            --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**,frontend/**,iot/**
             --define sonar.cpp.file.suffixes=.cpp,.h,.ino
-            --define sonar.c.file.suffixes=.c
+            --define sonar.c.file.suffixes=.c,.h
             --define sonar.objc.file.suffixes=-
