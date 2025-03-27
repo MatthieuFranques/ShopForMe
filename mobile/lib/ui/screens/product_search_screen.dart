@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/models/product.dart';
-import '../../blocs/product_search_bloc.dart';
-import '../../blocs/shopping_list_bloc.dart';
+import 'package:mobile/blocs/product_search/product_search_export.dart';
+import 'package:mobile/blocs/shopping_list/shopping_list_export.dart';
+
 
 class ProductSearchScreen extends StatefulWidget {
   final int shopId;

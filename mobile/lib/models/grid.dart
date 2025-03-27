@@ -1,10 +1,14 @@
 class Grid {
-  final int n, m;
+  final int rows, cols;
   final List<List<int>> grid;
+  final List<List<int>> beaconPositions;
+  // TODO List<List<int>>
+  final List<int> productPosition;
 
-  Grid(this.n, this.m, this.grid);
+  Grid(this.rows, this.cols, this.grid, this.beaconPositions,
+      this.productPosition);
 
-  bool isValid(int x, int y) {
-    return x >= 0 && x < n && y >= 0 && y < m && grid[x][y] == 0;
+  bool isValid(int posX, int posY) {
+    return posX >= 0 && posX < rows && posY >= 0 && posY < cols;
   }
 }

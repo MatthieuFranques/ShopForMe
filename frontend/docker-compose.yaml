@@ -6,6 +6,7 @@ services:
       context: .
       args:
         REACT_APP_API_PORT: ${REACT_APP_API_PORT}
+        REACT_APP_API_KEY: ${REACT_APP_API_KEY}
     container_name: shop-for-me-frontend
     ports:
       - "3000:80"

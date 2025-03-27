@@ -7,7 +7,8 @@ import {
     getFreeProduct,
     getAllProductByShopP,
     addNewProductToRayonP,
-    getProductsBySectionNameP
+    getProductsBySectionNameP,
+    getSectionByProductIdP
 } from '../controllers/product.controller';
 
 const shopRouter = Router();
@@ -252,5 +253,7 @@ shopRouter.put('/:id', updateProduct);
  *         description: Produit non trouvé
  */
 shopRouter.get('/:id', getProductById);
+
+shopRouter.get('/getSectionByProductId/:id', getSectionByProductIdP);
 
 export default shopRouter;

@@ -1,6 +1,6 @@
 ﻿# IoT - The POC
 
-This package sets up the various IOT objects to be used within the project.
+This package sets up the various IoT objects to be used within the project.
 
 It must contain scripts for the tags and the anchor that enable localisation from the mobile application.
 
@@ -29,7 +29,16 @@ To generate the documentation, managed by Doxygen, you first need to install it 
 Once this is done, open a terminal, move to the folder containing the `Doxyfile` and run : 
 
 ```bash
+cd app
 doxygen Doxyfile
 ```
 
-An `html` folder has been created and can now be viewed via the `index.html` file.
+A `doc` folder has been created and can now be viewed via the `index.html` file.
+
+To regenerate the doc after few modifications, you can execute this : 
+
+```bash
+rm -rf doc
+```
+
+and rerun the previous commands.

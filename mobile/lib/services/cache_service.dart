@@ -1,7 +1,7 @@
 // lib/services/cache_service.dart
 import 'package:hive/hive.dart';
-import '../models/product.dart';
-import '../models/shop.dart';
+import 'package:mobile/models/product.dart';
+import 'package:mobile/models/shop.dart';
 
 class CacheService {
   static const String shopBox = 'shops';

@@ -1,0 +1,94 @@
+
+
+enum ArrowDirection { nord, sud, est, ouest }
+
+class DirectionService {
+  
+  /// Calculates the next direction depending on the [path] to follow.
+  /// 
+  /// This function determines the direction from the current position to the next position in the [path]. The possible
+  /// directions are nord, sud, est, or ouest. It compares the coordinates of the current and next positions to determine
+  /// the direction.
+  /// 
+  /// ### Parameters:
+  /// - `path`: A list of lists where each inner list represents a position in the grid (e.g., [x, y]).
+  /// 
+  /// ### Returns:
+  /// An [ArrowDirection] representing the calculated direction.
+  /// 
+  /// ### Example:
+  /// ```dart
+  /// ArrowDirection direction = calculateDirection([[0, 0], [0, 1]]);
+  /// print(direction); // Prints ArrowDirection.est
+  /// ```
+  ArrowDirection calculateDirection(List<List<int>> path) {
+    if (path.length < 2) return ArrowDirection.nord;
+
+    final current = path[0];
+    final next = path[1];
+
+    if (next[0] < current[0]) return ArrowDirection.nord;
+    if (next[0] > current[0]) return ArrowDirection.sud;
+    if (next[1] < current[1]) return ArrowDirection.ouest;
+    return ArrowDirection.est;
+  }
+  
+  /// Gets the next direction depending on the [path] to follow and the [currentPosition].
+  /// 
+  /// This function determines the next movement instruction based on the current position and the path to follow. It
+  /// calculates the direction and distance to the next change in direction and returns a message with the direction and 
+  /// the number of steps to take.
+  /// 
+  /// ### Parameters:
+  /// - `path`: A list of lists where each inner list represents a position in the grid (e.g., [x, y]) that the user should follow.
+  /// - `currentPosition`: The current position of the user represented as a list [x, y].
+  /// 
+  /// ### Returns:
+  /// A list containing:
+  /// - `instructionMsg`: A string with the direction and distance to move.
+  /// - `ArrowDirection`: The direction to move next.
+  /// 
+  /// ### Example:
+  /// ```dart
+  /// List<Object> nextDirection = getNextDirection([[0, 0], [0, 1]], [0, 0]);
+  /// print(nextDirection[0]); // Prints "12H00, Avancez de 1 pas"
+  /// print(nextDirection[1]); // Prints ArrowDirection.nord
+  /// ```
+  List<Object> getNextDirection(List<List<int>> path, List<int> currentPosition) {
+    if (path.isEmpty) {
+      print("Aucune instruction disponible");
+      return ["Aucune instruction disponible", Null];
+    }
+    final List<List<int>> fullPath = [currentPosition, ...path];
+
+    // Déterminer la direction initiale
+    final ArrowDirection initialDirection = calculateDirection(fullPath);
+    int distance = 0;
+
+    // Parcourir le chemin jusqu'au premier changement de direction
+    for (int i = 0; i < fullPath.length - 1; i++) {
+      final nextDirection = calculateDirection([fullPath[i], fullPath[i + 1]]);
+
+      if (nextDirection == initialDirection) {
+        distance++;
+      } else {
+        break;
+      }
+    }
+    print("distance : $distance");
+    switch (initialDirection) {
+      case ArrowDirection.nord:
+        return ["12H00, Avancez de $distance pas", ArrowDirection.nord];
+      case ArrowDirection.sud:
+        return ["6H00, Avancez de $distance pas", ArrowDirection.sud];
+      case ArrowDirection.est:
+        return ["3H00, Avancez de $distance pas", ArrowDirection.est];
+      case ArrowDirection.ouest:
+        return ["9H00, Avancez de $distance pas", ArrowDirection.ouest];
+      default:
+        print("Direction inconnue, retourne null");
+        return ["Direction inconnue", Null];
+    }
+  }
+
+}

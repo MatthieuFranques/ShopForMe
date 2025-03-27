@@ -4,19 +4,33 @@ class ActionButton extends StatelessWidget {
   final IconData icon;
   final Color color;
   final VoidCallback onPressed;
+  final double? size; // Taille optionnelle
+  final double? borderRadius; // BorderRadius optionnel
 
-  const ActionButton({super.key, required this.icon, required this.color, required this.onPressed});
+  const ActionButton({
+    super.key,
+    required this.icon,
+    required this.color,
+    required this.onPressed,
+    this.size, // Paramètre optionnel
+    this.borderRadius, // Paramètre optionnel
+  });
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
+    final double finalSize = size ?? 125;
+    final double finalBorderRadius =
+        borderRadius ?? (size != null ? finalSize / 2 : 15);
+
+    return SizedBox(
+      width: finalSize,
+      height: finalSize,
       child: Material(
         color: color,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(finalBorderRadius),
         child: InkWell(
           onTap: onPressed,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(finalBorderRadius),
           child: FittedBox(
             fit: BoxFit.contain,
             child: Padding(

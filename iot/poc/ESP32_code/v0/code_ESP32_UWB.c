@@ -51,12 +51,12 @@ void setup()
     DW1000Ranging.attachNewDevice(handleNewDevice);
     DW1000Ranging.attachInactiveDevice(handleInactiveDevice);
 
-    // Start as anchor (receiver)
+    // Start as tag (receiver)
     DW1000Ranging.startAsAnchor("DWANCHOR", DW1000.MODE_LONGDATA_RANGE_ACCURACY);
     // Or start as tag (transmitter) by uncommenting the next line
     // DW1000Ranging.startAsTag("DWTAG", DW1000.MODE_LONGDATA_RANGE_ACCURACY);
 
-    Serial.println("DW1000 initialized as anchor (receiver)");
+    Serial.println("DW1000 initialized as tag (receiver)");
 }
 
 void loop()
