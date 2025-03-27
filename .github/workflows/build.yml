@@ -87,7 +87,7 @@ jobs:
       - name: Generate Compilation DB
         run: |
           cd iot/app
-          pio run -t compiledb
+          pio run --project-option="compiledb_absolute_paths=true" -t compiledb
 
       # 📌 SonarQube analysis
       - name: SonarQube Scan
@@ -104,7 +104,7 @@ jobs:
             --define sonar.typescript.tsconfigPath=backend/tsconfig.json
             --define sonar.javascript.lcov.reportPaths=backend/coverage/lcov.info
             --define sonar.dart.lcov.reportPaths=mobile/coverage/lcov.info
-            --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**,frontend/**,iot/**
+            --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**,frontend/**
             --define sonar.cpp.file.suffixes=.cpp,.h,.ino
-            --define sonar.c.file.suffixes=.c
+            --define sonar.c.file.suffixes=-
             --define sonar.objc.file.suffixes=-
