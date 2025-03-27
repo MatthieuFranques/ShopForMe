@@ -88,7 +88,7 @@ jobs:
         run: |
           cd iot/app
           pio run -t compiledb
-          ls -l iot/app/compile_commands.json
+          ls -l compile_commands.json
 
       # 📌 SonarQube analysis
       - name: SonarQube Scan
