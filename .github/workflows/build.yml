@@ -77,24 +77,15 @@ jobs:
         continue-on-error: true
 
       # 🔧 Add for compile_commands.json generation
-      - name: Setup PlatformIO Core
-        run: pip install --upgrade platformio
+      - name: Install build tools for IoT
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bear build-essential
 
-      - name: Generate Compilation DB
+      - name: Generate compile_commands.json for IoT
         run: |
           cd iot/app
-          
-          if [ ! -f platformio.ini ]; then
-            echo "[env:arduino_uno]" >> platformio.ini
-            echo "platform = atmelavr" >> platformio.ini
-            echo "board = uno" >> platformio.ini
-            echo "framework = arduino" >> platformio.ini
-          fi
-          
-          pio init --ide clion --environment arduino_uno
-          pio run -e arduino_uno
-        env:
-          PLATFORMIO_BUILD_FLAGS: -D GENERATE_COMPDB=1
+          bear -- arduino-cli compile --fqbn arduino:avr:uno
 
       # 📌 SonarQube analysis
       - name: SonarQube Scan
