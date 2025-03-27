@@ -114,20 +114,39 @@ void sendData(std::map<String, float> dataToSend)
  *
  * @return A string representing the data.
  */
+
 String constructString(std::map<String, float> dataToSend)
 {
     String data;
-    size_t counter = 0;
+    float anchorDistances[3] = {-1, -1, -1}; // Table of distances, -1 means ‘not yet received’.
 
-    // Loop through the map and build the string
+    // Desired order of anchors
+    const String anchorOrder[3] = {"07D", "445A", "119E"};
+
+    Serial.println("=== Entrée dataToSend ===");
     for (const auto &entry : dataToSend)
     {
-        data += String(int(trunc(entry.second * 100))); // Convert to integer representation
-        if (counter < dataToSend.size() - 1)
+        // Associate the distance with the correct anchor by browsing anchorOrder
+        for (int i = 0; i < 3; i++)
         {
-            data += "/"; // Separate entries with '/'
+            if (entry.first.equalsIgnoreCase(anchorOrder[i]))
+            {
+                anchorDistances[i] = entry.second;
+                break;
+            }
         }
-        counter++;
     }
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (anchorDistances[i] >= 0)
+        {
+            data += String(int(trunc(anchorDistances[i] * 100)));
+
+            if (i < 2)
+                data += "/";
+        }
+    }
+
     return data;
 }
