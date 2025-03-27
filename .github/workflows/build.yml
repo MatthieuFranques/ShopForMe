@@ -87,7 +87,7 @@ jobs:
       - name: Generate Compilation DB
         run: |
           cd iot/app
-          pio run --project-option="compiledb_absolute_paths=true" -t compiledb
+          pio run -t compiledb
 
       # 📌 SonarQube analysis
       - name: SonarQube Scan
