@@ -90,10 +90,19 @@ jobs:
       - name: Install Arduino AVR core
         run: arduino-cli core install arduino:avr
       
-      - name: Generate compile_commands.json for IoT
+      - name: Generate Compilation DB
         run: |
           cd iot/app
-          bear -- arduino-cli compile --fqbn arduino:avr:uno
+          echo '[]' > compile_commands.json
+          
+          # Analyser chaque sketch Arduino
+          find . -name "*.ino" -exec dirname {} \; | while read dir; do
+            cd "$dir"
+            arduino-cli compile --fqbn arduino:avr:uno --build-path ./build
+            bear --append --output ../../compile_commands.json -- \
+              arduino-cli compile --fqbn arduino:avr:uno --build-path ./build
+            cd - >/dev/null
+          done
 
       # 📌 SonarQube analysis
       - name: SonarQube Scan
