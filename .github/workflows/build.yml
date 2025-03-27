@@ -76,33 +76,18 @@ jobs:
           npm run lint
         continue-on-error: true
 
-      # 🔧 Add for compile_commands.json generation
-      - name: Install build tools for IoT
+      # 📌 IoT
+      - name: Setup PlatformIO
         run: |
-          sudo apt-get update
-          sudo apt-get install -y bear build-essential
-          
-          # Installation d'arduino-cli
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          sudo mv bin/arduino-cli /usr/local/bin/
-          arduino-cli config init
-      
-      - name: Install Arduino AVR core
-        run: arduino-cli core install arduino:avr
-      
+          sudo apt-get install -y python3-venv
+          python3 -m pip install --upgrade platformio
+          cd iot/app
+          platformio project init --project-option="platformio.ini"
+
       - name: Generate Compilation DB
         run: |
           cd iot/app
-          echo '[]' > compile_commands.json
-          
-          # Analyser chaque sketch Arduino
-          find . -name "*.ino" -exec dirname {} \; | while read dir; do
-            cd "$dir"
-            arduino-cli compile --fqbn arduino:avr:uno --build-path ./build
-            bear --append --output ../../compile_commands.json -- \
-              arduino-cli compile --fqbn arduino:avr:uno --build-path ./build
-            cd - >/dev/null
-          done
+          pio run -t compiledb
 
       # 📌 SonarQube analysis
       - name: SonarQube Scan
