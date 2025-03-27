@@ -83,8 +83,16 @@ jobs:
       - name: Generate Compilation DB
         run: |
           cd iot/app
-          pio init --ide clion  # Génère compile_commands.json
-          pio run  # Build du projet Arduino
+          
+          if [ ! -f platformio.ini ]; then
+            echo "[env:arduino_uno]" >> platformio.ini
+            echo "platform = atmelavr" >> platformio.ini
+            echo "board = uno" >> platformio.ini
+            echo "framework = arduino" >> platformio.ini
+          fi
+          
+          pio init --ide clion --environment arduino_uno
+          pio run -e arduino_uno
         env:
           PLATFORMIO_BUILD_FLAGS: -D GENERATE_COMPDB=1
 
