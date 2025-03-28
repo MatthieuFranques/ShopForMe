@@ -76,7 +76,7 @@ jobs:
           npm run lint
         continue-on-error: true
 
-      # 📌 IoT
+      # 📌 IoT building for C++ with Sonar
       - name: Setup PlatformIO
         run: |
           sudo apt-get install -y python3-venv
@@ -89,6 +89,30 @@ jobs:
           cd iot/app
           pio run -t compiledb
           ls -l compile_commands.json
+
+      - name: Preprocess compile_commands.json
+        run: |
+          cd iot/app
+          echo "Original compile_commands.json content:"
+          cat compile_commands.json | head -20
+
+          CURRENT_PATH=$(pwd)
+          echo "Current path: $CURRENT_PATH"
+
+          EXISTING_PATH=$(grep -oP '"directory":"\K[^"]+' compile_commands.json | head -1 | sed 's/\/[^\/]*$//')
+          echo "Existing path to replace: $EXISTING_PATH"
+
+          if [ ! -z "$EXISTING_PATH" ]; then
+            sed -i "s|$EXISTING_PATH|$CURRENT_PATH|g" compile_commands.json
+          fi
+
+          for cwd in $(grep -oP '"directory":"\K[^"]+' compile_commands.json | sort -u); do
+            mkdir -p "$cwd"
+            echo "Created directory: $cwd"
+          done
+
+          echo "Modified compile_commands.json content:"
+          cat compile_commands.json | head -20
 
       # 📌 SonarQube analysis
       - name: SonarQube Scan
