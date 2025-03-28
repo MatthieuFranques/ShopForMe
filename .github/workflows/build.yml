@@ -131,7 +131,11 @@ jobs:
           args: >
             --define sonar.projectKey=shopforme
             --define sonar.organization=shopforme
+            --define sonar.cfamily.build-wrapper-output.bypass=true
+            --define sonar.cfamily.threads=2
+            --define sonar.cfamily.cache.enabled=false
             --define sonar.cfamily.sources=iot/app
+            --define sonar.cfamily.sources=iot/app/anchor1/main,iot/app/anchor2/main,iot/app/anchor3/main,iot/app/tag/main
             --define sonar.cfamily.compile-commands=iot/app/compile_commands.json
             --define sonar.sources=mobile/lib,mobile/test,backend/src,frontend/src,iot/app
             --define sonar.exclusions=frontend/src/fonts/**,frontend/src/models/**,frontend/src/images/**
