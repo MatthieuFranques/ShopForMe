@@ -85,16 +85,12 @@ jobs:
           args: >
             --define sonar.projectKey=shopforme
             --define sonar.organization=shopforme
-            --define sonar.cfamily.build-wrapper-output.bypass=true
-            --define sonar.cfamily.threads=2
-            --define sonar.cfamily.cache.enabled=false
-            --define sonar.sources=mobile/lib,mobile/test,backend/src,frontend/src,iot/app
-            --define sonar.cfamily.sources=iot/app/anchor1/main,iot/app/anchor2/main,iot/app/anchor3/main,iot/app/tag/main
+            --define sonar.sources=mobile/lib,mobile/test,backend/src,frontend/src
             --define sonar.exclusions=frontend/src/fonts/**,frontend/src/models/**,frontend/src/images/**
             --define sonar.typescript.tsconfigPath=backend/tsconfig.json
             --define sonar.javascript.lcov.reportPaths=backend/coverage/lcov.info
             --define sonar.dart.lcov.reportPaths=mobile/coverage/lcov.info
             --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**,frontend/**
-            --define sonar.cpp.file.suffixes=.cpp,.h,.ino
             --define sonar.c.file.suffixes=-
+            --define sonar.cpp.file.suffixes=-
             --define sonar.objc.file.suffixes=-
