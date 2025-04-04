@@ -277,10 +277,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           instruction: "Tous les produits ont été trouvés",
           arrowDirection: ArrowDirection.nord,
           isLastProduct: true,
-          compassDirection: _compassDirection,
-          adjustedAngle: 0.0,
+          shouldPopAfterDelay: true,
         ));
         close();
+
         return;
       }
 

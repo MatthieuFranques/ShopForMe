@@ -164,29 +164,30 @@ class _NavigationViewState extends State<NavigationView>
                   ),
 
                   // Section information sur l'orientation
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Direction: ${state.compassDirection.toStringAsFixed(0)}°",
-                          style: TextStyle(
-                            fontSize: screenHeight * 0.02,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          "Angle: ${state.adjustedAngle.toStringAsFixed(0)}°",
-                          style: TextStyle(
-                            fontSize: screenHeight * 0.02,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // TODO
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 4),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Text(
+                  //         "Direction: ${state.compassDirection.toStringAsFixed(0)}°",
+                  //         style: TextStyle(
+                  //           fontSize: screenHeight * 0.02,
+                  //           color: Colors.grey[600],
+                  //         ),
+                  //       ),
+                  //       const SizedBox(width: 16),
+                  //       Text(
+                  //         "Angle: ${state.adjustedAngle.toStringAsFixed(0)}°",
+                  //         style: TextStyle(
+                  //           fontSize: screenHeight * 0.02,
+                  //           color: Colors.grey[600],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
 
                   // Icône de navigation avec boussole
                   Padding(
@@ -198,7 +199,7 @@ class _NavigationViewState extends State<NavigationView>
                           angle: (state.adjustedAngle * (math.pi / 180) * -1),
                           child: Icon(
                             Icons.navigation,
-                            size: screenWidth * 0.4,
+                            size: screenWidth * 0.8,
                             color: const Color.fromARGB(255, 1, 28, 64),
                           ),
                         );
@@ -221,14 +222,14 @@ class _NavigationViewState extends State<NavigationView>
                   ),
 
                   // Direction classique (pour compatibilité et accessibilité)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Icon(
-                      _getDirectionIcon(state.arrowDirection),
-                      size: screenWidth * 0.2,
-                      color: Colors.grey[400],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 8),
+                  //   child: Icon(
+                  //     _getDirectionIcon(state.arrowDirection),
+                  //     size: screenWidth * 0.2,
+                  //     color: Colors.grey[400],
+                  //   ),
+                  // ),
 
                   // Espace flexible
                   const Spacer(),
@@ -294,11 +295,9 @@ class _NavigationViewState extends State<NavigationView>
               ),
             );
           }
-
           // État par défaut
           return const Center(
-            child: Text(
-                'Une erreur est survenue lors du chargement de la navigation'),
+            child: CircularProgressIndicator(),
           );
         },
       ),
