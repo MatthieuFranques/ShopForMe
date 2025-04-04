@@ -64,9 +64,9 @@ const Plan = (props: CustomProps) => {
 
     const [plan, setPlan] = useState<Array<Array<Cell>>>(props.plan);
 
-    const [rows, setRows] = useState<number>(10);
+    const [rows, setRows] = useState<number | null>();
 
-    const [cols, setCols] = useState<number>(10);
+    const [cols, setCols] = useState<number | null>();
 
     const [currentDraw, setCurrentDraw] = useState<PlanType>(PlanType.VIDE);
 
@@ -281,6 +281,8 @@ const Plan = (props: CustomProps) => {
         if (!plan[0])
             return;
 
+        if (!cols)
+            return;
         const diffCols = cols - plan[0].length;
 
         if (diffCols < 0) {
@@ -301,6 +303,9 @@ const Plan = (props: CustomProps) => {
      * Change le nombre de lignes dans le plan
      */
     const handleChangeRows = () => {
+
+        if (!rows)
+            return;
         const rowsDiff = rows - plan.length;
 
         if (rowsDiff < 0) {
@@ -308,7 +313,7 @@ const Plan = (props: CustomProps) => {
             setPlan(plan.slice(0, rowsDiff));
         } else {
             // Add rows
-            const newRows = Array(rowsDiff).fill(Array(cols).fill(EMPTY_CELL));
+            const newRows = Array(rowsDiff).fill(Array(cols).fill(0));
             setPlan([...plan, ...newRows]);
         }
     };
