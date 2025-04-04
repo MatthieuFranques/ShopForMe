@@ -131,170 +131,141 @@ class _NavigationViewState extends State<NavigationView>
           }
 
           if (state is NavigationLoadedState) {
-            // Pour permettre une rotation fluide de l'icône de navigation
             _animationController.value = 0.0;
             _animationController.forward();
 
-            return SafeArea(
-              child: Column(
-                children: [
-                  // Bloc avec l'aliment recherché
-                  Padding(
-                    padding: const EdgeInsets.all(8.0), // Padding réduit
-                    child: Container(
-                      height: screenHeight * 0.08, // Hauteur réduite
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Center(
-                        child: Text(
-                          state.objectName,
-                          style: TextStyle(
-                            fontSize: screenHeight *
-                                0.035, // Taille de police réduite
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
+            final bool useSafeArea =
+                true; // ← change cette valeur selon ton besoin
+
+            final content = Column(
+              children: [
+                // === Ton contenu original ici ===
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: screenHeight * 0.08,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Center(
+                      child: Text(
+                        state.objectName,
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.035,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
+                ),
 
-                  // Section information sur l'orientation
-                  // TODO
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 4),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       Text(
-                  //         "Direction: ${state.compassDirection.toStringAsFixed(0)}°",
-                  //         style: TextStyle(
-                  //           fontSize: screenHeight * 0.02,
-                  //           color: Colors.grey[600],
-                  //         ),
-                  //       ),
-                  //       const SizedBox(width: 16),
-                  //       Text(
-                  //         "Angle: ${state.adjustedAngle.toStringAsFixed(0)}°",
-                  //         style: TextStyle(
-                  //           fontSize: screenHeight * 0.02,
-                  //           color: Colors.grey[600],
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-
-                  // Icône de navigation avec boussole
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: (state.adjustedAngle * (math.pi / 180) * -1),
-                          child: Icon(
-                            Icons.navigation,
-                            size: screenWidth * 0.8,
-                            color: const Color.fromARGB(255, 1, 28, 64),
-                          ),
-                        );
-                      },
-                    ),
+                // ... Le reste de la Column inchangé ...
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: (state.adjustedAngle * (math.pi / 180) * -1),
+                        child: Icon(
+                          Icons.navigation,
+                          size: screenWidth * 0.8,
+                          color: const Color.fromARGB(255, 1, 28, 64),
+                        ),
+                      );
+                    },
                   ),
-
-                  // Instruction de navigation
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      state.instruction,
-                      style: TextStyle(
-                        fontSize: screenHeight * 0.03,
-                        color: const Color.fromARGB(255, 1, 28, 64),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    state.instruction,
+                    style: TextStyle(
+                      fontSize: screenHeight * 0.03,
+                      color: const Color.fromARGB(255, 1, 28, 64),
+                      fontWeight: FontWeight.bold,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-
-                  // Direction classique (pour compatibilité et accessibilité)
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 8),
-                  //   child: Icon(
-                  //     _getDirectionIcon(state.arrowDirection),
-                  //     size: screenWidth * 0.2,
-                  //     color: Colors.grey[400],
-                  //   ),
-                  // ),
-
-                  // Espace flexible
-                  const Spacer(),
-
-                  // Boutons de contrôle
-                  if (!state.isLastProduct)
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: 4), // Padding minimal
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () =>
-                                  _handleProductFound(context, state),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
+                ),
+                const Spacer(),
+                if (!state.isLastProduct)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () =>
+                                _handleProductFound(context, state),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
                               ),
-                              child: Container(
-                                width: double.infinity,
-                                height: screenHeight * 0.06, // Hauteur réduite
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Icons.check,
-                                  size: screenHeight * 0.04, // Taille réduite
-                                  color: Colors.white,
-                                ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                            child: Container(
+                              width: double.infinity,
+                              height: screenHeight * 0.06,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.check,
+                                size: screenHeight * 0.04,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => _handleSkipProduct(context),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => _handleSkipProduct(context),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
                               ),
-                              child: Container(
-                                width: double.infinity,
-                                height: screenHeight * 0.06, // Hauteur réduite
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Icons.skip_next,
-                                  size: screenHeight * 0.04, // Taille réduite
-                                  color: Colors.white,
-                                ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                            child: Container(
+                              width: double.infinity,
+                              height: screenHeight * 0.06,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.skip_next,
+                                size: screenHeight * 0.04,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                ],
-              ),
+                  ),
+              ],
             );
+
+            // 🔁 Maintenant on retourne conditionnellement le widget
+            if (useSafeArea) {
+              return BlocListener<NavigationBloc, NavigationState>(
+                listener: (context, state) {
+                  if (state is NavigationLoadedState && state.isLastProduct) {
+                    Future.delayed(const Duration(seconds: 3), () {
+                      Navigator.pop(context);
+                    });
+                  }
+                },
+                child: SafeArea(child: content),
+              );
+            }
           }
+
           // État par défaut
           return const Center(
             child: CircularProgressIndicator(),
