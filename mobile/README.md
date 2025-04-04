@@ -42,5 +42,5 @@ Run the tests with:
 ```bash
 flutter packages pub run build_runner build --delete-conflicting-outputs
 flutter pub run build_runner build --delete-conflicting-outputs
-flutter test
+flutter test --coverage
 ```

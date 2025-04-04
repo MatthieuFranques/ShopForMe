@@ -7,6 +7,7 @@ import 'package:mobile/models/grid.dart';
 import 'package:mobile/services/api_service.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:mobile/models/product.dart';
+import 'package:mobile/services/navigation/compass_service.dart' as compass;
 import 'package:mobile/services/navigation/location_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/services/navigation/init_navigation_service.dart';
@@ -25,31 +26,34 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   late final InitNavigationService _initNavigationService =
       InitNavigationService();
   late final ApiService _apiService = ApiService(baseUrl: baseUrl);
-  late StreamController<String> _dataController;
+  late final compass.CompassService _compassService = compass.CompassService();
+  late StreamSubscription? _compassSubscription;
 
-  // TODO change to true value
+  // Cache values for various navigation data
   Grid? _cachedGrid;
   List<List<int>>? _cachePath;
   List<int>? _cacheCurrentPosition = [0, 0];
+  List<int>? _cacheTargetPosition;
   BluetoothDevice? _cacheDevice;
+  double _compassDirection = 0.0;
 
-  // const String jsonFilePath = 'assets/demo/plan_test.json';
+  // Path to the store layout JSON file
   String jsonFilePath = 'assets/demo/plan28_11_24.json';
 
   Timer? _navigationUpdateTimer;
   final List<Product> _products = [];
   int _currentProductIndex = 0;
 
-  /// Initializes the NavigationBloc with the provided [StoreService] and sets up event handlers.
+  /// Initializes the NavigationBloc with the provided parameters and sets up event handlers.
   NavigationBloc() : super(NavigationInitial()) {
     _locationService = LocationService();
 
+    // Using the test implementation by default
     on<LoadNavigationEvent>(_onLoadNavigation);
-    // on<UpdateNavigationEvent>(_onUpdateNavigation);
     on<UpdateNavigationEventDataRow>(_onUpdateNavigation);
-
     on<ProductFoundEvent>(_onProductFound);
     on<UpdatePositionEvent>(_onUpdatePosition);
+    on<CompassUpdateEvent>(_onCompassUpdate);
   }
 
   /// Closes the bloc, cancels any ongoing navigation timers.
@@ -58,6 +62,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     print("Enter in 'Close' : navigation_bloc");
     _navigationUpdateTimer?.cancel();
     _navigationTimer?.cancel();
+    _compassSubscription?.cancel();
     return super.close();
   }
 
@@ -71,11 +76,63 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     );
   }
 
-  /// Loads the navigation grid from a JSON file and starts periodic updates for navigation.
+  /// Handles updates from the compass sensor
+  /// [event] The event containing the compass direction
+  /// [emit] The emitter used to send states to the UI
+  void _onCompassUpdate(
+    CompassUpdateEvent event,
+    Emitter<NavigationState> emit,
+  ) {
+    if (state is NavigationLoadedState) {
+      final currentState = state as NavigationLoadedState;
+
+      // Calculate the adjusted angle between the current compass direction and target
+      double adjustedAngle =
+          _getAdjustedDirectionFromArrow(currentState.arrowDirection);
+
+      emit(NavigationLoadedState(
+        objectName: currentState.objectName,
+        instruction: currentState.instruction,
+        arrowDirection: currentState.arrowDirection,
+        isLastProduct: currentState.isLastProduct,
+        isDone: currentState.isDone,
+        compassDirection: event.direction,
+        adjustedAngle: adjustedAngle,
+      ));
+    }
+  }
+
+  /// Calculates the adjusted angle between the compass direction and arrow direction
+  /// [arrowDirection] The direction to display as an arrow
+  /// @returns The angle in degrees to rotate the compass arrow
+  double _getAdjustedDirectionFromArrow(ArrowDirection arrowDirection) {
+    // Convert ArrowDirection to degrees
+    double targetAngle = 0.0;
+    switch (arrowDirection) {
+      case ArrowDirection.nord:
+        targetAngle = 145.0;
+        break;
+      case ArrowDirection.est:
+        targetAngle = 235.0;
+        break;
+      case ArrowDirection.sud:
+        targetAngle = 325.0;
+        break;
+      case ArrowDirection.ouest:
+        targetAngle = 55.0;
+        break;
+    }
+
+    // Calculate the adjusted angle (angle the user needs to turn to)
+
+    return _compassService.getAdjustedDirection(targetAngle);
+  }
+
+  /// Loads the navigation grid from a JSON file and starts periodic updates using simulated data
+  /// This test implementation generates mock ESP device signals for development and testing
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  // TODO _onLoadNavigation with no blu (test)
-  Future<void> _onLoadNavigationTest(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -90,6 +147,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       // print(await _apiService.getAllProductByShop(defaultShopId));
       // print(await _apiService.getShopById(defaultShopId));
       // print(await _apiService.getSectionForProduct(1));
+      // Subscribe to compass updates
+
+      _compassSubscription = _compassService.compassStream.listen((direction) {
+        _compassDirection = direction;
+        add(CompassUpdateEvent(direction));
+      });
 
       _navigationTimer =
           Timer.periodic(const Duration(milliseconds: 1000), (timer) {
@@ -120,9 +183,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   /// Loads navigation via Bluetooth Low Energy (BLE) by checking permissions
   /// and obtaining anchor distances from the Bluetooth device.
+  /// This is the real implementation that connects to actual ESP devices
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigationReal(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -137,6 +201,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           ? _cacheDevice = await _bluetoothService.getBluetoothDevice()
           : null;
 
+      _compassSubscription = _compassService.compassStream.listen((direction) {
+        _compassDirection = direction;
+        add(CompassUpdateEvent(direction));
+      });
       await _bluetoothService.getAnchorDistances(_cacheDevice!,
           onDataReceived: (String decodedData) async {
         print("decodedData : $decodedData");
@@ -174,12 +242,18 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       final arrowDirection = instruction[1] as ArrowDirection;
       print("InstructionMsg: $instructionMsg, arrowDirection: $arrowDirection");
 
+      // Calculate adjusted angle
+      double adjustedAngle = _getAdjustedDirectionFromArrow(arrowDirection);
+
       emit(NavigationLoadedState(
-        objectName: "Riz",
+        objectName:
+            _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
         instruction: instructionMsg,
         arrowDirection: arrowDirection,
         isLastProduct: false,
         isDone: false,
+        compassDirection: _compassDirection,
+        adjustedAngle: adjustedAngle,
       ));
     } else {
       print("Error : null on the navigation");
@@ -203,8 +277,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           instruction: "Tous les produits ont été trouvés",
           arrowDirection: ArrowDirection.nord,
           isLastProduct: true,
+          shouldPopAfterDelay: true,
         ));
         close();
+
         return;
       }
 
@@ -242,21 +318,28 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           currentPath, _cacheCurrentPosition!);
       final instructionMsg = instruction[0] as String;
       final arrowDirection = instruction[1] as ArrowDirection;
+
+      // Calculate adjusted angle
+      double adjustedAngle = _getAdjustedDirectionFromArrow(arrowDirection);
+
       emit(NavigationLoadedState(
         objectName: product.name,
         arrowDirection: arrowDirection,
         instruction: instructionMsg,
         isLastProduct: _currentProductIndex == _products.length - 1,
+        compassDirection: _compassDirection,
+        adjustedAngle: adjustedAngle,
       ));
     } else {
       emit(NavigationError("Impossible de trouver un chemin vers le produit"));
+      close();
     }
   }
 
   /// Updates the current position based on the anchor distances received from BLE devices.
   /// [anchorDistances] The distances received from the BLE anchors used to calculate the position.
   Future<void> updatePosition(List<String> anchorDistances) async {
-    // Toujours recalculer la position actuelle avec la triangulation
+    // Always recalculate current position with triangulation
     _cacheCurrentPosition = await _locationService.getCurrentPosition(
         anchorDistances, _cachedGrid!);
 
