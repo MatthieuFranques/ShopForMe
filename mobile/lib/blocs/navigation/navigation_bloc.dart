@@ -345,11 +345,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
     //call request API for send data to backend
     // TODO uncomment if the backend root is ok because the error break the recalculatePath
-    // await _apiService.sendPosition(
-    //   _cacheCurrentPosition!,
-    //   _cachedGrid!.productPosition,
-    //   _cachePath,
-    // );
+    if (_cachePath != null) {
+      await _apiService.sendPosition(
+        _cacheCurrentPosition!,
+        _cachedGrid!.productPosition,
+        _cachePath,
+      );
+    }
 
     if (_cachePath == null || _cachePath!.isEmpty) {
       print("Si aucun chemin n'est défini, recalculer le chemin initial");

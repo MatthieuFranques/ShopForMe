@@ -73,25 +73,42 @@ class ApiService {
   }
 
 //Send shortestPath on the backend
-  Future<void> sendPosition(List<int> currentPosition,
-      List<int> productPosition, List<List<int>>? shortestPath) async {
-    final url = Uri.parse('$baseUrl/shop/sendposition');
-    final Map<String, dynamic> data = {
-      'currentPosition': currentPosition,
-      'productPosition': productPosition,
-      'shortestPath': shortestPath
-    };
+  Future<void> sendPosition(
+  List<int> currentPosition,
+  List<int> productPosition,
+  List<List<int>>? shortestPath,
+) async {
+  final url = Uri.parse(apiGatewayUrl);
 
+  final Map<String, dynamic> data = {
+    'id': '1',
+    'currentPosition': currentPosition,
+    'productPosition': productPosition,
+    'shortestPath': shortestPath,
+  };
+
+  try {
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': apiGatewayBearer,
+      },
       body: json.encode(data),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("Data sent successfully");
+      print("✅ Data sent successfully to API Gateway");
     } else {
+      print("❌ Status: ${response.statusCode}");
+      print("❌ Response body: ${response.body}");
       throw Exception("Error sending data to backend");
     }
+  } catch (e) {
+    print("❌ Exception during HTTP request: $e");
+    rethrow;
   }
 }
+
+}
+
