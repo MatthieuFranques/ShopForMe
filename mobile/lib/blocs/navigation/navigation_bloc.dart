@@ -38,7 +38,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   double _compassDirection = 0.0;
 
   // Path to the store layout JSON file
-  String jsonFilePath = 'assets/demo/plan28_11_24.json';
+  String jsonFilePath = 'assets/demo/plan-keynote-2025.json';
 
   Timer? _navigationUpdateTimer;
   final List<Product> _products = [];
@@ -132,7 +132,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This test implementation generates mock ESP device signals for development and testing
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigationFake(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -186,7 +186,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This is the real implementation that connects to actual ESP devices
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigationReal(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
