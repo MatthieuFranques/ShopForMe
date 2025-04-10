@@ -1,0 +1,76 @@
+.demo-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100vh !important;
+    align-items: center;
+
+    .plan {
+        margin: 0 !important;
+    }
+}
+
+.same {
+    background-color: #0EA80E !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+.person {
+    background-image: url("../../images/person.svg");
+}
+
+.dest {
+    background-image: url("../../images/tresor.svg");
+}
+
+.path {
+    background-image: url("../../images/foot.svg");
+    background-size: 40% !important;
+}
+
+
+.controls {
+    margin-right: 20px;
+    width: 400px;
+
+    div > div {
+        border-top: 1px solid #1a1e21;
+        padding-top: 10px;
+    }
+
+    .positionControl {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+    }
+
+    .controlBtn {
+        width: 400px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .controlBtnIcon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+
+            path {
+                stroke: white;
+                transition: all .1s ease-in-out;
+            }
+        }
+
+        &:hover {
+            .controlBtnIcon {
+                path {
+                    stroke: #4268c1;
+                }
+            }
+        }
+    }
+}
