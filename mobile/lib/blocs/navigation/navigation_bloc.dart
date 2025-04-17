@@ -110,7 +110,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This test implementation generates mock ESP device signals for development and testing
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigationFake(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -164,7 +164,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This is the real implementation that connects to actual ESP devices
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigationReal(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -222,7 +222,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       if (instruction[0] == Null && instruction[1] == Null){
        print("User is not in a Zone !"); 
       }
-      else {
+      else if (instruction[0] == "Finished") {
+        await _onProductFound(ProductFoundEvent(product: _products[_currentProductIndex]), emit);
+      } 
+      else  {
         _cacheInstruction = instruction[0] as String;
         _cacheArrowDirection = instruction[1] as ArrowDirection;
       }

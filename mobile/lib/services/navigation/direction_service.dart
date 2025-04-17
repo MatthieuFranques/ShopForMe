@@ -64,9 +64,14 @@ class DirectionService {
     int distance = 1;
 
     // Vérifier si l'utilisateur est dans une zone
-    for (ZoneInstruction zone in zoneInstruction){
-      if (zone.isInRange(currentPosition)) {
-        return ["Avancez de $distance pas", zone.direction];
+    for (int i = 0; i < zoneInstruction.length; i++){
+      if (zoneInstruction[i].isInRange(currentPosition)) {
+        if (i == zoneInstruction.length - 1) {
+          return ["Finished", zoneInstruction[i].direction];
+        }
+        else {
+          return ["Avancez de $distance pas", zoneInstruction[i].direction];
+        }
       }
     }
 

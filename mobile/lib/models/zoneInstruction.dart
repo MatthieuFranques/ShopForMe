@@ -87,7 +87,7 @@ List<ZoneInstruction> getDirectionalZones(List<List<int>> path) {
       }
     }
 
-    instructions.add(ZoneInstruction(zone: finalZone, direction: ArrowDirection.nearProduct, center: last));
+    instructions.add(ZoneInstruction(zone: finalZone, direction: ArrowDirection.nord, center: last));
   }
 
   return instructions;
