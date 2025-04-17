@@ -8,6 +8,7 @@ import 'package:mobile/services/api_service.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/services/navigation/compass_service.dart' as compass;
+import 'package:mobile/services/navigation/compass_service.dart';
 import 'package:mobile/services/navigation/location_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/services/navigation/init_navigation_service.dart';
@@ -88,7 +89,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
       // Calculate the adjusted angle between the current compass direction and target
       double adjustedAngle =
-          _getAdjustedDirectionFromArrow(currentState.arrowDirection);
+          _compassService.getAdjustedDirectionFromArrow(currentState.arrowDirection);
 
       emit(NavigationLoadedState(
         objectName: currentState.objectName,
@@ -100,32 +101,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         adjustedAngle: adjustedAngle,
       ));
     }
-  }
-
-  /// Calculates the adjusted angle between the compass direction and arrow direction
-  /// [arrowDirection] The direction to display as an arrow
-  /// @returns The angle in degrees to rotate the compass arrow
-  double _getAdjustedDirectionFromArrow(ArrowDirection arrowDirection) {
-    // Convert ArrowDirection to degrees
-    double targetAngle = 0.0;
-    switch (arrowDirection) {
-      case ArrowDirection.nord:
-        targetAngle = 145.0;
-        break;
-      case ArrowDirection.est:
-        targetAngle = 235.0;
-        break;
-      case ArrowDirection.sud:
-        targetAngle = 325.0;
-        break;
-      case ArrowDirection.ouest:
-        targetAngle = 55.0;
-        break;
-    }
-
-    // Calculate the adjusted angle (angle the user needs to turn to)
-
-    return _compassService.getAdjustedDirection(targetAngle);
   }
 
   /// Loads the navigation grid from a JSON file and starts periodic updates using simulated data
@@ -243,7 +218,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       print("InstructionMsg: $instructionMsg, arrowDirection: $arrowDirection");
 
       // Calculate adjusted angle
-      double adjustedAngle = _getAdjustedDirectionFromArrow(arrowDirection);
+      double adjustedAngle = _compassService.getAdjustedDirectionFromArrow(arrowDirection);
 
       emit(NavigationLoadedState(
         objectName:
@@ -320,7 +295,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       final arrowDirection = instruction[1] as ArrowDirection;
 
       // Calculate adjusted angle
-      double adjustedAngle = _getAdjustedDirectionFromArrow(arrowDirection);
+      double adjustedAngle = _compassService.getAdjustedDirectionFromArrow(arrowDirection);
 
       emit(NavigationLoadedState(
         objectName: product.name,
