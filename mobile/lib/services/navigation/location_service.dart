@@ -4,8 +4,8 @@ import 'package:mobile/models/node.dart';
 
 class LocationService {
   /// Converts a list of string distances from anchors into a list of double distances.
-  /// 
-  /// This function parses the string values of anchor distances from the list [anchorDistances] 
+  ///
+  /// This function parses the string values of anchor distances from the list [anchorDistances]
   /// and converts them to double values representing the distances from the user to each anchor.
   ///
   /// ### Parameters:
@@ -31,8 +31,8 @@ class LocationService {
   /// The function uses a breadth-first search (BFS) algorithm to find the shortest
   /// path and returns the path as a list of `[row, col]` coordinates.
   ///
-  /// The function considers 4 possible directions: right, down, left, and up to 
-  /// navigate through the grid. It uses a priority queue to explore the grid, 
+  /// The function considers 4 possible directions: right, down, left, and up to
+  /// navigate through the grid. It uses a priority queue to explore the grid,
   /// and tracks visited nodes and their previous nodes to reconstruct the path.
   ///
   /// The [grid] is represented by a list of rows and columns where:
@@ -98,8 +98,8 @@ class LocationService {
 
   /// Reconstructs the path from the goal to the start using a map of previous nodes.
   ///
-  /// This function takes a map of `previous` nodes, a `start` position, a `goal` position, 
-  /// and the number of columns (`cols`) in the grid. It traces back from the `goal` to the 
+  /// This function takes a map of `previous` nodes, a `start` position, a `goal` position,
+  /// and the number of columns (`cols`) in the grid. It traces back from the `goal` to the
   /// `start` using the `previous` map and reconstructs the path.
   ///
   /// The function returns a list of `[row, col]` positions representing the reconstructed path.
@@ -115,7 +115,7 @@ class LocationService {
   ///
   /// ### Example:
   /// ```dart
-  /// Map<int, int> previous = {4: 3, 3: 2, 2: 1, 1: -1}; 
+  /// Map<int, int> previous = {4: 3, 3: 2, 2: 1, 1: -1};
   /// List<int> start = [0, 1];
   /// List<int> goal = [1, 1];
   /// int cols = 3;
@@ -138,14 +138,14 @@ class LocationService {
 
   /// Triangulates the position of a point based on the distances from three anchor points.
   ///
-  /// This method calculates the (x, y) coordinates of a point using trilateration, 
-  /// given the positions of three known anchor points and their respective distances 
-  /// to the point being located. The distances are provided in centimeters, and the 
-  /// function converts them to grid units (carreaux). The grid is assumed to have 
+  /// This method calculates the (x, y) coordinates of a point using trilateration,
+  /// given the positions of three known anchor points and their respective distances
+  /// to the point being located. The distances are provided in centimeters, and the
+  /// function converts them to grid units (carreaux). The grid is assumed to have
   /// a scale of 1 carreau = 50 cm.
   ///
   /// The triangulation process uses the following formula to solve for the point's coordinates:
-  /// - \( x \) is calculated using the formula: 
+  /// - \( x \) is calculated using the formula:
   ///     \[
   ///     x = \frac{C * E - F * B}{E * A - B * D}
   ///     \]
@@ -155,22 +155,22 @@ class LocationService {
   ///     \]
   ///
   /// ### Parameters:
-  /// - `anchorLeft`: The coordinates of the left anchor point as a list of integers 
+  /// - `anchorLeft`: The coordinates of the left anchor point as a list of integers
   ///   representing [x, y] in grid units.
   /// - `distanceLeft`: The distance from the point to the left anchor in centimeters.
-  /// - `anchorMiddle`: The coordinates of the middle anchor point as a list of integers 
+  /// - `anchorMiddle`: The coordinates of the middle anchor point as a list of integers
   ///   representing [x, y] in grid units.
   /// - `distanceMiddle`: The distance from the point to the middle anchor in centimeters.
-  /// - `anchorRight`: The coordinates of the right anchor point as a list of integers 
+  /// - `anchorRight`: The coordinates of the right anchor point as a list of integers
   ///   representing [x, y] in grid units.
   /// - `distanceRight`: The distance from the point to the right anchor in centimeters.
   ///
   /// ### Returns:
-  /// A `Future<List<int>>` that resolves to a list of two integers [x, y], 
+  /// A `Future<List<int>>` that resolves to a list of two integers [x, y],
   /// which represent the triangulated position in grid units (carreaux).
   ///
   /// ### Throws:
-  /// - Throws an `Exception` if the denominator in the triangulation calculation is zero, 
+  /// - Throws an `Exception` if the denominator in the triangulation calculation is zero,
   ///   which would indicate that the given distances are inconsistent or invalid.
   ///
   /// ### Example:
@@ -181,7 +181,7 @@ class LocationService {
   /// double distanceMiddle = 70.0;
   /// List<int> anchorRight = [100, 0];
   /// double distanceRight = 120.0;
-  /// 
+  ///
   /// triangulateData(anchorLeft, distanceLeft, anchorMiddle, distanceMiddle, anchorRight, distanceRight)
   ///     .then((result) => print("Triangulated position: $result"));
   /// ```
@@ -232,7 +232,7 @@ class LocationService {
   }
 
   /// Calculates the user's current position based on the distances to three anchor points.
-  /// 
+  ///
   /// This function uses triangulation to compute the user's position using the provided anchor distances.
   /// If any of the anchor distances is zero, the function returns `null` indicating the position cannot be determined.
   ///
@@ -285,7 +285,7 @@ class LocationService {
   }
 
   /// Retrieves the shortest path from the user's current position to the target (product position) on the grid.
-  /// 
+  ///
   /// This function first calculates the current position using the [getCurrentPosition] function, then checks if
   /// the position is valid on the grid. If valid, it finds and returns the shortest path to the product's position.
   ///
@@ -322,7 +322,7 @@ class LocationService {
   }
 
   /// Checks if the user's current position is close to the planned path with a margin of ±1.
-  /// 
+  ///
   /// This function compares the user's current position with each step in the path and returns `true` if the user
   /// is within a margin of ±1 from any step on the path. This is useful to check if the user is still on track
   /// with the planned navigation.
@@ -351,5 +351,43 @@ class LocationService {
     }
     print("L'utilisateur s'est trop éloigné");
     return false;
+  }
+
+  List<List<int>> updateCachePath(
+      List<int> currentPosition, List<List<int>> path) {
+    List<List<int>> accessiblePositions =
+        getAccessiblePositions(currentPosition);
+
+    int lastIndex = 0;
+
+    for (int i = 0; i < path.length; i++) {
+      for (List<int> pos in accessiblePositions) {
+        if (pos.equals(path[i])) {
+          lastIndex = i;
+        }
+      }
+    }
+
+    print("path before : $path");
+    path = [...path.sublist(lastIndex)];
+    print("path after : $path");
+    return path;
+  }
+
+  List<List<int>> getAccessiblePositions(
+    List<int> currentPosition,
+  ) {
+    List<List<int>> accessiblePositions = [];
+
+    for (int i = -1; i < 2; i++) {
+      for (int j = -1; j < 2; j++) {
+        accessiblePositions.add([
+          currentPosition[0] + i,
+          currentPosition[1] + j,
+        ]);
+      }
+    }
+    print("accessiblePositions : $accessiblePositions");
+    return accessiblePositions;
   }
 }

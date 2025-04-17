@@ -351,6 +351,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         _cachedGrid!.productPosition,
         _cachePath,
       );
+      //Regarde ce qu'il y a dans  _cacheCurrentPosition et _cachePath compare les valeur est supprimer celle qui n'est pas cohérente
     }
 
     if (_cachePath == null || _cachePath!.isEmpty) {
@@ -362,6 +363,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         _cacheCurrentPosition!, _cachePath!)) {
       print("Utilisateur hors chemin, recalcul du plus court chemin...");
       await recalculatePath(anchorDistances);
+    } else {
+      _cachePath =
+          _locationService.updateCachePath(_cacheCurrentPosition!, _cachePath!);
     }
   }
 
