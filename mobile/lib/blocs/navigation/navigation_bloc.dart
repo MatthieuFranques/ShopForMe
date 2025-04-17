@@ -12,6 +12,7 @@ import 'package:mobile/services/navigation/compass_service.dart';
 import 'package:mobile/services/navigation/location_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/services/navigation/init_navigation_service.dart';
+import 'package:mobile/models/zoneInstruction.dart';
 import './navigation_event.dart';
 import './navigation_state.dart';
 import 'package:mobile/utils/constants.dart';
@@ -35,6 +36,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   List<List<int>>? _cachePath;
   List<int>? _cacheCurrentPosition = [0, 0];
   List<int>? _cacheTargetPosition;
+  List<ZoneInstruction>? _cacheZoneInstruction;
+  ArrowDirection? _cacheArrowDirection;
+  String? _cacheInstruction;
   BluetoothDevice? _cacheDevice;
   double _compassDirection = 0.0;
 
@@ -53,7 +57,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<LoadNavigationEvent>(_onLoadNavigation);
     on<UpdateNavigationEventDataRow>(_onUpdateNavigation);
     on<ProductFoundEvent>(_onProductFound);
-    on<UpdatePositionEvent>(_onUpdatePosition);
     on<CompassUpdateEvent>(_onCompassUpdate);
   }
 
@@ -205,26 +208,34 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   ) async {
     final anchorDistances = event.decodedData.split("/");
     print("anchorDistances : $anchorDistances");
+
+    // update Current position
     await updatePosition(anchorDistances);
 
     print("shortestPath : $_cachePath");
     if (!const DeepCollectionEquality().equals(_cachePath, null)) {
       print("Shortest path non null, getNextDirection");
       print("Cache current position $_cacheCurrentPosition");
+
       final List<Object> instruction = _directionService.getNextDirection(
-          _cachePath!, _cacheCurrentPosition!);
-      final instructionMsg = instruction[0] as String;
-      final arrowDirection = instruction[1] as ArrowDirection;
-      print("InstructionMsg: $instructionMsg, arrowDirection: $arrowDirection");
+          _cachePath!, _cacheCurrentPosition!, _cacheZoneInstruction!);
+      if (instruction[0] == Null && instruction[1] == Null){
+       print("User is not in a Zone !"); 
+      }
+      else {
+        _cacheInstruction = instruction[0] as String;
+        _cacheArrowDirection = instruction[1] as ArrowDirection;
+      }
+      print("InstructionMsg: $_cacheInstruction, arrowDirection: $_cacheArrowDirection");
 
       // Calculate adjusted angle
-      double adjustedAngle = _compassService.getAdjustedDirectionFromArrow(arrowDirection);
+      double adjustedAngle = _compassService.getAdjustedDirectionFromArrow(_cacheArrowDirection!);
 
       emit(NavigationLoadedState(
         objectName:
             _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
-        instruction: instructionMsg,
-        arrowDirection: arrowDirection,
+        instruction: _cacheInstruction!,
+        arrowDirection: _cacheArrowDirection!,
         isLastProduct: false,
         isDone: false,
         compassDirection: _compassDirection,
@@ -259,55 +270,9 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         return;
       }
 
-      await _updateNavigation(_products[_currentProductIndex], emit);
       _startNavigationUpdates(_products[_currentProductIndex]);
     } catch (e) {
       emit(NavigationError(e.toString()));
-    }
-  }
-
-  /// Updates the navigation state by calculating the direction towards the next product.
-  /// [event] The event containing the current product.
-  /// [emit] The emitter used to send states to the UI.
-  Future<void> _onUpdatePosition(
-    UpdatePositionEvent event,
-    Emitter<NavigationState> emit,
-  ) async {
-    try {
-      await _updateNavigation(event.currentProduct, emit);
-    } catch (e) {
-      emit(NavigationError(e.toString()));
-    }
-  }
-
-  /// Updates the navigation by calculating the next direction towards a product based on the current path.
-  /// [product] The product the navigation is guiding to.
-  /// [emit] The emitter used to send states to the UI.
-  Future<void> _updateNavigation(
-      Product product, Emitter<NavigationState> emit) async {
-    const currentPath = null;
-    //await _locationService.findTargetPosition(productPosition);
-
-    if (currentPath != null && currentPath.isNotEmpty) {
-      final List<Object> instruction = _directionService.getNextDirection(
-          currentPath, _cacheCurrentPosition!);
-      final instructionMsg = instruction[0] as String;
-      final arrowDirection = instruction[1] as ArrowDirection;
-
-      // Calculate adjusted angle
-      double adjustedAngle = _compassService.getAdjustedDirectionFromArrow(arrowDirection);
-
-      emit(NavigationLoadedState(
-        objectName: product.name,
-        arrowDirection: arrowDirection,
-        instruction: instructionMsg,
-        isLastProduct: _currentProductIndex == _products.length - 1,
-        compassDirection: _compassDirection,
-        adjustedAngle: adjustedAngle,
-      ));
-    } else {
-      emit(NavigationError("Impossible de trouver un chemin vers le produit"));
-      close();
     }
   }
 
@@ -326,7 +291,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         _cachedGrid!.productPosition,
         _cachePath,
       );
-      //Regarde ce qu'il y a dans  _cacheCurrentPosition et _cachePath compare les valeur est supprimer celle qui n'est pas cohérente
     }
 
     if (_cachePath == null || _cachePath!.isEmpty) {
@@ -338,9 +302,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         _cacheCurrentPosition!, _cachePath!)) {
       print("Utilisateur hors chemin, recalcul du plus court chemin...");
       await recalculatePath(anchorDistances);
-    } else {
-      _cachePath =
-          _locationService.updateCachePath(_cacheCurrentPosition!, _cachePath!);
     }
   }
 
@@ -351,12 +312,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       anchorDistances,
       _cachedGrid!,
     );
-    //call request API for send data to backend
-    // TODO uncomment if the backend root is ok because the error break the recalculatePath
-    // await _apiService.sendPosition(
-    //   _cacheCurrentPosition!,
-    //   _cachedGrid!.productPosition,
-    //   _cachePath!,
-    // );
+
+    _cacheZoneInstruction = getDirectionalZones(_cachePath!);
+    _cacheArrowDirection = _directionService.calculateDirection(_cachePath!);
   }
 }

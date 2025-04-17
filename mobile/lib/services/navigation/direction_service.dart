@@ -1,3 +1,4 @@
+import "package:mobile/models/zoneInstruction.dart";
 import "package:mobile/services/navigation/compass_service.dart";
 
 class DirectionService {
@@ -52,7 +53,7 @@ class DirectionService {
   /// print(nextDirection[1]); // Prints ArrowDirection.nord
   /// ```
   List<Object> getNextDirection(
-      List<List<int>> path, List<int> currentPosition) {
+      List<List<int>> path, List<int> currentPosition, List<ZoneInstruction> zoneInstruction) {
     if (path.isEmpty) {
       print("Aucune instruction disponible");
       return ["Aucune instruction disponible", Null];
@@ -60,32 +61,29 @@ class DirectionService {
     // final List<List<int>> fullPath = [currentPosition, ...path];
 
     // Déterminer la direction initiale
-    final ArrowDirection initialDirection = calculateDirection(path);
-    int distance = 0;
+    int distance = 1;
 
-    // Parcourir le chemin jusqu'au premier changement de direction
-    for (int i = 0; i < path.length - 1; i++) {
-      final nextDirection = calculateDirection([path[i], path[i + 1]]);
-
-      if (nextDirection == initialDirection) {
-        distance++;
-      } else {
-        break;
+    // Vérifier si l'utilisateur est dans une zone
+    for (ZoneInstruction zone in zoneInstruction){
+      if (zone.isInRange(currentPosition)) {
+        return ["Avancez de $distance pas", zone.direction];
       }
     }
-    print("distance : $distance");
-    switch (initialDirection) {
-      case ArrowDirection.nord:
-        return ["12H00, Avancez de $distance pas", ArrowDirection.nord];
-      case ArrowDirection.sud:
-        return ["6H00, Avancez de $distance pas", ArrowDirection.sud];
-      case ArrowDirection.est:
-        return ["3H00, Avancez de $distance pas", ArrowDirection.est];
-      case ArrowDirection.ouest:
-        return ["9H00, Avancez de $distance pas", ArrowDirection.ouest];
-      default:
-        print("Direction inconnue, retourne null");
-        return ["Direction inconnue", Null];
-    }
+
+    // print("distance : $distance");
+    // switch (initialDirection) {
+    //   case ArrowDirection.nord:
+    //     return ["12H00, Avancez de $distance pas", ArrowDirection.nord];
+    //   case ArrowDirection.sud:
+    //     return ["6H00, Avancez de $distance pas", ArrowDirection.sud];
+    //   case ArrowDirection.est:
+    //     return ["3H00, Avancez de $distance pas", ArrowDirection.est];
+    //   case ArrowDirection.ouest:
+    //     return ["9H00, Avancez de $distance pas", ArrowDirection.ouest];
+    //   default:
+    //     print("Direction inconnue, retourne null");
+    //     return ["Direction inconnue", Null];
+    // }
+    return [Null, Null];
   }
 }

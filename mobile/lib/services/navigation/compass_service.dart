@@ -109,4 +109,4 @@ class CompassService {
 }
 
 /// Enumeration for cardinal directions
-enum ArrowDirection { nord, sud, est, ouest }
+enum ArrowDirection { nord, sud, est, ouest, nearProduct }
