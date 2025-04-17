@@ -8,6 +8,8 @@ import {ReactComponent as Play} from "../../images/play.svg";
 import {ReactComponent as Pause} from "../../images/pause.svg";
 import {ReactComponent as Down} from "../../images/arrow-down.svg";
 import {ReactComponent as Up} from "../../images/arrow-up.svg";
+import {ShopService} from "../../services/shop.service";
+import {ShopModel} from "../../models/Shop.model";
 
 interface Position {
     row: number;
@@ -2830,6 +2832,9 @@ export default function Demo() {
     const [showControls, setShowControls] = useState(true);
 
     useEffect(() => {
+
+        ShopService.getPlanById('1').then((data: ShopModel) => setPlan(data.layout))
+
         if (!isPaused) {
             const intervalId = setInterval(() => {
                 const headers = {
