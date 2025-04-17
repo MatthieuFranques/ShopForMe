@@ -1,4 +1,4 @@
-enum ArrowDirection { nord, sud, est, ouest }
+import "package:mobile/services/navigation/compass_service.dart";
 
 class DirectionService {
   /// Calculates the next direction depending on the [path] to follow.

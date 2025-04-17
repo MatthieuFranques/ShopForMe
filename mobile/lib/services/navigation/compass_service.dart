@@ -77,18 +77,30 @@ class CompassService {
     
     return (angle + 360) % 360;
   }
-  
-  /// Converts an ArrowDirection to degrees
-  /// @param direction Direction as an enumeration
-  /// @returns Corresponding angle in degrees
-  double arrowDirectionToDegrees(ArrowDirection direction) {
-    switch (direction) {
-      case ArrowDirection.nord: return 0;
-      case ArrowDirection.est: return 90;
-      case ArrowDirection.sud: return 180;
-      case ArrowDirection.ouest: return 270;
+
+  /// Calculates the adjusted angle between the compass direction and arrow direction
+  /// [arrowDirection] The direction to display as an arrow
+  /// @returns The angle in degrees to rotate the compass arrow
+  double getAdjustedDirectionFromArrow(ArrowDirection arrowDirection) {
+    // Convert ArrowDirection to degrees
+    double targetAngle = 0.0;
+    switch (arrowDirection) {
+      case ArrowDirection.nord:
+        targetAngle = 60;
+        break;
+      case ArrowDirection.est:
+        targetAngle = 150;
+        break;
+      case ArrowDirection.sud:
+        targetAngle = 240;
+        break;
+      case ArrowDirection.ouest:
+        targetAngle = 330;
+        break;
     }
+  return getAdjustedDirection(targetAngle);
   }
+  
   
   /// Releases resources
   void dispose() {

@@ -51,5 +51,6 @@ flutter:
     - assets/list/defaultShoppingList.json
     - assets/demo/plan28_11_24.json
     - assets/demo/plan_test.json
+    - assets/demo/plan-keynote-2025.json
 
 

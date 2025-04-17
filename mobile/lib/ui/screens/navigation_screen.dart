@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
 import 'package:mobile/blocs/navigation/navigation_export.dart';
 import 'package:mobile/models/product.dart';
+import 'package:mobile/services/navigation/compass_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
+
 
 class NavigationPage extends StatelessWidget {
   final List<Product> shoppingList;
