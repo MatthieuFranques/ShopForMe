@@ -73,7 +73,7 @@ class InitNavigationService {
   /// print(productPosition); // Prints the product position [17, 12].
   /// ```
   Future<List<int>> getProductPosition() async {
-    final List<int> productPositions = [3, 8];
+    final List<int> productPositions = [20, 4];
     return productPositions;
   }
 

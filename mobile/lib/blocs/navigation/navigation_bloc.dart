@@ -91,8 +91,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       final currentState = state as NavigationLoadedState;
 
       // Calculate the adjusted angle between the current compass direction and target
-      double adjustedAngle =
-          _compassService.getAdjustedDirectionFromArrow(currentState.arrowDirection);
+      double adjustedAngle = _compassService
+          .getAdjustedDirectionFromArrow(currentState.arrowDirection);
 
       emit(NavigationLoadedState(
         objectName: currentState.objectName,
@@ -110,7 +110,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This test implementation generates mock ESP device signals for development and testing
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigationFake(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -164,7 +164,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This is the real implementation that connects to actual ESP devices
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigationReal(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -219,25 +219,36 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
       final List<Object> instruction = _directionService.getNextDirection(
           _cachePath!, _cacheCurrentPosition!, _cacheZoneInstruction!);
-      if (instruction[0] == Null && instruction[1] == Null){
-       print("User is not in a Zone !"); 
-      }
-      else if (instruction[0] == "Finished") {
-        await _onProductFound(ProductFoundEvent(product: _products[_currentProductIndex]), emit);
-      } 
-      else  {
+      if (instruction[0] == Null && instruction[1] == Null) {
+        print("User is not in a Zone !");
+      } else if (instruction[0] == "Finished") {
+        print("Finished");
+        //init _product because is null
+        final newProduct = Product(
+          id: '1',
+          name: 'Chocolat Noir',
+          category: 'Alimentaire',
+          rayon: 'Épicerie',
+        );
+        _products.add(newProduct);
+        await _onProductFound(ProductFoundEvent(product: _products[0]), emit);
+      } else {
         _cacheInstruction = instruction[0] as String;
         _cacheArrowDirection = instruction[1] as ArrowDirection;
       }
-      print("InstructionMsg: $_cacheInstruction, arrowDirection: $_cacheArrowDirection");
+      print(
+          "InstructionMsg: $_cacheInstruction, arrowDirection: $_cacheArrowDirection");
 
       // Calculate adjusted angle
-      double adjustedAngle = _compassService.getAdjustedDirectionFromArrow(_cacheArrowDirection!);
+      double adjustedAngle =
+          _compassService.getAdjustedDirectionFromArrow(_cacheArrowDirection!);
 
       emit(NavigationLoadedState(
         objectName:
             _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
-        instruction: _cacheInstruction!,
+        instruction: _cacheInstruction != null && _cacheInstruction!.isNotEmpty
+            ? _cacheInstruction!
+            : "TOTO",
         arrowDirection: _cacheArrowDirection!,
         isLastProduct: false,
         isDone: false,
@@ -260,20 +271,20 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     try {
       _currentProductIndex++;
 
-      if (_currentProductIndex >= _products.length) {
-        emit(NavigationLoadedState(
-          objectName: "Terminé !",
-          instruction: "Tous les produits ont été trouvés",
-          arrowDirection: ArrowDirection.nord,
-          isLastProduct: true,
-          shouldPopAfterDelay: true,
-        ));
-        close();
+      // if (_currentProductIndex >= _products.length) {
+      emit(NavigationLoadedState(
+        objectName: "Terminé !",
+        instruction: "Tous les produits ont été trouvés",
+        arrowDirection: ArrowDirection.nord,
+        isLastProduct: true,
+        shouldPopAfterDelay: true,
+      ));
+      close();
 
-        return;
-      }
+      // return;
+      // }
 
-      _startNavigationUpdates(_products[_currentProductIndex]);
+      // _startNavigationUpdates(_products[_currentProductIndex]);
     } catch (e) {
       emit(NavigationError(e.toString()));
     }
