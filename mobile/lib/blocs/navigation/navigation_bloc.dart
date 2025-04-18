@@ -187,7 +187,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           onDataReceived: (String decodedData) async {
         print("decodedData : $decodedData");
         if (decodedData != "") {
-          print(" if (decodedData != " ") {");
           add(UpdateNavigationEventDataRow(decodedData));
         }
       });
@@ -222,7 +221,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       if (instruction[0] == Null && instruction[1] == Null) {
         print("User is not in a Zone !");
       } else if (instruction[0] == "Finished") {
-        print("Finished");
         //init _product because is null
         final newProduct = Product(
           id: '1',
@@ -248,7 +246,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
             _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
         instruction: _cacheInstruction != null && _cacheInstruction!.isNotEmpty
             ? _cacheInstruction!
-            : "TOTO",
+            : "Calibrage en cours",
         arrowDirection: _cacheArrowDirection!,
         isLastProduct: false,
         isDone: false,
@@ -274,7 +272,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       // if (_currentProductIndex >= _products.length) {
       emit(NavigationLoadedState(
         objectName: "Terminé !",
-        instruction: "Tous les produits ont été trouvés",
+        instruction: "Vous êtes arrivé au produit",
         arrowDirection: ArrowDirection.nord,
         isLastProduct: true,
         shouldPopAfterDelay: true,

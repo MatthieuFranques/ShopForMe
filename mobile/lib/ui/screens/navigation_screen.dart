@@ -7,7 +7,6 @@ import 'package:mobile/services/navigation/compass_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
-
 class NavigationPage extends StatelessWidget {
   final List<Product> shoppingList;
 
@@ -81,20 +80,6 @@ class _NavigationViewState extends State<NavigationView>
         ));
   }
 
-  // Fonction pour obtenir l'icône correspondant à la direction
-  IconData _getDirectionIcon(ArrowDirection direction) {
-    switch (direction) {
-      case ArrowDirection.nord:
-        return Icons.arrow_upward;
-      case ArrowDirection.sud:
-        return Icons.arrow_downward;
-      case ArrowDirection.est:
-        return Icons.arrow_forward;
-      case ArrowDirection.ouest:
-        return Icons.arrow_back;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -165,23 +150,62 @@ class _NavigationViewState extends State<NavigationView>
                   ),
                 ),
 
-                // ... Le reste de la Column inchangé ...
+                // Section information sur l'orientation
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: (state.adjustedAngle * (math.pi / 180) * -1),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Direction: ${state.compassDirection.toStringAsFixed(0)}°",
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.02,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        "Angle: ${state.adjustedAngle.toStringAsFixed(0)}°",
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.02,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // ... Le reste de la Column inchangé ...
+                if (state.objectName != "Terminé !")
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: (state.adjustedAngle * (math.pi / 180) * -1),
+                          child: Icon(
+                            Icons.navigation,
+                            size: screenWidth * 0.8,
+                            color: const Color.fromARGB(255, 1, 28, 64),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                if (state.objectName == "Terminé !")
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Expanded(
+                      child: Center(
                         child: Icon(
-                          Icons.navigation,
+                          Icons.check_circle,
                           size: screenWidth * 0.8,
                           color: const Color.fromARGB(255, 1, 28, 64),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
@@ -258,7 +282,7 @@ class _NavigationViewState extends State<NavigationView>
               return BlocListener<NavigationBloc, NavigationState>(
                 listener: (context, state) {
                   if (state is NavigationLoadedState && state.isLastProduct) {
-                    Future.delayed(const Duration(seconds: 3), () {
+                    Future.delayed(const Duration(seconds: 5), () {
                       Navigator.pop(context);
                     });
                   }

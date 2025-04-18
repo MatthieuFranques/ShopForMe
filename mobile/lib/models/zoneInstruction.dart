@@ -1,6 +1,5 @@
 import "package:mobile/services/navigation/compass_service.dart";
- 
-  
+
 class ZoneInstruction {
   final List<List<int>> zone;
   final ArrowDirection direction;
@@ -16,13 +15,17 @@ class ZoneInstruction {
   String toString() {
     return 'Zone(center: $center, direction: $direction, zone size: ${zone.length}, zone: $zone)';
   }
+
   List getZoneRange() {
-    return [ zone[0], [ zone[0][0] + 2, zone[0][1] + 2] ];
+    return [
+      zone[0],
+      [zone[0][0] + 2, zone[0][1] + 2]
+    ];
   }
 
   bool isInRange(List<int> position) {
     final int firstY = zone[0][0];
-    final int firstX = zone [0][1];
+    final int firstX = zone[0][1];
     final int lastY = firstY + 2;
     final int lastX = firstX + 2;
     final int y = position[0];
@@ -48,10 +51,14 @@ List<ZoneInstruction> getDirectionalZones(List<List<int>> path) {
 
     if (dLine1 != dLine2 || dCol1 != dCol2) {
       ArrowDirection direction;
-      if (dLine2 == 1) direction = ArrowDirection.sud;
-      else if (dLine2 == -1) direction = ArrowDirection.nord;
-      else if (dCol2 == 1) direction = ArrowDirection.est;
-      else direction = ArrowDirection.ouest;
+      if (dLine2 == 1)
+        direction = ArrowDirection.sud;
+      else if (dLine2 == -1)
+        direction = ArrowDirection.nord;
+      else if (dCol2 == 1)
+        direction = ArrowDirection.est;
+      else
+        direction = ArrowDirection.ouest;
 
       List<List<int>> zone = [];
       for (int x = curr[0] - 1; x <= curr[0] + 1; x++) {
@@ -60,7 +67,8 @@ List<ZoneInstruction> getDirectionalZones(List<List<int>> path) {
         }
       }
 
-      instructions.add(ZoneInstruction(zone: zone, direction: direction, center: curr));
+      instructions
+          .add(ZoneInstruction(zone: zone, direction: direction, center: curr));
       lastDirection = direction; // Store the last known direction
     }
   }
@@ -87,12 +95,12 @@ List<ZoneInstruction> getDirectionalZones(List<List<int>> path) {
       }
     }
 
-    instructions.add(ZoneInstruction(zone: finalZone, direction: ArrowDirection.nord, center: last));
+    instructions.add(ZoneInstruction(
+        zone: finalZone, direction: ArrowDirection.nord, center: last));
   }
 
   return instructions;
 }
-
 
 void printGrid({
   required List<List<int>> path,
@@ -105,8 +113,8 @@ void printGrid({
     for (int col = 0; col < width; col++) {
       final List<int> pos = [line, col];
 
-      if (zones.any((zone) =>
-          zone.center[0] == line && zone.center[1] == col)) {
+      if (zones
+          .any((zone) => zone.center[0] == line && zone.center[1] == col)) {
         ZoneInstruction z = zones.firstWhere(
             (zone) => zone.center[0] == line && zone.center[1] == col);
         row += directionArrow(z.direction);
@@ -133,5 +141,7 @@ String directionArrow(ArrowDirection dir) {
       return '←';
     case ArrowDirection.est:
       return '→';
+    case ArrowDirection.finish:
+      return '*';
   }
 }
