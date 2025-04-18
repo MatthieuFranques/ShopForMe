@@ -67,6 +67,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     _navigationUpdateTimer?.cancel();
     _navigationTimer?.cancel();
     _compassSubscription?.cancel();
+    _cacheDevice!.disconnect();
     return super.close();
   }
 
@@ -283,7 +284,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       ));
       close();
 
-      // return;
+      return;
       // }
 
       // _startNavigationUpdates(_products[_currentProductIndex]);
