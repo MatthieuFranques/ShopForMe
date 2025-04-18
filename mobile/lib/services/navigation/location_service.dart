@@ -58,19 +58,20 @@ class LocationService {
   /// ```
   List<List<int>> findShortestPath(Grid grid, List<int> start, List<int> goal) {
     final PriorityQueue<Node> queue = PriorityQueue<Node>();
-    final Map<int, int> previous =
-        {}; // Stores previous node in 1D index format
-    final Set<int> visited = {}; // Track visited nodes
+    final Map<int, int> previous = {}; // Map to store previous node in path
+    final Set<int> visited = {}; // Set to track visited nodes
     final List<List<int>> directions = [
-      [0, 1],
-      [1, 0],
-      [0, -1],
-      [-1, 0]
+      [0, 1], // Right
+      [1, 0], // Down
+      [0, -1], // Left
+      [-1, 0] // Up
     ];
     final int cols = grid.cols;
 
+    // Add the start node to the queue with a distance of 0
     queue.add(Node(start[0], start[1], 0));
-    previous[start[0] * cols + start[1]] = -1; // Mark start
+    previous[start[0] * cols + start[1]] =
+        -1; // Mark start as having no predecessor
 
     while (queue.isNotEmpty) {
       final Node current = queue.removeFirst();
@@ -80,13 +81,18 @@ class LocationService {
       if (visited.contains(index)) continue;
       visited.add(index);
 
-      if (x == goal[0] && y == goal[1]) break; // Stop if goal reached
+      // Goal reached: stop processing
+      if (x == goal[0] && y == goal[1]) break;
 
       for (var dir in directions) {
         final int newX = x + dir[0], newY = y + dir[1];
         final int newIndex = newX * cols + newY;
 
-        if (grid.isValid(newX, newY) && !visited.contains(newIndex)) {
+        // Check bounds, walkability, and if already visited
+        if (grid.isValid(newX, newY) &&
+            grid.getValue(newX, newY) ==
+                0 && // <--- Make sure it's a walkable cell
+            !visited.contains(newIndex)) {
           queue.add(Node(newX, newY, current.distance + 1));
           previous[newIndex] = index;
         }

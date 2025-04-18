@@ -150,30 +150,6 @@ class _NavigationViewState extends State<NavigationView>
                   ),
                 ),
 
-                // Section information sur l'orientation
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Direction: ${state.compassDirection.toStringAsFixed(0)}°",
-                        style: TextStyle(
-                          fontSize: screenHeight * 0.02,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Text(
-                        "Angle: ${state.adjustedAngle.toStringAsFixed(0)}°",
-                        style: TextStyle(
-                          fontSize: screenHeight * 0.02,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 // ... Le reste de la Column inchangé ...
                 if (state.objectName != "Terminé !")
                   Padding(
@@ -193,14 +169,18 @@ class _NavigationViewState extends State<NavigationView>
                     ),
                   ),
                 if (state.objectName == "Terminé !")
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Expanded(
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Center(
-                        child: Icon(
-                          Icons.check_circle,
-                          size: screenWidth * 0.8,
-                          color: const Color.fromARGB(255, 1, 28, 64),
+                        child: Semantics(
+                          label: 'Icône de validation',
+                          hint: 'Indique que le calibrage est terminé',
+                          child: Icon(
+                            Icons.check_circle,
+                            size: screenWidth * 0.8,
+                            color: const Color.fromARGB(255, 1, 28, 64),
+                          ),
                         ),
                       ),
                     ),
@@ -208,14 +188,17 @@ class _NavigationViewState extends State<NavigationView>
 
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    state.instruction,
-                    style: TextStyle(
-                      fontSize: screenHeight * 0.03,
-                      color: const Color.fromARGB(255, 1, 28, 64),
-                      fontWeight: FontWeight.bold,
+                  child: Semantics(
+                    label: 'Instruction de navigation',
+                    child: Text(
+                      state.instruction,
+                      style: TextStyle(
+                        fontSize: screenHeight * 0.03,
+                        color: const Color.fromARGB(255, 1, 28, 64),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
                 const Spacer(),
@@ -300,21 +283,28 @@ class _NavigationViewState extends State<NavigationView>
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: Image.asset(
-                  'assets/logo/CompassCalibration.gif',
-                  width: 300,
-                  height: 300,
+              Semantics(
+                label: 'Animation de calibrage de la boussole en forme de 8',
+                image: true,
+                child: Center(
+                  child: Image.asset(
+                    'assets/logo/CompassCalibration.gif',
+                    width: 300,
+                    height: 300,
+                  ),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  "Calibrage en cours....",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 1, 28, 64),
+                child: Semantics(
+                  label: 'Calibrage en cours',
+                  child: const Text(
+                    "Calibrage en cours....",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 1, 28, 64),
+                    ),
                   ),
                 ),
               ),

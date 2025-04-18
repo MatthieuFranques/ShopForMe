@@ -208,6 +208,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     final anchorDistances = event.decodedData.split("/");
     print("anchorDistances : $anchorDistances");
 
+    // _cachedGrid!.toStringData();
+
     // update Current position
     await updatePosition(anchorDistances);
 
@@ -244,9 +246,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       emit(NavigationLoadedState(
         objectName:
             _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
-        instruction: _cacheInstruction != null && _cacheInstruction!.isNotEmpty
-            ? _cacheInstruction!
-            : " ",
+        instruction:
+            //  _cacheInstruction != null && _cacheInstruction!.isNotEmpty
+            //     ? _cacheInstruction!
+            //     : " "
+            "Avancer vers la direction de la flèche",
         arrowDirection: _cacheArrowDirection!,
         isLastProduct: false,
         isDone: false,
