@@ -246,7 +246,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
             _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
         instruction: _cacheInstruction != null && _cacheInstruction!.isNotEmpty
             ? _cacheInstruction!
-            : "Calibrage en cours",
+            : " ",
         arrowDirection: _cacheArrowDirection!,
         isLastProduct: false,
         isDone: false,

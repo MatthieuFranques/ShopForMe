@@ -194,7 +194,7 @@ class _NavigationViewState extends State<NavigationView>
                   ),
                 if (state.objectName == "Terminé !")
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Expanded(
                       child: Center(
                         child: Icon(
@@ -293,8 +293,32 @@ class _NavigationViewState extends State<NavigationView>
           }
 
           // État par défaut
-          return const Center(
-            child: CircularProgressIndicator(),
+          // return const Center(
+          //   child: CircularProgressIndicator(),
+          // );
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/logo/CompassCalibration.gif',
+                  width: 300,
+                  height: 300,
+                ),
+              ),
+              const Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  "Calibrage en cours....",
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 1, 28, 64),
+                  ),
+                ),
+              ),
+            ],
           );
         },
       ),
