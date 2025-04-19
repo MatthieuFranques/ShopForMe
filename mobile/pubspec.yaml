@@ -23,6 +23,7 @@ dependencies:
   permission_handler: ^11.3.1
   cbor: ^6.3.3
   json_annotation: ^4.0.1
+  flutter_compass: ^0.8.1
 
 
 
@@ -50,5 +51,8 @@ flutter:
     - assets/list/defaultShoppingList.json
     - assets/demo/plan28_11_24.json
     - assets/demo/plan_test.json
+    - assets/demo/plan-keynote-2025.json
+    - assets/logo/
+
 
 

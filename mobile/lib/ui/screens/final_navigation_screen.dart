@@ -14,8 +14,8 @@ class _FinalNavigationScreenState extends State<FinalNavigationScreen> {
   @override
   void initState() {
     super.initState();
-    // Retour à la page d'accueil après 5 secondes
-    Future.delayed(const Duration(seconds: 5), () {
+    // Return menu
+    Future.delayed(const Duration(seconds: 9), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),

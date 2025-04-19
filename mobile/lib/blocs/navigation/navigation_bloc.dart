@@ -7,9 +7,12 @@ import 'package:mobile/models/grid.dart';
 import 'package:mobile/services/api_service.dart';
 import 'package:mobile/services/bluetooth_service.dart';
 import 'package:mobile/models/product.dart';
+import 'package:mobile/services/navigation/compass_service.dart' as compass;
+import 'package:mobile/services/navigation/compass_service.dart';
 import 'package:mobile/services/navigation/location_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/services/navigation/init_navigation_service.dart';
+import 'package:mobile/models/zoneInstruction.dart';
 import './navigation_event.dart';
 import './navigation_state.dart';
 import 'package:mobile/utils/constants.dart';
@@ -25,31 +28,36 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   late final InitNavigationService _initNavigationService =
       InitNavigationService();
   late final ApiService _apiService = ApiService(baseUrl: baseUrl);
-  late StreamController<String> _dataController;
+  late final compass.CompassService _compassService = compass.CompassService();
+  late StreamSubscription? _compassSubscription;
 
-  // TODO change to true value
+  // Cache values for various navigation data
   Grid? _cachedGrid;
   List<List<int>>? _cachePath;
   List<int>? _cacheCurrentPosition = [0, 0];
+  List<int>? _cacheTargetPosition;
+  List<ZoneInstruction>? _cacheZoneInstruction;
+  ArrowDirection? _cacheArrowDirection;
+  String? _cacheInstruction;
   BluetoothDevice? _cacheDevice;
+  double _compassDirection = 0.0;
 
-  // const String jsonFilePath = 'assets/demo/plan_test.json';
-  String jsonFilePath = 'assets/demo/plan28_11_24.json';
+  // Path to the store layout JSON file
+  String jsonFilePath = 'assets/demo/plan-keynote-2025.json';
 
   Timer? _navigationUpdateTimer;
   final List<Product> _products = [];
   int _currentProductIndex = 0;
 
-  /// Initializes the NavigationBloc with the provided [StoreService] and sets up event handlers.
+  /// Initializes the NavigationBloc with the provided parameters and sets up event handlers.
   NavigationBloc() : super(NavigationInitial()) {
     _locationService = LocationService();
 
+    // Using the test implementation by default
     on<LoadNavigationEvent>(_onLoadNavigation);
-    // on<UpdateNavigationEvent>(_onUpdateNavigation);
     on<UpdateNavigationEventDataRow>(_onUpdateNavigation);
-
     on<ProductFoundEvent>(_onProductFound);
-    on<UpdatePositionEvent>(_onUpdatePosition);
+    on<CompassUpdateEvent>(_onCompassUpdate);
   }
 
   /// Closes the bloc, cancels any ongoing navigation timers.
@@ -58,6 +66,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     print("Enter in 'Close' : navigation_bloc");
     _navigationUpdateTimer?.cancel();
     _navigationTimer?.cancel();
+    _compassSubscription?.cancel();
+    _cacheDevice!.disconnect();
     return super.close();
   }
 
@@ -71,11 +81,37 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     );
   }
 
-  /// Loads the navigation grid from a JSON file and starts periodic updates for navigation.
+  /// Handles updates from the compass sensor
+  /// [event] The event containing the compass direction
+  /// [emit] The emitter used to send states to the UI
+  void _onCompassUpdate(
+    CompassUpdateEvent event,
+    Emitter<NavigationState> emit,
+  ) {
+    if (state is NavigationLoadedState) {
+      final currentState = state as NavigationLoadedState;
+
+      // Calculate the adjusted angle between the current compass direction and target
+      double adjustedAngle = _compassService
+          .getAdjustedDirectionFromArrow(currentState.arrowDirection);
+
+      emit(NavigationLoadedState(
+        objectName: currentState.objectName,
+        instruction: currentState.instruction,
+        arrowDirection: currentState.arrowDirection,
+        isLastProduct: currentState.isLastProduct,
+        isDone: currentState.isDone,
+        compassDirection: event.direction,
+        adjustedAngle: adjustedAngle,
+      ));
+    }
+  }
+
+  /// Loads the navigation grid from a JSON file and starts periodic updates using simulated data
+  /// This test implementation generates mock ESP device signals for development and testing
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  // TODO _onLoadNavigation with no blu (test)
-  Future<void> _onLoadNavigationTest(
+  Future<void> _onLoadNavigationFake(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -90,6 +126,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       // print(await _apiService.getAllProductByShop(defaultShopId));
       // print(await _apiService.getShopById(defaultShopId));
       // print(await _apiService.getSectionForProduct(1));
+      // Subscribe to compass updates
+
+      _compassSubscription = _compassService.compassStream.listen((direction) {
+        _compassDirection = direction;
+        add(CompassUpdateEvent(direction));
+      });
 
       _navigationTimer =
           Timer.periodic(const Duration(milliseconds: 1000), (timer) {
@@ -120,6 +162,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   /// Loads navigation via Bluetooth Low Energy (BLE) by checking permissions
   /// and obtaining anchor distances from the Bluetooth device.
+  /// This is the real implementation that connects to actual ESP devices
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
   Future<void> _onLoadNavigation(
@@ -137,11 +180,14 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
           ? _cacheDevice = await _bluetoothService.getBluetoothDevice()
           : null;
 
+      _compassSubscription = _compassService.compassStream.listen((direction) {
+        _compassDirection = direction;
+        add(CompassUpdateEvent(direction));
+      });
       await _bluetoothService.getAnchorDistances(_cacheDevice!,
           onDataReceived: (String decodedData) async {
         print("decodedData : $decodedData");
         if (decodedData != "") {
-          print(" if (decodedData != " ") {");
           add(UpdateNavigationEventDataRow(decodedData));
         }
       });
@@ -162,24 +208,55 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   ) async {
     final anchorDistances = event.decodedData.split("/");
     print("anchorDistances : $anchorDistances");
+
+    // _cachedGrid!.toStringData();
+
+    // update Current position
     await updatePosition(anchorDistances);
 
     print("shortestPath : $_cachePath");
     if (!const DeepCollectionEquality().equals(_cachePath, null)) {
       print("Shortest path non null, getNextDirection");
       print("Cache current position $_cacheCurrentPosition");
+
       final List<Object> instruction = _directionService.getNextDirection(
-          _cachePath!, _cacheCurrentPosition!);
-      final instructionMsg = instruction[0] as String;
-      final arrowDirection = instruction[1] as ArrowDirection;
-      print("InstructionMsg: $instructionMsg, arrowDirection: $arrowDirection");
+          _cachePath!, _cacheCurrentPosition!, _cacheZoneInstruction!);
+      if (instruction[0] == Null && instruction[1] == Null) {
+        print("User is not in a Zone !");
+      } else if (instruction[0] == "Finished") {
+        //init _product because is null
+        final newProduct = Product(
+          id: '1',
+          name: 'Chocolat Noir',
+          category: 'Alimentaire',
+          rayon: 'Épicerie',
+        );
+        _products.add(newProduct);
+        await _onProductFound(ProductFoundEvent(product: _products[0]), emit);
+      } else {
+        _cacheInstruction = instruction[0] as String;
+        _cacheArrowDirection = instruction[1] as ArrowDirection;
+      }
+      print(
+          "InstructionMsg: $_cacheInstruction, arrowDirection: $_cacheArrowDirection");
+
+      // Calculate adjusted angle
+      double adjustedAngle =
+          _compassService.getAdjustedDirectionFromArrow(_cacheArrowDirection!);
 
       emit(NavigationLoadedState(
-        objectName: "Riz",
-        instruction: instructionMsg,
-        arrowDirection: arrowDirection,
+        objectName:
+            _products.isNotEmpty ? _products[_currentProductIndex].name : "Riz",
+        instruction:
+            //  _cacheInstruction != null && _cacheInstruction!.isNotEmpty
+            //     ? _cacheInstruction!
+            //     : " "
+            "Avancer vers la direction de la flèche",
+        arrowDirection: _cacheArrowDirection!,
         isLastProduct: false,
         isDone: false,
+        compassDirection: _compassDirection,
+        adjustedAngle: adjustedAngle,
       ));
     } else {
       print("Error : null on the navigation");
@@ -197,76 +274,41 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     try {
       _currentProductIndex++;
 
-      if (_currentProductIndex >= _products.length) {
-        emit(NavigationLoadedState(
-          objectName: "Terminé !",
-          instruction: "Tous les produits ont été trouvés",
-          arrowDirection: ArrowDirection.nord,
-          isLastProduct: true,
-        ));
-        close();
-        return;
-      }
-
-      await _updateNavigation(_products[_currentProductIndex], emit);
-      _startNavigationUpdates(_products[_currentProductIndex]);
-    } catch (e) {
-      emit(NavigationError(e.toString()));
-    }
-  }
-
-  /// Updates the navigation state by calculating the direction towards the next product.
-  /// [event] The event containing the current product.
-  /// [emit] The emitter used to send states to the UI.
-  Future<void> _onUpdatePosition(
-    UpdatePositionEvent event,
-    Emitter<NavigationState> emit,
-  ) async {
-    try {
-      await _updateNavigation(event.currentProduct, emit);
-    } catch (e) {
-      emit(NavigationError(e.toString()));
-    }
-  }
-
-  /// Updates the navigation by calculating the next direction towards a product based on the current path.
-  /// [product] The product the navigation is guiding to.
-  /// [emit] The emitter used to send states to the UI.
-  Future<void> _updateNavigation(
-      Product product, Emitter<NavigationState> emit) async {
-    const currentPath = null;
-    //await _locationService.findTargetPosition(productPosition);
-
-    if (currentPath != null && currentPath.isNotEmpty) {
-      final List<Object> instruction = _directionService.getNextDirection(
-          currentPath, _cacheCurrentPosition!);
-      final instructionMsg = instruction[0] as String;
-      final arrowDirection = instruction[1] as ArrowDirection;
+      // if (_currentProductIndex >= _products.length) {
       emit(NavigationLoadedState(
-        objectName: product.name,
-        arrowDirection: arrowDirection,
-        instruction: instructionMsg,
-        isLastProduct: _currentProductIndex == _products.length - 1,
+        objectName: "Terminé !",
+        instruction: "Vous êtes arrivé au produit",
+        arrowDirection: ArrowDirection.nord,
+        isLastProduct: true,
+        shouldPopAfterDelay: true,
       ));
-    } else {
-      emit(NavigationError("Impossible de trouver un chemin vers le produit"));
+      close();
+
+      return;
+      // }
+
+      // _startNavigationUpdates(_products[_currentProductIndex]);
+    } catch (e) {
+      emit(NavigationError(e.toString()));
     }
   }
 
   /// Updates the current position based on the anchor distances received from BLE devices.
   /// [anchorDistances] The distances received from the BLE anchors used to calculate the position.
   Future<void> updatePosition(List<String> anchorDistances) async {
-    // Toujours recalculer la position actuelle avec la triangulation
+    // Always recalculate current position with triangulation
     _cacheCurrentPosition = await _locationService.getCurrentPosition(
         anchorDistances, _cachedGrid!);
 
     //call request API for send data to backend
     // TODO uncomment if the backend root is ok because the error break the recalculatePath
-    // await _apiService.sendPosition(
-    //   _cacheCurrentPosition!,
-    //   _cachedGrid!.productPosition,
-    //   _cachePath,
-    // );
+    if (_cachePath != null) {
+      await _apiService.sendPosition(
+        _cacheCurrentPosition!,
+        _cachedGrid!.productPosition,
+        _cachePath,
+      );
+    }
 
     if (_cachePath == null || _cachePath!.isEmpty) {
       print("Si aucun chemin n'est défini, recalculer le chemin initial");
@@ -287,12 +329,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       anchorDistances,
       _cachedGrid!,
     );
-    //call request API for send data to backend
-    // TODO uncomment if the backend root is ok because the error break the recalculatePath
-    // await _apiService.sendPosition(
-    //   _cacheCurrentPosition!,
-    //   _cachedGrid!.productPosition,
-    //   _cachePath!,
-    // );
+
+    _cacheZoneInstruction = getDirectionalZones(_cachePath!);
+    _cacheArrowDirection = _directionService.calculateDirection(_cachePath!);
   }
 }

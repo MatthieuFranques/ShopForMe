@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:mobile/services/navigation/compass_service.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
 
 abstract class NavigationState extends Equatable {
@@ -17,16 +18,33 @@ class NavigationLoadedState extends NavigationState {
   final bool isLastProduct;
   final bool isDone;
 
+  // Propriétés essentielles pour le compass
+  final double compassDirection; // Direction actuelle en degrés
+  final double adjustedAngle; // Angle ajusté pour la rotation de l'UI
+  final bool shouldPopAfterDelay;
+
   NavigationLoadedState({
     required this.objectName,
     required this.instruction,
     required this.arrowDirection,
     this.isLastProduct = false,
     this.isDone = false,
+    this.compassDirection = 0.0,
+    this.adjustedAngle = 0.0,
+    this.shouldPopAfterDelay = false,
   });
 
   @override
-  List<Object?> get props => [objectName, instruction, arrowDirection, isLastProduct, isDone];
+  List<Object?> get props => [
+        objectName,
+        instruction,
+        arrowDirection,
+        isLastProduct,
+        isDone,
+        compassDirection,
+        adjustedAngle,
+        shouldPopAfterDelay,
+      ];
 }
 
 class NavigationError extends NavigationState {

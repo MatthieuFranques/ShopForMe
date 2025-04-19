@@ -37,9 +37,9 @@ class InitNavigationService {
     final List<List<int>> grid =
         List.generate(numRows, (_) => List<int>.filled(numCols, 1));
     final List<List<int>> beaconPositions = [];
-    beaconPositions.add([16, 3]);
-    beaconPositions.add([2, 12]);
-    beaconPositions.add([16, 17]);
+    beaconPositions.add([3, 0]);
+    beaconPositions.add([23, 1]);
+    beaconPositions.add([23, 26]);
     for (int row = 0; row < numRows; row++) {
       final List<dynamic> rowData = plan[row];
 
@@ -73,7 +73,7 @@ class InitNavigationService {
   /// print(productPosition); // Prints the product position [17, 12].
   /// ```
   Future<List<int>> getProductPosition() async {
-    final List<int> productPositions = [17, 12];
+    final List<int> productPositions = [20, 4];
     return productPositions;
   }
 

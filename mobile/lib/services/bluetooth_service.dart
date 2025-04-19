@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/services/shared_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BluetoothScanService {
   FlutterBlue flutterBlue = FlutterBlue.instance;
@@ -110,8 +112,24 @@ class BluetoothScanService {
   Future<BluetoothDevice> getBluetoothDevice() async {
   print("Starting Bluetooth scan...");
 
+    // final bluetoothIsOn = await FlutterBlue.instance.isOn;
+    // if (!bluetoothIsOn) {
+    //   print("Bluetooth is OFF");
+    //   // Prompt the user
+    //   return null;
+    // }
+
+    // // Check permissions
+    // if (Platform.isAndroid) {
+    //   final status = await Permission.bluetoothScan.status;
+    //   if (!status.isGranted) {
+    //     await Permission.bluetoothScan.request();
+    //   }
+    // }
+
   // Créer une instance de FlutterBlue pour le scan
   final FlutterBlue flutterBlue = FlutterBlue.instance;
+  print("Instance created");
 
   // Ensure any ongoing scan is stopped before starting a new one
   if (await flutterBlue.isScanning.first) {
@@ -124,8 +142,13 @@ class BluetoothScanService {
   final completer = Completer<BluetoothDevice>();
   late StreamSubscription<ScanResult> scanSubscription;
 
+  print("Before listening");
+
+  
+
   // Écouter les résultats du scan
   scanSubscription = flutterBlue.scan().listen((scanResult) async {
+    print("Trying to find devices");
     if (scanResult.device.name == 'ESP32_BLE') {
       print("Device found: ${scanResult.device.name}");
 
