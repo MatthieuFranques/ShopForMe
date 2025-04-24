@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:mobile/services/navigation/compass_service.dart';
-import 'package:mobile/services/navigation/direction_service.dart';
 
 abstract class NavigationState extends Equatable {
   @override

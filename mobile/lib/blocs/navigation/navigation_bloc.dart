@@ -35,7 +35,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   Grid? _cachedGrid;
   List<List<int>>? _cachePath;
   List<int>? _cacheCurrentPosition = [0, 0];
-  List<int>? _cacheTargetPosition;
   List<ZoneInstruction>? _cacheZoneInstruction;
   ArrowDirection? _cacheArrowDirection;
   String? _cacheInstruction;

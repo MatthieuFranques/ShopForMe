@@ -51,16 +51,17 @@ List<ZoneInstruction> getDirectionalZones(List<List<int>> path) {
 
     if (dLine1 != dLine2 || dCol1 != dCol2) {
       ArrowDirection direction;
-      if (dLine2 == 1)
+      if (dLine2 == 1) {
         direction = ArrowDirection.sud;
-      else if (dLine2 == -1)
+      } else if (dLine2 == -1) {
         direction = ArrowDirection.nord;
-      else if (dCol2 == 1)
+      } else if (dCol2 == 1) {
         direction = ArrowDirection.est;
-      else
+      } else {
         direction = ArrowDirection.ouest;
+      }
 
-      List<List<int>> zone = [];
+      final List<List<int>> zone = [];
       for (int x = curr[0] - 1; x <= curr[0] + 1; x++) {
         for (int y = curr[1] - 1; y <= curr[1] + 1; y++) {
           zone.add([x, y]);
@@ -88,7 +89,7 @@ List<ZoneInstruction> getDirectionalZones(List<List<int>> path) {
       return ArrowDirection.ouest;
     }();
 
-    List<List<int>> finalZone = [];
+    final List<List<int>> finalZone = [];
     for (int x = last[0] - 1; x <= last[0] + 1; x++) {
       for (int y = last[1] - 1; y <= last[1] + 1; y++) {
         finalZone.add([x, y]);
@@ -111,11 +112,9 @@ void printGrid({
   for (int line = 0; line < height; line++) {
     String row = '';
     for (int col = 0; col < width; col++) {
-      final List<int> pos = [line, col];
-
       if (zones
           .any((zone) => zone.center[0] == line && zone.center[1] == col)) {
-        ZoneInstruction z = zones.firstWhere(
+        final ZoneInstruction z = zones.firstWhere(
             (zone) => zone.center[0] == line && zone.center[1] == col);
         row += directionArrow(z.direction);
       } else if (zones.any((zone) =>

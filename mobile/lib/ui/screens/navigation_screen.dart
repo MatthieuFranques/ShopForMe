@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
 import 'package:mobile/blocs/navigation/navigation_export.dart';
 import 'package:mobile/models/product.dart';
-import 'package:mobile/services/navigation/compass_service.dart';
-import 'package:mobile/services/navigation/direction_service.dart';
 import 'package:mobile/ui/screens/final_navigation_screen.dart';
 
 class NavigationPage extends StatelessWidget {
@@ -121,7 +119,7 @@ class _NavigationViewState extends State<NavigationView>
             _animationController.value = 0.0;
             _animationController.forward();
 
-            final bool useSafeArea =
+            const bool useSafeArea =
                 true; // ← change cette valeur selon ton besoin
 
             final content = Column(
@@ -266,7 +264,9 @@ class _NavigationViewState extends State<NavigationView>
                 listener: (context, state) {
                   if (state is NavigationLoadedState && state.isLastProduct) {
                     Future.delayed(const Duration(seconds: 5), () {
-                      Navigator.pop(context);
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
                     });
                   }
                 },

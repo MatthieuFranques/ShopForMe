@@ -19,9 +19,9 @@ class Grid {
     for (int i = 0; i < rows; i++) {
       String row = "row $i : ";
       for (int a = 0; a < cols; a++) {
-        row = row + ", ${grid[i][a]}";
+        row = "$row, ${grid[i][a]}";
       }
-      result = result + " $row ";
+      result = "$result $row ";
       print(row);
     }
     return result;

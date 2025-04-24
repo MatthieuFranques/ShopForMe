@@ -18,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
   final int currentShopId = 2;
+  final String shoppingListEmpty = 'Aucune liste de courses disponible';
+  static const String deleteList = 'Supprimer la liste';
 
   @override
   void initState() {
@@ -26,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _navigateToEditList(BuildContext context, ShoppingListLoaded state) {
     if (state.shoppingLists.isEmpty) {
-      _showErrorSnackBar(context, 'Aucune liste de courses disponible');
+      _showErrorSnackBar(context, shoppingListEmpty);
       return;
     }
 
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _searchProduct(BuildContext context, ShoppingListLoaded state) {
     if (state.shoppingLists.isEmpty) {
-      _showErrorSnackBar(context, 'Aucune liste de courses disponible');
+      _showErrorSnackBar(context, shoppingListEmpty);
       return;
     }
 
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _startShopping(BuildContext context, ShoppingListLoaded state) {
     if (state.shoppingLists.isEmpty) {
-      _showErrorSnackBar(context, 'Aucune liste de courses disponible');
+      _showErrorSnackBar(context, shoppingListEmpty);
       return;
     }
 
@@ -106,8 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Semantics(
-            label: 'Supprimer la liste',
-            child: const Text('Supprimer la liste'),
+            label: deleteList,
+            child: const Text(deleteList),
           ),
           content: Semantics(
             label: 'Confirmation de suppression',
@@ -245,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () =>
                                   _handleDeleteList(context, state),
                               icon: const Icon(Icons.delete_outline),
-                              label: const Text('Supprimer la liste'),
+                              label: const Text(deleteList),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.red,
                               ),

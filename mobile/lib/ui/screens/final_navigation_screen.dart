@@ -7,17 +7,17 @@ class FinalNavigationScreen extends StatefulWidget {
   const FinalNavigationScreen({super.key});
 
   @override
-  _FinalNavigationScreenState createState() => _FinalNavigationScreenState();
+  FinalNavigationScreenState createState() => FinalNavigationScreenState();
 }
 
-class _FinalNavigationScreenState extends State<FinalNavigationScreen> {
+class FinalNavigationScreenState extends State<FinalNavigationScreen> {
   @override
   void initState() {
     super.initState();
     // Return menu
+    final navigator = Navigator.of(context);
     Future.delayed(const Duration(seconds: 9), () {
-      Navigator.pushReplacement(
-        context,
+      navigator.pushReplacement(
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     });

@@ -11,10 +11,10 @@ class ShoppingListScreen extends StatefulWidget {
   const ShoppingListScreen({super.key});
 
   @override
-  _ShoppingListScreenState createState() => _ShoppingListScreenState();
+  ShoppingListScreenState createState() => ShoppingListScreenState();
 }
 
-class _ShoppingListScreenState extends State<ShoppingListScreen> {
+class ShoppingListScreenState extends State<ShoppingListScreen> {
   int _currentIndex = 0;
 
   @override
@@ -63,9 +63,9 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                // TODO: Implémenter la suppression de la liste
-                // context.read<ShoppingListBloc>().add(DeleteShoppingList(state.currentList.id));
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
@@ -217,7 +217,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
           Icon(
             Icons.shopping_basket_outlined,
             size: context.getResponsiveSize(64),
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.primary.withAlpha((0.5 * 255).toInt()),
           ),
           SizedBox(height: context.getResponsiveSize(16)),
           Text(
