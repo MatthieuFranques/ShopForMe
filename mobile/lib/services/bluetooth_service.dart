@@ -1,30 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobile/services/shared_service.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class BluetoothScanService {
   FlutterBlue flutterBlue = FlutterBlue.instance;
   BluetoothDevice? connectedDevice;
   BluetoothCharacteristic? characteristic;
   late SharedService sharedService;
-  final _dataController = StreamController<Map<String, dynamic>>.broadcast();
 
   // Stream for device data
   Stream<List<int>>? dataStream;
-
-  // // Start scanning for devices
-  // void startScan(Function(BluetoothDevice) onDeviceFound) async {
-  //   flutterBlue.scan().listen((scanResult) {
-  //     if (scanResult.device.name == 'ESP32_BLE') {
-  //       flutterBlue.stopScan();
-  //       onDeviceFound(scanResult.device);
-  //     }
-  //   });
-  // }
 
   /// Connects to a Bluetooth device and listens for incoming data, handling connection and service discovery.
   /// 
