@@ -111,7 +111,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This test implementation generates mock ESP device signals for development and testing
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigation(
+  Future<void> _onLoadNavigationFake(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
@@ -165,7 +165,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   /// This is the real implementation that connects to actual ESP devices
   /// [event] The event that triggered the navigation load.
   /// [emit] The emitter used to send states to the UI.
-  Future<void> _onLoadNavigationReal(
+  Future<void> _onLoadNavigation(
     LoadNavigationEvent event,
     Emitter<NavigationState> emit,
   ) async {
