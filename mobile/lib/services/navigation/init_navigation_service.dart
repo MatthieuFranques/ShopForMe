@@ -21,7 +21,9 @@ class InitNavigationService {
   /// print(grid); // Prints the grid object.
   /// ```
   Future<Grid> loadGridFromJson(String jsonFilePath) async {
+    // coverage:ignore-start
     print("Chargement du PLAN depuis $jsonFilePath");
+    // coverage:ignore-end
 
     // Load the plan from the JSON file
     final String response = await rootBundle.loadString(jsonFilePath);
