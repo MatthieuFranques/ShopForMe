@@ -137,7 +137,7 @@ describe("Product Controller", () => {
     });
 
     describe("getFreeProduct", () => {
-        it("should return free products", async () => {
+        it("should return products that are not yet assigned to a section of a store", async () => {
             const products = [{ id: 1, name: "Free Product 1" }];
             (getFree as jest.Mock).mockResolvedValue(products);
             req.params = { id: "1" };
