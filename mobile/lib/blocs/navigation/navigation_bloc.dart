@@ -42,7 +42,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   double _compassDirection = 0.0;
 
   // Path to the store layout JSON file
-  String jsonFilePath = 'assets/demo/plan-keynote-2025.json';
+  String jsonFilePath = 'assets/demo/plan_video.json';
 
   Timer? _navigationUpdateTimer;
   final List<Product> _products = [];
@@ -61,13 +61,11 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   /// Closes the bloc, cancels any ongoing navigation timers.
   @override
-  Future<void> close() {
-    print("Enter in 'Close' : navigation_bloc");
+  Future<void> close() async {
     _navigationUpdateTimer?.cancel();
     _navigationTimer?.cancel();
     _compassSubscription?.cancel();
     _cacheDevice!.disconnect();
-    return super.close();
   }
 
   /// Starts periodic updates for navigation when a product is found.
@@ -299,16 +297,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     _cacheCurrentPosition = await _locationService.getCurrentPosition(
         anchorDistances, _cachedGrid!);
 
-    //call request API for send data to backend
-    // TODO uncomment if the backend root is ok because the error break the recalculatePath
-    if (_cachePath != null) {
-      await _apiService.sendPosition(
-        _cacheCurrentPosition!,
-        _cachedGrid!.productPosition,
-        _cachePath,
-      );
-    }
-
     if (_cachePath == null || _cachePath!.isEmpty) {
       print("Si aucun chemin n'est défini, recalculer le chemin initial");
       await recalculatePath(anchorDistances);
@@ -318,6 +306,16 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
         _cacheCurrentPosition!, _cachePath!)) {
       print("Utilisateur hors chemin, recalcul du plus court chemin...");
       await recalculatePath(anchorDistances);
+    }
+
+    //call request API for send data to backend
+    // TODO uncomment if the backend root is ok because the error break the recalculatePath
+    if (_cachePath != null) {
+      await _apiService.sendPosition(
+        _cacheCurrentPosition!,
+        _cachedGrid!.productPosition,
+        _cachePath,
+      );
     }
   }
 

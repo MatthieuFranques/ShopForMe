@@ -95,6 +95,7 @@ List<ZoneInstruction> getDirectionalZones(List<List<int>> path) {
         finalZone.add([x, y]);
       }
     }
+    print("final zone: $finalZone");
 
     instructions.add(ZoneInstruction(
         zone: finalZone, direction: ArrowDirection.nord, center: last));

@@ -50,3 +50,60 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Frontend
+
+This project is a frontend application built with React and TypeScript. It is designed to work with a backend API and provides a user interface for interacting with the API.
+
+## Tech Stack
+
+- **React**: A JavaScript library for building user interfaces.
+- **TypeScript**: A superset of JavaScript that adds static typing.
+- **MUI**: A popular React UI framework that provides pre-designed components.
+
+## Setup Instructions
+
+1. **Clone the Repository**
+
+```bash
+git clone git@github.com:EpitechMscProPromo2025/T-ESP-902-71730-TLS-ShopForMe-3.git
+
+cd T-ESP-902-71730-TLS-ShopForMe-3/frontend
+```
+
+2. **Install Dependencies**
+
+```bash
+npm install
+```
+
+3. **Environment Variables**
+
+Create a `.env` file in the root directory of the project and fill it with your API URL. You can use the `.env.template` file as a reference.
+
+4. **Run the Application**
+
+```bash
+npm start
+```
+
+This will start the development server and open the application in your default web browser.
+The application will be available at `http://localhost:9000`.
+
+5. **Build the Application**
+
+```bash
+npm run build
+```
+
+This will create a production build of the application in the `build` directory.
+
+You can then deploy the contents of the `build` directory to your web server.
+
+6. **Docker**
+
+This project is containerized using Docker. You can run the application in a Docker container for both production and development environments. You have to have a .env file in the root of the project with your database credentials. You can use the `.env.template` file as a reference.
+
+```bash
+docker-compose up
+```

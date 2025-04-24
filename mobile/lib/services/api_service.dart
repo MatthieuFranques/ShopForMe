@@ -78,41 +78,76 @@ class ApiService {
 
 //Send shortestPath on the backend
   Future<void> sendPosition(
-  List<int> currentPosition,
-  List<int> productPosition,
-  List<List<int>>? shortestPath,
-) async {
-  final url = Uri.parse(apiGatewayUrl);
+    List<int> currentPosition,
+    List<int> productPosition,
+    List<List<int>>? shortestPath,
+  ) async {
+    final url = Uri.parse(apiGatewayUrl);
 
-  final Map<String, dynamic> data = {
-    'id': '1',
-    'currentPosition': currentPosition,
-    'productPosition': productPosition,
-    'shortestPath': shortestPath,
-  };
+    final List<List<int>> reducedShortestPath =
+        reduceShortestPath(currentPosition, shortestPath!);
 
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': apiGatewayBearer,
-      },
-      body: json.encode(data),
-    );
+    final Map<String, dynamic> data = {
+      'id': '1',
+      'currentPosition': currentPosition,
+      'productPosition': productPosition,
+      'shortestPath': reducedShortestPath,
+    };
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      print("✅ Data sent successfully to API Gateway");
-    } else {
-      print("❌ Status: ${response.statusCode}");
-      print("❌ Response body: ${response.body}");
-      throw Exception("Error sending data to backend");
+    print('Reduced shortest path ${reducedShortestPath}');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': apiGatewayBearer,
+        },
+        body: json.encode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("✅ Data sent successfully to API Gateway");
+      } else {
+        print("❌ Status: ${response.statusCode}");
+        print("❌ Response body: ${response.body}");
+        throw Exception("Error sending data to backend");
+      }
+    } catch (e) {
+      print("❌ Exception during HTTP request: $e");
+      rethrow;
     }
-  } catch (e) {
-    print("❌ Exception during HTTP request: $e");
-    rethrow;
+  }
+
+  bool isInRange(List<int> currentPosition, List<int> targetPosition) {
+    final int currentY = currentPosition[0];
+    final int currentX = currentPosition[1];
+    final int targetY = targetPosition[0];
+    final int targetX = targetPosition[1];
+
+    return (targetY <= currentY + 1 &&
+        targetY >= currentY - 1 &&
+        targetX <= currentX + 1 &&
+        targetX >= currentX - 1);
+  }
+
+  List<List<int>> reduceShortestPath(
+      List<int> currentPosition, List<List<int>> path) {
+    List<List<int>> reducedShortestPath = [];
+    int i = 0;
+    bool isAccessible = false;
+    while (isAccessible == false) {
+      if (isInRange(currentPosition, path[i])) {
+        if (currentPosition != path[i]) {
+          reducedShortestPath.add(currentPosition);
+        }
+        isAccessible = true;
+      }
+      i++;
+    }
+    if (i < path.length) {
+      reducedShortestPath.addAll(path.sublist(i));
+    }
+    return reducedShortestPath;
   }
 }
-
-}
-
