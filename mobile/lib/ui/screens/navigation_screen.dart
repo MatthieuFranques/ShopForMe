@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math' as math;
 import 'package:mobile/blocs/navigation/navigation_export.dart';
 import 'package:mobile/models/product.dart';
 import 'package:mobile/services/navigation/direction_service.dart';
@@ -18,8 +19,8 @@ class NavigationPage extends StatelessWidget {
     // 🔥 Récupération de StoreService depuis le RepositoryProvider
 
     return BlocProvider(
-      create: (context) => NavigationBloc()
-        ..add(LoadNavigationEvent(products: shoppingList)),
+      create: (context) =>
+          NavigationBloc()..add(LoadNavigationEvent(products: shoppingList)),
       child: NavigationView(shoppingList: shoppingList),
     );
   }
@@ -37,7 +38,28 @@ class NavigationView extends StatefulWidget {
   State<NavigationView> createState() => _NavigationViewState();
 }
 
-class _NavigationViewState extends State<NavigationView> {
+class _NavigationViewState extends State<NavigationView>
+    with SingleTickerProviderStateMixin {
+  // Contrôleur d'animation pour l'icône de direction
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialisation du contrôleur d'animation
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _handleProductFound(BuildContext context, NavigationLoadedState state) {
     if (state.isLastProduct) {
       Navigator.pushReplacement(
@@ -55,6 +77,20 @@ class _NavigationViewState extends State<NavigationView> {
     context.read<NavigationBloc>().add(ProductFoundEvent(
           product: widget.shoppingList[0], // Le produit actuel
         ));
+  }
+
+  // Fonction pour obtenir l'icône correspondant à la direction
+  IconData _getDirectionIcon(ArrowDirection direction) {
+    switch (direction) {
+      case ArrowDirection.nord:
+        return Icons.arrow_upward;
+      case ArrowDirection.sud:
+        return Icons.arrow_downward;
+      case ArrowDirection.est:
+        return Icons.arrow_forward;
+      case ArrowDirection.ouest:
+        return Icons.arrow_back;
+    }
   }
 
   @override
@@ -95,133 +131,147 @@ class _NavigationViewState extends State<NavigationView> {
           }
 
           if (state is NavigationLoadedState) {
-            return SafeArea(
-              child: Column(
-                children: [
-                  // Bloc avec l'aliment recherché
-                  Padding(
-                    padding: const EdgeInsets.all(8.0), // Reduced padding
-                    child: Container(
-                      height: screenHeight * 0.08, // Reduced height
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Center(
-                        child: Text(
-                          state.objectName,
-                          style: TextStyle(
-                            fontSize: screenHeight * 0.035, // Reduced font size
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
+            _animationController.value = 0.0;
+            _animationController.forward();
+
+            final bool useSafeArea =
+                true; // ← change cette valeur selon ton besoin
+
+            final content = Column(
+              children: [
+                // === Ton contenu original ici ===
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: screenHeight * 0.08,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Center(
+                      child: Text(
+                        state.objectName,
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.035,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                  // Icône de navigation
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4), // Minimal padding
-                    child: Icon(
-                      _getDirectionIcon(state.arrowDirection),
-                      size: screenWidth * 0.3, // Further reduced size
+                ),
+
+                // ... Le reste de la Column inchangé ...
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: (state.adjustedAngle * (math.pi / 180) * -1),
+                        child: Icon(
+                          Icons.navigation,
+                          size: screenWidth * 0.8,
+                          color: const Color.fromARGB(255, 1, 28, 64),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    state.instruction,
+                    style: TextStyle(
+                      fontSize: screenHeight * 0.03,
                       color: const Color.fromARGB(255, 1, 28, 64),
+                      fontWeight: FontWeight.bold,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                  // Instruction de navigation
+                ),
+                const Spacer(),
+                if (!state.isLastProduct)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4), // Minimal padding
-                    child: Text(
-                      state.instruction,
-                      style: TextStyle(
-                        fontSize: screenHeight * 0.03, // Further reduced font size
-                        color: const Color.fromARGB(255, 1, 28, 64),
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () =>
+                                _handleProductFound(context, state),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                            child: Container(
+                              width: double.infinity,
+                              height: screenHeight * 0.06,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.check,
+                                size: screenHeight * 0.04,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => _handleSkipProduct(context),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                            child: Container(
+                              width: double.infinity,
+                              height: screenHeight * 0.06,
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.skip_next,
+                                size: screenHeight * 0.04,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(child: SizedBox()), // Flexible space
-                  // Boutons de contrôle
-                  if (!state.isLastProduct)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4), // Minimal padding
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () =>
-                                  _handleProductFound(context, state),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                              ),
-                              child: Container(
-                                width: double.infinity,
-                                height: screenHeight * 0.06, // Further reduced height
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Icons.check,
-                                  size: screenHeight * 0.04, // Further reduced size
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => _handleSkipProduct(context),
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
-                              ),
-                              child: Container(
-                                width: double.infinity,
-                                height: screenHeight * 0.06, // Further reduced height
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Icons.skip_next,
-                                  size: screenHeight * 0.04, // Further reduced size
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
+              ],
             );
+
+            // 🔁 Maintenant on retourne conditionnellement le widget
+            if (useSafeArea) {
+              return BlocListener<NavigationBloc, NavigationState>(
+                listener: (context, state) {
+                  if (state is NavigationLoadedState && state.isLastProduct) {
+                    Future.delayed(const Duration(seconds: 3), () {
+                      Navigator.pop(context);
+                    });
+                  }
+                },
+                child: SafeArea(child: content),
+              );
+            }
           }
 
+          // État par défaut
           return const Center(
-              child: CircularProgressIndicator()); // Garde l'utilisateur dans un état de chargement.
+            child: CircularProgressIndicator(),
+          );
         },
       ),
     );
-  }
-
-  IconData _getDirectionIcon(ArrowDirection direction) {
-    switch (direction) {
-      case ArrowDirection.nord:
-        return Icons.arrow_upward;
-      case ArrowDirection.sud:
-        return Icons.arrow_downward;
-      case ArrowDirection.est:
-        return Icons.arrow_forward;
-      case ArrowDirection.ouest:
-        return Icons.arrow_back;
-    }
   }
 }

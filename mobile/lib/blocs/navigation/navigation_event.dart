@@ -26,3 +26,9 @@ class UpdateNavigationEventDataRow extends NavigationEvent {
   final String decodedData;
   UpdateNavigationEventDataRow(this.decodedData);
 }
+
+/// Événement pour la mise à jour de la direction de la boussole
+class CompassUpdateEvent extends NavigationEvent {
+  final double direction;
+  CompassUpdateEvent(this.direction);
+}
