@@ -4,7 +4,7 @@ module.exports = {
     collectCoverage: true,
     coverageDirectory: 'coverage',
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
-    coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/documentation/'],
+    coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/documentation/', '/test/'],
     moduleFileExtensions: ['ts', 'js', 'json'],
     testMatch: ['**/*.test.ts'],
 };

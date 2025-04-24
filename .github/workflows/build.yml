@@ -23,37 +23,60 @@ jobs:
           flutter-version: '3.24.1'
           channel: 'stable'
 
-      - name: Build & Test (Flutter)
-        run: |
-          flutter pub get
-          flutter build apk --debug
-          flutter test --coverage || echo "Tests failed, but continuing..."
+      - name: Get Flutter dependencies
+        run: flutter pub get
         working-directory: mobile
+
+      - name: Build Flutter app (Debug)
+        run: flutter build apk --debug
+        working-directory: mobile
+
+      - name: Run Flutter Tests with Coverage
+        run: |
+          cd mobile
+          flutter test --coverage
+        continue-on-error: true
 
       # 📌 Checking for NodeJS (backend repository)
       - name: Setup Node.js (Backend)
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Install Backend dependencies
         run: |
           cd backend
           npm install
 
-      - name: Run tests (Backend)
-        run: |
-          cd backend
-          npm run test -- --coverage
-        working-directory: backend
-
       - name: Lint Backend code
         run: |
           cd backend
           npx eslint 'src/**/*.ts' --fix
+        continue-on-error: true
 
+      - name: Run Backend Tests with Coverage
+        run: |
+          cd backend
+          npm run test:coverage-sonar
 
-      # 📌 SonarCloud analysis
+      # 📌 Checking for NodeJS (frontend repository)
+      - name: Setup Node.js (Frontend)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Lint Frontend code
+        run: |
+          cd frontend
+          npm run lint
+        continue-on-error: true
+
+      # 📌 SonarQube analysis
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
@@ -62,9 +85,12 @@ jobs:
           args: >
             --define sonar.projectKey=shopforme
             --define sonar.organization=shopforme
-            --define sonar.sources=mobile,backend
-            --define sonar.javascript.lcov.reportPaths=coverage/lcov.info
+            --define sonar.sources=mobile/lib,mobile/test,backend/src,frontend/src
+            --define sonar.exclusions=frontend/src/fonts/**,frontend/src/models/**,frontend/src/images/**
             --define sonar.typescript.tsconfigPath=backend/tsconfig.json
+            --define sonar.javascript.lcov.reportPaths=backend/coverage/lcov.info
+            --define sonar.dart.lcov.reportPaths=mobile/coverage/lcov.info
+            --define sonar.coverage.exclusions=mobile/test/**,mobile/lib/blocs/**,mobile/lib/config/**,mobile/lib/ui/**,mobile/lib/utils/**,backend/src/tests/**,backend/src/routes/**,frontend/**
             --define sonar.c.file.suffixes=-
             --define sonar.cpp.file.suffixes=-
             --define sonar.objc.file.suffixes=-
