@@ -107,9 +107,41 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -121,15 +153,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -145,56 +183,75 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { CompleteUser } from "../models/user";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * @module Services/Auth
+ * @description This module is responsible for handling user registration and login.
+ */
+import { CompleteUser } from "../models/user";
 import bcrypt from 'bcryptjs';
 import prisma from "../utils/prisma";
 &nbsp;
-export async function createUser (validEmail: string, hashedPassword: string): Promise&lt;CompleteUser&gt; {
+/**
+ * @function createUser
+ * @description Create a new user in the database.
+ * 
+ * @param {string} validEmail - The email address of the new user (must be validated beforehand).
+ * @param {string} hashedPassword - The hashed password of the new user.
+ * @returns {Promise&lt;CompleteUser&gt;} - The newly created user.
+ * @throws {Error} - If an error occurs during user creation.
+ */
+export async function createUser(validEmail: string, hashedPassword: string): Promise&lt;CompleteUser&gt; {
     try {
-        const user : CompleteUser = await prisma.user.create({
+        const user: CompleteUser = await prisma.user.create({
             data: {
                 email: validEmail,
                 password: hashedPassword
             }
         });
         return user;
-&nbsp;
     } catch (error) {
         throw error;
     }
 }
 &nbsp;
+/**
+ * @function getByEmailAndPwd
+ * @description Retrieve a user from the database by email and verify the password.
+ * 
+ * @param {string} email - The email address of the user to retrieve.
+ * @param {string} password - The password of the user to validate.
+ * @returns {Promise&lt;CompleteUser | null&gt;} - The user if the email and password are valid, null otherwise.
+ * @throws {Error} - If an error occurs while fetching or validating the user.
+ */
 export async function getByEmailAndPwd(email: string, password: string): Promise&lt;CompleteUser | null&gt; {
     try {
-        
-&nbsp;
-        const user : CompleteUser | null = await prisma.user.findFirst({
+        const user: CompleteUser | null = await prisma.user.findFirst({
             where: {
                 email: email,
             }
         });
 &nbsp;
-        if(!user){
+        if (!user) {
             return null;
         }
 &nbsp;
-        const validPassword : boolean = await bcrypt.compare(password, user.password);
+        const validPassword: boolean = await bcrypt.compare(password, user.password);
 &nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if(!validPassword){
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!validPassword) {
 <span class="cstat-no" title="statement not covered" >            return null;</span>
         }
+&nbsp;
         return user;
     } catch (error) {
         throw error;
     }
 }
-&nbsp;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -202,7 +259,7 @@ export async function getByEmailAndPwd(email: string, password: string): Promise
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-02-14T10:56:01.882Z
+                at 2025-04-24T08:57:12.868Z
             </div>
         <script src="../prettify.js"></script>
         <script>
