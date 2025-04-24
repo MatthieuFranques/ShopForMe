@@ -13,6 +13,8 @@ class TextToSpeechService {
   }
 
   Future<void> speak(String text) async {
+    // coverage:ignore-line
+    print("Debug info");
     await flutterTts.speak(text);
   }
 

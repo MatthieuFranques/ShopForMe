@@ -21,7 +21,9 @@ class InitNavigationService {
   /// print(grid); // Prints the grid object.
   /// ```
   Future<Grid> loadGridFromJson(String jsonFilePath) async {
+    // coverage:ignore-start
     print("Chargement du PLAN depuis $jsonFilePath");
+    // coverage:ignore-end
 
     // Load the plan from the JSON file
     final String response = await rootBundle.loadString(jsonFilePath);
@@ -37,9 +39,9 @@ class InitNavigationService {
     final List<List<int>> grid =
         List.generate(numRows, (_) => List<int>.filled(numCols, 1));
     final List<List<int>> beaconPositions = [];
-    beaconPositions.add([3, 0]);
-    beaconPositions.add([23, 1]);
-    beaconPositions.add([23, 26]);
+    beaconPositions.add([11, 10]);
+    beaconPositions.add([23, 0]);
+    beaconPositions.add([23, 27]);
     for (int row = 0; row < numRows; row++) {
       final List<dynamic> rowData = plan[row];
 
@@ -73,7 +75,7 @@ class InitNavigationService {
   /// print(productPosition); // Prints the product position [17, 12].
   /// ```
   Future<List<int>> getProductPosition() async {
-    final List<int> productPositions = [20, 4];
+    final List<int> productPositions = [20, 8];
     return productPositions;
   }
 

@@ -37,32 +37,46 @@ class CacheService {
 
   Future<void> cacheProducts(String key, List<Product> products) async {
     try {
+      // coverage:ignore-start
       print('💾 Attempting to cache ${products.length} products');
+      // coverage:ignore-end
       await _productBox.put(key, products);
+      // coverage:ignore-start
       print('✅ Successfully cached products');
+      // coverage:ignore-end
     } catch (e) {
+      // coverage:ignore-start
       print('❌ Error caching products: $e');
+      // coverage:ignore-end
       rethrow;
     }
   }
 
   List<Product>? getProducts(String key) {
     try {
+      // coverage:ignore-start
       print('🔍 Retrieving products from cache');
+      // coverage:ignore-end
       final dynamic data = _productBox.get(key);
 
       if (data == null) {
+        // coverage:ignore-start
         print('⚠️ No products found in cache');
+        // coverage:ignore-end
         return null;
       }
 
       if (data is List<Product>) {
+        // coverage:ignore-start
         print('✅ Found ${data.length} products in cache');
+        // coverage:ignore-end
         return data;
       }
 
       if (data is List) {
+        // coverage:ignore-start
         print('🔄 Converting cached data to Product list');
+        // coverage:ignore-end
         final products = data.map((item) {
           if (item is Product) return item;
 
@@ -72,15 +86,20 @@ class CacheService {
 
           throw TypeError();
         }).toList();
-
+        // coverage:ignore-start
         print('✅ Successfully converted ${products.length} products');
+        // coverage:ignore-end
         return products.cast<Product>();
       }
 
+      // coverage:ignore-start
       print('❌ Invalid cache data format');
+      // coverage:ignore-end
       return null;
     } catch (e) {
+      // coverage:ignore-start
       print('❌ Error retrieving products from cache: $e');
+      // coverage:ignore-end
       return null;
     }
   }

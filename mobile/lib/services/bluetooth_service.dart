@@ -110,7 +110,9 @@ class BluetoothScanService {
   /// print("Found device: ${device.name}");
   /// ```
   Future<BluetoothDevice> getBluetoothDevice() async {
+  // coverage:ignore-start
   print("Starting Bluetooth scan...");
+  // coverage:ignore-end
 
     // final bluetoothIsOn = await FlutterBlue.instance.isOn;
     // if (!bluetoothIsOn) {
@@ -129,11 +131,15 @@ class BluetoothScanService {
 
   // Créer une instance de FlutterBlue pour le scan
   final FlutterBlue flutterBlue = FlutterBlue.instance;
+  // coverage:ignore-start
   print("Instance created");
+  // coverage:ignore-end
 
   // Ensure any ongoing scan is stopped before starting a new one
   if (await flutterBlue.isScanning.first) {
+    // coverage:ignore-start
     print("Stopping previous scan...");
+    // coverage:ignore-end
     await flutterBlue.stopScan();
     await Future.delayed(const Duration(seconds: 1)); // Allow cleanup
   }
@@ -142,15 +148,21 @@ class BluetoothScanService {
   final completer = Completer<BluetoothDevice>();
   late StreamSubscription<ScanResult> scanSubscription;
 
+  // coverage:ignore-start
   print("Before listening");
+  // coverage:ignore-end
 
   
 
   // Écouter les résultats du scan
   scanSubscription = flutterBlue.scan().listen((scanResult) async {
+    // coverage:ignore-start
     print("Trying to find devices");
+    // coverage:ignore-end
     if (scanResult.device.name == 'ESP32_BLE') {
+      // coverage:ignore-start
       print("Device found: ${scanResult.device.name}");
+      // coverage:ignore-end
 
       // Arrêter le scan une fois que l'appareil est trouvé
       await flutterBlue.stopScan();

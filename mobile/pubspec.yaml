@@ -53,6 +53,7 @@ flutter:
     - assets/demo/plan_test.json
     - assets/demo/plan-keynote-2025.json
     - assets/logo/
+    - assets/demo/plan_video.json
 
 
 
