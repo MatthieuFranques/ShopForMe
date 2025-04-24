@@ -208,9 +208,10 @@ class LocationService {
     final double y2 = anchorMiddle[1].toDouble();
     final double x3 = anchorRight[0].toDouble();
     final double y3 = anchorRight[1].toDouble();
+    // coverage:ignore-start
     print("x1 : $x1 y1: $y1 x2: $x2 y2: $y2 y3: $y3 x3: $x3");
-    print(
-        "distanceLeft : $distanceLeft distanceMiddle: $distanceMiddle  distanceRight: $distanceRight");
+    print("distanceLeft : $distanceLeft distanceMiddle: $distanceMiddle  distanceRight: $distanceRight");
+    // coverage:ignore-end
     // Convertir les distances en carreaux
     final double d1 = distanceLeft / echelle;
     final double d2 = distanceMiddle / echelle;
@@ -269,10 +270,10 @@ class LocationService {
       final List<int> anchorLeft = grid.beaconPositions[0];
       final List<int> anchorMiddle = grid.beaconPositions[1];
       final List<int> anchorRight = grid.beaconPositions[2];
-      print(
-          "anchorLeft : $anchorLeft , anchorMiddle : $anchorMiddle , anchorRight : $anchorRight");
-      print(
-          "tagLeft : $anchorLeftDistance , tagMiddle : $anchorMiddleDistance , tagRight : $anchorRightDistance");
+      // coverage:ignore-start
+      print("anchorLeft : $anchorLeft , anchorMiddle : $anchorMiddle , anchorRight : $anchorRight");
+      print("tagLeft : $anchorLeftDistance , tagMiddle : $anchorMiddleDistance , tagRight : $anchorRightDistance");
+      // coverage:ignore-end
 
       final List<int> currentPosition = await triangulateData(
         anchorLeft,
@@ -282,10 +283,14 @@ class LocationService {
         anchorRight,
         anchorRightDistance,
       );
+      // coverage:ignore-start
       print("currentPosition : $currentPosition");
+      // coverage:ignore-end
       return currentPosition;
     } else {
+      // coverage:ignore-start
       print("Valeur null");
+      // coverage:ignore-end
       return null;
     }
   }
@@ -319,10 +324,14 @@ class LocationService {
     if (grid.isValid(currentPosition[0], currentPosition[1])) {
       final List<List<int>> path =
           findShortestPath(grid, currentPosition, grid.productPosition);
+      // coverage:ignore-start
       print("Chemin le plus court : $path");
+      // coverage:ignore-end
       return path;
     } else {
+      // coverage:ignore-start
       print("Current position is not valid");
+      // coverage:ignore-end
       return null;
     }
   }
@@ -351,11 +360,15 @@ class LocationService {
     for (var step in path) {
       if ((currentPosition[0] - step[0]).abs() <= 1 &&
           (currentPosition[1] - step[1]).abs() <= 1) {
+        // coverage:ignore-start
         print("L'utilisateur est encore proche du chemin prévu");
+        // coverage:ignore-end
         return true;
       }
     }
+    // coverage:ignore-start
     print("L'utilisateur s'est trop éloigné");
+    // coverage:ignore-end
     return false;
   }
 
@@ -374,9 +387,13 @@ class LocationService {
       }
     }
 
+    // coverage:ignore-start
     print("path before : $path");
+    // coverage:ignore-end
     path = [...path.sublist(lastIndex)];
+    // coverage:ignore-start
     print("path after : $path");
+    // coverage:ignore-end
     return path;
   }
 
@@ -393,7 +410,9 @@ class LocationService {
         ]);
       }
     }
+    // coverage:ignore-start
     print("accessiblePositions : $accessiblePositions");
+    // coverage:ignore-end
     return accessiblePositions;
   }
 }
