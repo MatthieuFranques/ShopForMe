@@ -86,6 +86,21 @@ void main() {
         [4, 2]
       ]);
     });
+
+    test('loadDistances correctly parses distances from strings', () {
+      final parsed = locationService.loadDistances(["150.0", "200.5", "300.25"]);
+      expect(parsed, [150.0, 200.5, 300.25]);
+    });
+
+    test('triangulateData should return a valid position when inputs are correct', () async {
+      final position = await locationService.triangulateData(
+        [0, 0], 100.0,
+        [2, 0], 100.0,
+        [1, 2], 100.0,
+      );
+      expect(position.length, 2);
+      expect(position[0], isA<int>());
+      expect(position[1], isA<int>());
+    });
   });
 }
-
