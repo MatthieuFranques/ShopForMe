@@ -111,7 +111,7 @@ export async function getFree(storeId: number): Promise<ProductModel[] | null> {
 
 /**
  * @function getAllProductByShop
- * @description Fetch all products associated with a specific store.
+ * @description Fetch all products and section associated with a specific store.
  * 
  * @param {number} storeId - The ID of the store.
  * @returns {Promise<any>} - The list of products, with their section information.

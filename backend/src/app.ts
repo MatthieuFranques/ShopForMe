@@ -10,7 +10,7 @@ import {swaggerSpec} from "./swagger";
 dotenv.config();
 
 export const app: Application = express();
-const port = process.env.BACKEND_PORT;
+const port = process.env.BACKEND_PORT || 3000;
 
 const allowedOrigins = ['http://localhost:3000', 'http://localhost:3000/', 'http://91.121.191.34', 'http://localhost:8080', 'http://localhost:62352', 'http://localhost:57447']
 

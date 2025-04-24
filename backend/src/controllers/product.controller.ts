@@ -90,7 +90,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
 /**
  * @function getFreeProduct
- * @description Retrieves all free products by shop ID.
+ * @description Retrieves all products that are not yet assigned to a section of a store.
  *
  * @param {Request} req - The Express request object containing the shop ID as a URL parameter.
  * @param {Response} res - The Express response object used to send the free products data.
