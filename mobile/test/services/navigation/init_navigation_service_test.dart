@@ -19,10 +19,10 @@ void main() {
     expect(grid.rows, 20);
     expect(grid.cols, 23);
     expect(grid.beaconPositions, [
-      [3, 0],
-      [23, 1],
-      [23, 26]
+      [11, 10],
+      [23, 0],
+      [23, 27]
     ]);
-    expect(grid.productPosition, [20, 4]);
+    expect(grid.productPosition, [20, 8]);
   });
 }
