@@ -6,7 +6,10 @@ import 'package:flutter/foundation.dart'; // Pour l'annotation @visibleForTestin
 /// Service for managing the compass and calculating orientation
 class CompassService {
   /// Stream controller for compass events
-  final _compassController = StreamController<double>.broadcast();
+  final StreamController<double> _compassController;
+
+  /// External compass event stream (used for testing injection)
+  final Stream<CompassEvent>? _compassEventStream;
 
   /// Stream used to track compass orientation in degrees
   Stream<double> get compassStream => _compassController.stream;
@@ -16,7 +19,7 @@ class CompassService {
 
   /// Current orientation in degrees (0-360)
   double get currentDirection => _currentDirection;
-  
+
   /// Sets the current direction (for testing purposes only)
   @visibleForTesting
   set currentDirection(double value) => _currentDirection = value;
@@ -28,13 +31,23 @@ class CompassService {
   factory CompassService() => _instance;
 
   /// Private constructor for the Singleton implementation
-  CompassService._internal() {
+  CompassService._internal()
+      : _compassController = StreamController<double>.broadcast(),
+        _compassEventStream = FlutterCompass.events {
+    _initCompass();
+  }
+
+  /// Custom constructor for testing with mocked stream
+  @visibleForTesting
+  CompassService.test({required Stream<CompassEvent> testStream})
+      : _compassController = StreamController<double>.broadcast(),
+        _compassEventStream = testStream {
     _initCompass();
   }
 
   /// Initialize listening to compass events
   void _initCompass() {
-    FlutterCompass.events?.listen((CompassEvent event) {
+    _compassEventStream?.listen((CompassEvent event) {
       if (event.heading != null) {
         _currentDirection = event.heading!;
         _compassController.add(_currentDirection);
@@ -105,9 +118,48 @@ class CompassService {
 
   /// Releases resources
   void dispose() {
-    _compassController.close();
+    if (!_compassController.isClosed) {
+      _compassController.close();
+    }
   }
 }
 
 /// Enumeration for cardinal directions
 enum ArrowDirection { nord, sud, est, ouest, finish }
+
+/// Classe de test pour injecter manuellement des événements Compass
+@visibleForTesting
+class TestableCompassService extends CompassService {
+  final StreamController<CompassEvent> _testController = StreamController<CompassEvent>.broadcast();
+
+  TestableCompassService()
+      : super.test(testStream: StreamController<CompassEvent>.broadcast().stream);
+
+  /// Envoie manuellement un heading à la boussole
+  void emitHeading(double heading) {
+    _testController.add(MockCompassEvent(heading: heading));
+  }
+
+  /// Retourne le stream interne pour vérification ou simulation
+  Stream<CompassEvent> get testStream => _testController.stream;
+
+  /// Ferme le controller de test
+  void disposeTest() {
+    _testController.close();
+    dispose();
+  }
+}
+
+/// Classe factice pour simuler CompassEvent
+class MockCompassEvent implements CompassEvent {
+  @override
+  final double? heading;
+
+  @override
+  double? get accuracy => null;
+
+  @override
+  double? get headingForCameraMode => null;
+
+  MockCompassEvent({this.heading});
+}
