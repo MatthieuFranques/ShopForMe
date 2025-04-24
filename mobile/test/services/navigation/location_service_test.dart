@@ -92,15 +92,75 @@ void main() {
       expect(parsed, [150.0, 200.5, 300.25]);
     });
 
-    test('triangulateData should return a valid position when inputs are correct', () async {
+    test('loadDistances throws on invalid input', () {
+      expect(() => locationService.loadDistances(["abc", "200.5", "300.25"]), throwsA(isA<FormatException>()));
+    });
+
+    test('triangulateData returns correct position with known values', () async {
       final position = await locationService.triangulateData(
-        [0, 0], 100.0,
-        [2, 0], 100.0,
-        [1, 2], 100.0,
+        [0, 0], 70.71,
+        [0, 10], 70.71,
+        [10, 0], 70.71,
       );
       expect(position.length, 2);
-      expect(position[0], isA<int>());
-      expect(position[1], isA<int>());
+      expect(position[0], closeTo(5, 1));
+      expect(position[1], closeTo(5, 1));
+    });
+
+    test('triangulateData throws if denominator is zero (bad anchor config)', () async {
+      expect(
+        () async => await locationService.triangulateData(
+          [0, 0], 100,
+          [0, 0], 100,
+          [0, 0], 100,
+        ),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test('getCurrentPosition returns null when any distance is 0', () async {
+      final grid = Grid(5, 5, List.generate(5, (_) => List.filled(5, 0)), [[0, 0], [1, 1], [2, 2]], [4, 4]);
+      final position = await locationService.getCurrentPosition(["100.0", "0.0", "300.0"], grid);
+      expect(position, isNull);
+    });
+
+    test('getCurrentPosition returns null if position is outside grid bounds', () async {
+      final grid = Grid(3, 3, List.generate(3, (_) => List.filled(3, 0)), [[0, 0], [1, 1], [2, 2]], [2, 2]);
+      final position = await locationService.getCurrentPosition(["500.0", "500.0", "500.0"], grid);
+      expect(position, isNull);
+    });
+
+    test('getAccessiblePositions works for edge of grid (e.g. [0, 0])', () {
+      final currentPosition = [0, 0];
+      final positions = locationService.getAccessiblePositions(currentPosition);
+      expect(positions.length, 9);
+      expect(positions, contains([0, 0]));
+    });
+
+    test('findShortestPath returns empty path if no path exists', () {
+      final grid = Grid(3, 3, [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 1, 0],
+      ], [], []);
+      final path = locationService.findShortestPath(grid, [0, 0], [2, 2]);
+      expect(path, isEmpty);
+    });
+
+    test('updateCachePath returns full path if current position is not in it', () {
+      final path = [
+        [0, 0], [0, 1], [0, 2]
+      ];
+      final currentPosition = [2, 2];
+      final newPath = locationService.updateCachePath(currentPosition, path);
+      expect(newPath, path);
+    });
+
+    test('getShortestPath returns path if valid', () async {
+      final grid = Grid(5, 5, List.generate(5, (_) => List.filled(5, 0)), [[0, 0], [2, 0], [4, 0]], [4, 4]);
+      final position = await locationService.getShortestPath(["100.0", "100.0", "100.0"], grid);
+      expect(position, isNotNull);
+      expect(position!.last, [4, 4]);
     });
   });
 }
