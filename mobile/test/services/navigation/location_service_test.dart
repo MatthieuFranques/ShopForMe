@@ -162,5 +162,11 @@ void main() {
       expect(position, isNotNull);
       expect(position!.last, [4, 4]);
     });
+
+    test('getShortestPath returns null if position is invalid', () async {
+      final grid = Grid(5, 5, List.generate(5, (_) => List.filled(5, 1)), [[0, 0], [1, 1], [2, 2]], [4, 4]);
+      final path = await locationService.getShortestPath(["100.0", "100.0", "100.0"], grid);
+      expect(path, isNull);
+    });
   });
 }
