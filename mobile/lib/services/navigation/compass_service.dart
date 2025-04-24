@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:flutter/foundation.dart'; // Pour l'annotation @visibleForTesting
 
 /// Service for managing the compass and calculating orientation
 class CompassService {
@@ -15,6 +16,10 @@ class CompassService {
 
   /// Current orientation in degrees (0-360)
   double get currentDirection => _currentDirection;
+  
+  /// Sets the current direction (for testing purposes only)
+  @visibleForTesting
+  set currentDirection(double value) => _currentDirection = value;
 
   /// Unique instance of the service (Singleton)
   static final CompassService _instance = CompassService._internal();
