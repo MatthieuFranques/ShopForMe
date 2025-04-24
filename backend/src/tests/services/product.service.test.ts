@@ -2,7 +2,7 @@ import prisma from "../../utils/prisma";
 import { 
     getOne, update, create, get, getFree, 
     getAllProductByShop, addNewProductToRayon, 
-    getProductsBySectionName 
+    getProductsBySectionName, getSectionByProductId
 } from "../../services/product.service";
 import { CreateProductDto, ProductModel } from "../../models/product.model";
 
@@ -17,6 +17,7 @@ jest.mock("../../utils/prisma", () => ({
     section: {
         create: jest.fn(),
         findMany: jest.fn(),
+        findFirst: jest.fn()
     }
 }));
 
@@ -167,6 +168,28 @@ describe("Product Service", () => {
         it("should throw an error if an exception occurs", async () => {
             (prisma.section.findMany as jest.Mock).mockRejectedValue(new Error("DB Error"));
             await expect(getProductsBySectionName("Rayon A")).rejects.toThrow("DB Error");
+        });
+    });
+
+    describe("getSectionByProductId", () => {
+        it("should return a section by product id", async () => {
+            const mockSection = { id: 5, name: "Rayon A", product: [{ id: 1, name: "Product A" }] };
+
+            (prisma.section.findFirst as jest.Mock).mockResolvedValue(mockSection);
+
+            const result = await getSectionByProductId(1);
+            expect(result).toEqual(mockSection);
+        });
+
+        it("should return empty array if no section is found", async () => {
+            (prisma.section.findFirst as jest.Mock).mockResolvedValue(null);
+            const result = await getSectionByProductId(1);
+            expect(result).toStrictEqual([]);
+        });
+
+        it("should throw an error if an exception occurs", async () => {
+            (prisma.section.findFirst as jest.Mock).mockRejectedValue(new Error("DB Error"));
+            await expect(getSectionByProductId(1)).rejects.toThrow("DB Error");
         });
     });
 

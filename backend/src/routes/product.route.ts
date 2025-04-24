@@ -17,7 +17,7 @@ const shopRouter = Router();
  * @swagger
  * /products/getFree/{id}:
  *   get:
- *     summary: Récupère un produit gratuit par son identifiant
+ *     summary: Récupère les produits non assigné à un rayon par id de magasin
  *     tags: [Products]
  *     parameters:
  *       - in: path
@@ -25,10 +25,25 @@ const shopRouter = Router();
  *         required: true
  *         schema:
  *           type: string
- *         description: L'identifiant unique du produit
+ *         description: L'identifiant unique du magasin
  *     responses:
  *       200:
- *         description: Détails du produit gratuit
+ *         description: Détails des produits non assignés
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   price:
+ *                     type: number
+ *                   description:
+ *                     type: string
  *       404:
  *         description: Produit non trouvé
  */
@@ -38,7 +53,7 @@ shopRouter.get('/getFree/:id', getFreeProduct);
  * @swagger
  * /products/getAllProductByShop/{id}:
  *   get:
- *     summary: Récupère tous les produits par l'identifiant du magasin
+ *     summary: Récupère tous les produits et section par l'identifiant du magasin
  *     tags: [Products]
  *     parameters:
  *       - in: path
@@ -89,6 +104,9 @@ shopRouter.get('/getAllProductByShop/:id', getAllProductByShopP);
  *               productId:
  *                 type: string
  *                 description: ID du produit à ajouter
+ *              name:
+ *                type: string
+ *                description: Nom du produit
  *     responses:
  *       200:
  *         description: Produit ajouté avec succès
@@ -103,7 +121,7 @@ shopRouter.post('/addNewProductToRayonP', addNewProductToRayonP);
  * @swagger
  * /products/getProductsBySectionName/{name}:
  *   get:
- *     summary: Récupère les produits par nom de section
+ *     summary: Récupère les produits par id de section
  *     tags: [Products]
  *     parameters:
  *       - in: path
@@ -111,7 +129,7 @@ shopRouter.post('/addNewProductToRayonP', addNewProductToRayonP);
  *         required: true
  *         schema:
  *           type: string
- *         description: L'identifiant unique du produit
+ *         description: L'identifiant unique de la section
  *     responses:
  *       200:
  *         description: Produits récupérés avec succès

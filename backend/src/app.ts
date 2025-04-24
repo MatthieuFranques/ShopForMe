@@ -9,6 +9,7 @@ import {swaggerSpec} from "./swagger";
 dotenv.config();
 
 export const app: Application = express();
+
 const port = process.env.BACKEND_PORT;
 const API_KEY = process.env.API_KEY;
 
