@@ -94,7 +94,7 @@ class ApiService {
       'shortestPath': reducedShortestPath,
     };
 
-    print('Reduced shortest path ${reducedShortestPath}');
+    print('Reduced shortest path $reducedShortestPath');
 
     try {
       final response = await http.post(
