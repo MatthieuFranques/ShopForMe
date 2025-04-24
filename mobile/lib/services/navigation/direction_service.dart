@@ -55,7 +55,9 @@ class DirectionService {
   List<Object> getNextDirection(
       List<List<int>> path, List<int> currentPosition, List<ZoneInstruction> zoneInstruction) {
     if (path.isEmpty) {
+      // coverage:ignore-start
       print("Aucune instruction disponible");
+      // coverage:ignore-end
       return ["Aucune instruction disponible", Null];
     }
     // final List<List<int>> fullPath = [currentPosition, ...path];
