@@ -8,6 +8,10 @@ import 'package:mobile/utils/constants.dart';
 
 class ApiService {
   final String baseUrl;
+  final Map<String, String> defaultHeaders = {
+  'Content-Type': 'application/json',
+  'x-api-key': API_KEY,
+  };
 
   ApiService({required this.baseUrl});
 
@@ -17,7 +21,7 @@ class ApiService {
       // Then fetch the section details using the rayon name
       final response = await http.get(
         Uri.parse('$baseUrl/products/getSectionByProductId/$productId'),
-        headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
+        headers: defaultHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -37,7 +41,7 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/products/getAllProductByShop/$shopId'),
-        headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
+        headers: defaultHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -57,7 +61,7 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/shops/$shopId'),
-        headers: {'Content-Type': 'application/json', 'x-api-key': API_KEY},
+        headers: defaultHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -90,7 +94,7 @@ class ApiService {
       'shortestPath': reducedShortestPath,
     };
 
-    print('Reduced shortest path ${reducedShortestPath}');
+    print('Reduced shortest path $reducedShortestPath');
 
     try {
       final response = await http.post(

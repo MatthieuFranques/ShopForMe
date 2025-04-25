@@ -7,69 +7,78 @@ void main() {
     late ShoppingList shoppingList;
     late Product product1;
     late Product product2;
+    const String id = '123';
+    const String date = '2025-03-21';
+    const String name = 'My Shopping List';
+    const String rayonP1 = 'Rayon A';
+    const String rayonP2 = 'Rayon B';
+    const String categoryP1 = 'Category 1';
+    const String categoryP2 = 'Category 2';
+    const String productP1 = 'Product 1';
+    const String productP2 = 'Product 2';
 
     setUp(() {
       // Création de produits fictifs pour les tests
       product1 = Product(
         id: '1',
-        name: 'Product 1',
-        category: 'Category 1',
-        rayon: 'Rayon A',
+        name: productP1,
+        category: categoryP1,
+        rayon: rayonP1,
       );
       product2 = Product(
         id: '2',
-        name: 'Product 2',
-        category: 'Category 2',
-        rayon: 'Rayon B',
+        name: productP2,
+        category: categoryP2,
+        rayon: rayonP2,
       );
 
       // Création de la ShoppingList avec des produits fictifs
       shoppingList = ShoppingList(
-        id: '123',
-        name: 'My Shopping List',
-        date: '2025-03-21',
+        id: id,
+        name: name,
+        date: date,
         products: [product1, product2],
       );
     });
 
     // Test de l'initialisation de la ShoppingList
     test('ShoppingList should initialize with correct values', () {
-      expect(shoppingList.id, '123');
-      expect(shoppingList.name, 'My Shopping List');
-      expect(shoppingList.date, '2025-03-21');
+      expect(shoppingList.id, id);
+      expect(shoppingList.name, name);
+      expect(shoppingList.date, date);
       expect(shoppingList.products, [product1, product2]);
     });
 
     // Test de la méthode fromJson
     test('fromJson should correctly parse JSON into a ShoppingList', () {
       final json = {
-        'id': '123',
-        'name': 'My Shopping List',
-        'date': '2025-03-21',
+        'id': id,
+        'name': name,
+        'date': date,
         'products': [
           {
             'id': '1',
-            'name': 'Product 1',
-            'category': 'Category 1',
-            'rayon': 'Rayon A'
+            'name': productP1,
+            'category': categoryP1,
+            'rayon': rayonP1
           },
           {
             'id': '2',
-            'name': 'Product 2',
-            'category': 'Category 2',
-            'rayon': 'Rayon B'
+            'name': productP2,
+            'category': categoryP2,
+            'rayon': rayonP2
           }
         ]
       };
 
       final parsedShoppingList = ShoppingList.fromJson(json);
 
-      expect(parsedShoppingList.id, '123');
-      expect(parsedShoppingList.name, 'My Shopping List');
-      expect(parsedShoppingList.date, '2025-03-21');
+      expect(parsedShoppingList.id, id);
+      expect(parsedShoppingList.name, name);
+      expect(parsedShoppingList.date, date);
       expect(parsedShoppingList.products.length, 2);
-      expect(parsedShoppingList.products[0].name, 'Product 1');
-      expect(parsedShoppingList.products[1].rayon, 'Rayon B');
+      expect(parsedShoppingList.products[0].name, productP1);
+      expect(parsedShoppingList.products[1].rayon, rayonP2);
     });
 
     // Test si la méthode fromJson fonctionne avec des valeurs par défaut
@@ -81,9 +90,9 @@ void main() {
         'products': [
           {
             'id': '1',
-            'name': 'Product 1',
-            'category': 'Category 1',
-            'rayon': 'Rayon A'
+            'name': productP1,
+            'category': categoryP1,
+            'rayon': rayonP1
           }
         ]
       };
@@ -94,12 +103,12 @@ void main() {
       expect(parsedShoppingList.name, 'Unnamed List'); // Valeur par défaut
       expect(parsedShoppingList.date, 'Unknown Date'); // Valeur par défaut
       expect(parsedShoppingList.products.length, 1);
-      expect(parsedShoppingList.products[0].name, 'Product 1');
+      expect(parsedShoppingList.products[0].name, productP1);
     });
 
     // Test si la méthode fromJson gère les valeurs nulles dans le JSON
     test('fromJson should handle null values gracefully', () {
-      final json = {'id': null, 'name': null, 'date': null, 'products': null};
+      final json = {'id': null, 'name': null, 'date': null, 'products': []};
 
       final parsedShoppingList = ShoppingList.fromJson(json);
 

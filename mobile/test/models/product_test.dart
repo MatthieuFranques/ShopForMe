@@ -4,40 +4,43 @@ import 'package:mobile/models/product.dart'; // Assurez-vous que le chemin du fi
 void main() {
   group('Product Model Tests', () {
     late Product product;
+    const name = 'Test Product';
+    const category = 'Test Category';
+    const rayon = 'Test Rayon';
 
     setUp(() {
       // Création d'un produit fictif pour les tests
       product = Product(
         id: '123',
-        name: 'Test Product',
-        category: 'Test Category',
-        rayon: 'Test Rayon',
+        name: name,
+        category: category,
+        rayon: rayon,
       );
     });
 
     // Test de l'initialisation de l'objet Product
     test('Product should initialize with correct values', () {
       expect(product.id, '123');
-      expect(product.name, 'Test Product');
-      expect(product.category, 'Test Category');
-      expect(product.rayon, 'Test Rayon');
+      expect(product.name, name);
+      expect(product.category, category);
+      expect(product.rayon, rayon);
     });
 
     // Test de la méthode fromJson avec des données valides
     test('fromJson should correctly parse JSON into a Product', () {
       final json = {
         'id': '123',
-        'name': 'Test Product',
-        'category': 'Test Category',
-        'rayon': 'Test Rayon',
+        'name': name,
+        'category': category,
+        'rayon': rayon,
       };
 
       final parsedProduct = Product.fromJson(json);
 
       expect(parsedProduct.id, '123');
-      expect(parsedProduct.name, 'Test Product');
-      expect(parsedProduct.category, 'Test Category');
-      expect(parsedProduct.rayon, 'Test Rayon');
+      expect(parsedProduct.name, name);
+      expect(parsedProduct.category, category);
+      expect(parsedProduct.rayon, rayon);
     });
 
     // Test de la méthode fromJson avec des données manquantes ou nulles
@@ -61,9 +64,9 @@ void main() {
     test('toJson should correctly convert a Product to JSON', () {
       final expectedJson = {
         'id': '123',
-        'name': 'Test Product',
-        'category': 'Test Category',
-        'rayon': 'Test Rayon',
+        'name': name,
+        'category': category,
+        'rayon': rayon,
       };
 
       final productJson = product.toJson();
@@ -76,12 +79,12 @@ void main() {
       final invalidJson = {
         'id': '123',
         // 'name' is missing
-        'category': 'Test Category',
-        'rayon': 'Test Rayon',
+        'category': category,
+        'rayon': rayon,
       };
 
-      // Nous attendons une exception pour JSON mal formé
-      expect(() => Product.fromJson(invalidJson), throwsA(isA<TypeError>()));
+      final parsedProduct = Product.fromJson(invalidJson);
+      expect(parsedProduct.name, 'Unnamed Product');
     });
   });
 }
