@@ -4,7 +4,7 @@ import {
     getAllProductByShop, addNewProductToRayon, 
     getProductsBySectionName, getSectionByProductId
 } from "../../services/product.service";
-import { CreateProductDto, ProductModel } from "../../models/product.model";
+import { ProductModel } from "../../models/product.model";
 
 // Mock Prisma
 jest.mock("../../utils/prisma", () => ({

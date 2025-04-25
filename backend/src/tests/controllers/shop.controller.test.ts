@@ -7,7 +7,6 @@ jest.mock("../../services/shop.service");
 describe("Shop Controller", () => {
     let req: Partial<Request>;
     let res: Partial<Response>;
-    let next: jest.Mock;
 
     beforeEach(() => {
         req = {};
@@ -15,7 +14,7 @@ describe("Shop Controller", () => {
             status: jest.fn().mockReturnThis(),
             json: jest.fn(),
         };
-        next = jest.fn();
+        jest.fn();
     });
 
     afterEach(() => {

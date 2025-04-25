@@ -30,7 +30,7 @@ export const getProductById = async (req: Request, res: Response) => {
         const shop = await getOne(parseInt(req.params.id));
         return res.status(200).json(shop);
     } catch (error) {
-        return res.status(500).json({message: "Internal Server Error"});
+        return res.status(500).json({message: "Internal Server Error : (", error});
     }
 }
 

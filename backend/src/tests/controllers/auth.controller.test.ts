@@ -38,7 +38,6 @@ describe("Auth Controller", () => {
                 updatedAt: new Date(),
                 deletedAt: null
             };
-            // const returnUser: ReturnUser = { id: 1, email: "test@example.com", name: "Test User" };
             const returnUser: ReturnUser = { id: 1, email: "test@example.com"};
             (bcrypt.hash as jest.Mock).mockResolvedValue("hashedPassword");
             (isValidEmail as jest.Mock).mockResolvedValue(true);
@@ -103,7 +102,6 @@ describe("Auth Controller", () => {
                 updatedAt: new Date(),
                 deletedAt: null
             };
-            // const returnUser: ReturnUser = { id: 1, email: "test@example.com", name: "Test User" };
             const returnUser: ReturnUser = { id: 1, email: "test@example.com"};
             (getByEmailAndPwd as jest.Mock).mockResolvedValue(user);
             (completeUserToCreateUser as jest.Mock).mockReturnValue(returnUser);
