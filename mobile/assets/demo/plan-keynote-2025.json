@@ -511,10 +511,10 @@
   ],
   [
     {
-      "isBeacon": false,
-      "type": "VIDE",
       "name": "X",
-      "size": 0
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
     },
     {
       "name": "X",
@@ -1931,10 +1931,10 @@
       "isBeacon": false
     },
     {
-      "isBeacon": true,
-      "type": "VIDE",
       "name": "X",
-      "size": 0
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": true
     },
     {
       "name": "X",
@@ -3911,16 +3911,76 @@
   ],
   [
     {
-      "isBeacon": true,
-      "type": "VIDE",
       "name": "X",
-      "size": 0
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": true
     },
     {
-      "isBeacon": false,
-      "type": "VIDE",
       "name": "X",
-      "size": 0
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
+    },
+    {
+      "name": "PLEIN",
+      "size": 0,
+      "type": "PLEIN",
+      "isBeacon": false
+    },
+    {
+      "name": "X",
+      "size": 0,
+      "type": "VIDE",
+      "isBeacon": false
     },
     {
       "name": "X",
@@ -4016,67 +4076,7 @@
       "name": "X",
       "size": 0,
       "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "name": "X",
-      "size": 0,
-      "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "name": "X",
-      "size": 0,
-      "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "name": "PLEIN",
-      "size": 0,
-      "type": "PLEIN",
-      "isBeacon": false
-    },
-    {
-      "name": "X",
-      "size": 0,
-      "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "name": "X",
-      "size": 0,
-      "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "name": "X",
-      "size": 0,
-      "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "name": "X",
-      "size": 0,
-      "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "name": "X",
-      "size": 0,
-      "type": "VIDE",
-      "isBeacon": false
-    },
-    {
-      "isBeacon": false,
-      "type": "VIDE",
-      "name": "X",
-      "size": 0
-    },
-    {
-      "isBeacon": true,
-      "type": "VIDE",
-      "name": "X",
-      "size": 0
+      "isBeacon": true
     }
   ]
 ]

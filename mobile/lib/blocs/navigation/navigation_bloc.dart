@@ -42,7 +42,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   double _compassDirection = 0.0;
 
   // Path to the store layout JSON file
-  String jsonFilePath = 'assets/demo/plan_video.json';
+  String jsonFilePath = 'assets/demo/plan-keynote-2025.json';
 
   Timer? _navigationUpdateTimer;
   final List<Product> _products = [];
