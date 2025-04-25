@@ -24,7 +24,7 @@ export async function isValidEmail(email: string): Promise<boolean> {
                 email: true
             }
         });
-        result = emailExists ? false : true;
+        result = !emailExists;
     }
     return result;
 }
