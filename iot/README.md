@@ -18,6 +18,20 @@ When each tag is active, the anchor must be connected in order to receive the po
 
 > **Note** You need to set the baud rate to 115 200.
 
+### Lib required
+
+Use Library Manager: Sketch > Include Library > Manage Libraries...
+
+<Arduino.h>	            Core Arduino functions and macros (Serial, millis(), delay()).
+<map>	                C++ Standard Library container to store key-value pairs (address -> distance).
+<BLEDevice.h>	        Initializes and manages BLE functions on the ESP32 (device name, scanning).
+<BLEServer.h>	        Enables the ESP32 to act as a BLE server that the mobile app can connect to.
+<BLEUtils.h>	        BLE utility functions, including UUID handling and internal helpers.
+<BLE2902.h>	            Handles BLE descriptors (enabling notification for a characteristic).
+<BLECharacteristic.h>	Defines the characteristics (data payloads) used in BLE communication.
+<DW1000.h>	            Control the DW1000 UWB chip. Required for antenna delay calibration.
+<DW1000Ranging.h>	    Simplifies UWB ranging between the tag and anchors.
+
 
 ### Documentation
 
