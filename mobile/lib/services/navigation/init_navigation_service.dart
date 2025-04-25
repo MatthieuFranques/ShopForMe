@@ -32,9 +32,6 @@ class InitNavigationService {
     final int numCols = plan[0].length;
     final List<int> productPosition = await getProductPosition();
 
-    // TODO
-    // Modifier Grid charger les rayons disponibles dans Grid
-
     // Initialize the grid with default values
     final List<List<int>> grid =
         List.generate(numRows, (_) => List<int>.filled(numCols, 1));
@@ -50,12 +47,6 @@ class InitNavigationService {
 
         // Assign grid values based on cell type
         grid[row][col] = (cell['type'] == "VIDE") ? 0 : 1;
-
-        // Check if the cell is a beacon
-        // TODO
-        // if (cell['isBeacon'] == true) {
-        //   beaconPositions.add([row, col]);
-        // }
       }
     }
     return Grid(numRows, numCols, grid, beaconPositions, productPosition);
@@ -64,7 +55,7 @@ class InitNavigationService {
   /// Gets the current product position.
   ///
   /// Currently, this function returns a fixed position for the product (in the future, it will return positions of all
-  /// products in the shopping list). TODO
+  /// products in the shopping list).
   ///
   /// ### Returns:
   /// A [Future] that resolves to a list of integers representing the product's position in the grid.

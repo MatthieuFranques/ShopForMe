@@ -113,8 +113,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) async {
     try {
-      // TODO
-      // Cache init
       if (_cachedGrid == null) {
         print("Chargement du PLAN depuis $jsonFilePath");
         _cachedGrid =
@@ -167,7 +165,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) async {
     try {
-      // TODO
       await _initNavigationService.checkPermissions();
       _cachedGrid == null
           ? _cachedGrid =
