@@ -16,17 +16,14 @@ import prisma from "../utils/prisma";
  * @throws {Error} - If an error occurs during user creation.
  */
 export async function createUser(validEmail: string, hashedPassword: string): Promise<CompleteUser> {
-    try {
-        const user: CompleteUser = await prisma.user.create({
-            data: {
-                email: validEmail,
-                password: hashedPassword
-            }
-        });
-        return user;
-    } catch (error) {
-        throw error;
-    }
+
+    const user: CompleteUser = await prisma.user.create({
+        data: {
+            email: validEmail,
+            password: hashedPassword
+        }
+    });
+    return user;
 }
 
 /**
@@ -39,25 +36,22 @@ export async function createUser(validEmail: string, hashedPassword: string): Pr
  * @throws {Error} - If an error occurs while fetching or validating the user.
  */
 export async function getByEmailAndPwd(email: string, password: string): Promise<CompleteUser | null> {
-    try {
-        const user: CompleteUser | null = await prisma.user.findFirst({
-            where: {
-                email: email,
-            }
-        });
 
-        if (!user) {
-            return null;
+    const user: CompleteUser | null = await prisma.user.findFirst({
+        where: {
+            email: email,
         }
+    });
 
-        const validPassword: boolean = await bcrypt.compare(password, user.password);
-
-        if (!validPassword) {
-            return null;
-        }
-
-        return user;
-    } catch (error) {
-        throw error;
+    if (!user) {
+        return null;
     }
+
+    const validPassword: boolean = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+        return null;
+    }
+
+    return user;
 }
