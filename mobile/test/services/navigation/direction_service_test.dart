@@ -82,8 +82,8 @@ void main() {
       ];
       final zones = getDirectionalZones(path);
       final instruction = directionService.getNextDirection(path, [5, 5], zones);
-      expect(instruction[0], isNull);
-      expect(instruction[1], isNull);
+      expect(instruction[0], Null);
+      expect(instruction[1], Null);
     });
 
     test('ZoneInstruction isInRange returns true for position inside zone', () {

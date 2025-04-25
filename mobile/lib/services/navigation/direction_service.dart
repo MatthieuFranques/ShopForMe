@@ -60,10 +60,9 @@ class DirectionService {
       // coverage:ignore-end
       return ["Aucune instruction disponible", Null];
     }
-    // final List<List<int>> fullPath = [currentPosition, ...path];
 
     // Déterminer la direction initiale
-    int distance = 1;
+    const int distance = 1;
 
     // Vérifier si l'utilisateur est dans une zone
     for (int i = 0; i < zoneInstruction.length; i++){
@@ -77,20 +76,6 @@ class DirectionService {
       }
     }
 
-    // print("distance : $distance");
-    // switch (initialDirection) {
-    //   case ArrowDirection.nord:
-    //     return ["12H00, Avancez de $distance pas", ArrowDirection.nord];
-    //   case ArrowDirection.sud:
-    //     return ["6H00, Avancez de $distance pas", ArrowDirection.sud];
-    //   case ArrowDirection.est:
-    //     return ["3H00, Avancez de $distance pas", ArrowDirection.est];
-    //   case ArrowDirection.ouest:
-    //     return ["9H00, Avancez de $distance pas", ArrowDirection.ouest];
-    //   default:
-    //     print("Direction inconnue, retourne null");
-    //     return ["Direction inconnue", Null];
-    // }
     return [Null, Null];
   }
 }
