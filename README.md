@@ -1,14 +1,25 @@
+![Status](https://img.shields.io/badge/Status-In--Development-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.0.0--beta-blue?style=for-the-badge)
+![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=flutter&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![Arduino](https://img.shields.io/badge/-Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white)
+![C++](https://img.shields.io/badge/C++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+
+
+
 # **ShopForMe Project**
 
 # 🛒 01. Introduction
 
 ---
 
-## 1.1 📌 Context
+## 1.1 Context
 
 The project aims to design an **innovative connected system** to enhance the **shopping experience** for **visually impaired or blind individuals**. These individuals face daily challenges in stores, often hindering their autonomy.
 
-🔍 **Main Objective:**  
+ **Main Objective:**  
 Increase independence by integrating **smart technologies** into the grocery shopping process.
 
 ---
@@ -17,15 +28,15 @@ Increase independence by integrating **smart technologies** into the grocery sho
 
 Visually impaired or blind individuals often struggle with:
 
-- 🧴 **Product identification**
-- 🧭 **Navigation through aisles**
-- 🧾 **Access to item information**
+-  **Product identification**
+-  **Navigation through aisles**
+-  **Access to item information**
 
 Our solution — a **connected system** integrated with a **mobile application** — is designed to tackle these challenges by providing **intelligent support** and **seamless access to information**.
 
 ---
 
-## 1.3 🎯 Project Goals
+## 1.3  Project Goals
 
 The primary goal is to develop a **connected system** that:
 
@@ -39,15 +50,15 @@ This project follows an **inclusive design philosophy**, aiming to deliver a **p
 
 ---
 
-## 1.4 📍 Project Scope
+## 1.4  Project Scope
 
-### 🏬 Where?
+###  Where?
 
 - Inside a **supermarket** (e.g., Carrefour)
 - **Large enclosed spaces** with several aisles that **may change layout**
 - Presence of **other customers and shopping carts**
 
-### 👤 For Whom?
+###  For Whom?
 
 - 🧑‍🦯 **Blind individuals**
 - 👓 **Visually impaired individuals**
