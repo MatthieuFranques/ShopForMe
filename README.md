@@ -1,4 +1,3 @@
-![Status](https://img.shields.io/badge/Status-In--Development-orange?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Version](https://img.shields.io/badge/Version-1.0.0--beta-blue?style=for-the-badge)
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=flutter&logoColor=white)
